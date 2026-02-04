@@ -1,0 +1,35 @@
+{
+  "paths": {
+    "en": "D:\\Development\\altayar\\MobileApp\\frontend\\src\\i18n\\translations\\en.json",
+    "ar": "D:\\Development\\altayar\\MobileApp\\frontend\\src\\i18n\\translations\\ar.json"
+  },
+  "summary": {
+    "en_paths": 2254,
+    "ar_paths": 2254,
+    "missing_in_en": 0,
+    "missing_in_ar": 0,
+    "type_mismatches": 0,
+    "placeholder_mismatches": 0,
+    "suspicious_latin_in_ar": 0,
+    "suspicious_arabic_in_en": 0,
+    "scan_dirs": 5,
+    "used_keys": 1524,
+    "missing_used_en": 0,
+    "missing_used_ar": 0
+  },
+  "scan_dirs": [
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(user)",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(admin)",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(employee)",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\src\\components",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\components"
+  ],
+  "missing_in_en": [],
+  "missing_in_ar": [],
+  "type_mismatches": [],
+  "placeholder_mismatches": [],
+  "suspicious_latin_in_ar": [],
+  "suspicious_arabic_in_en": [],
+  "missing_used_en": [],
+  "missing_used_ar": []
+}

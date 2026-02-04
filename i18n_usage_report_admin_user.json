@@ -1,0 +1,12 @@
+{
+  "scan_dirs": [
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(admin)",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(user)"
+  ],
+  "files_scanned": 82,
+  "unique_keys_referenced": 1299,
+  "missing_en_count": 0,
+  "missing_ar_count": 0,
+  "missing_en": [],
+  "missing_ar": []
+}

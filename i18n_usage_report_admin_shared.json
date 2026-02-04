@@ -1,0 +1,15 @@
+{
+  "scan_dirs": [
+    "D:\\Development\\altayar\\MobileApp\\frontend\\app\\(admin)",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\src\\components",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\src\\contexts",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\src\\hooks",
+    "D:\\Development\\altayar\\MobileApp\\frontend\\components"
+  ],
+  "files_scanned": 54,
+  "unique_keys_referenced": 835,
+  "missing_en_count": 0,
+  "missing_ar_count": 0,
+  "missing_en": [],
+  "missing_ar": []
+}
