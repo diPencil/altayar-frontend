@@ -20,7 +20,7 @@ import { adminApi, ordersApi } from "../../../src/services/api";
 import Toast from "../../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     removeBtn: {
-        marginLeft: 10,
+        marginStart: 10,
         marginTop: 10,
     },
     addItemBtn: {
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
     addItemText: {
         color: COLORS.primary,
         fontWeight: '600',
-        marginLeft: 6,
+        marginStart: 6,
     },
 
     // Deductions
@@ -867,7 +867,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     switchLabel: {
-        marginLeft: 10,
+        marginStart: 10,
         fontSize: 14,
         color: COLORS.text,
         fontWeight: '500',
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 8,
-        marginLeft: 50,
+        marginStart: 50,
     },
     deductionInput: {
         backgroundColor: COLORS.background,
@@ -888,7 +888,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     deductionHint: {
-        marginLeft: 10,
+        marginStart: 10,
         fontSize: 12,
         color: COLORS.textLight,
     },
@@ -1001,7 +1001,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
 
     // RTL Styles
@@ -1027,8 +1027,8 @@ const styles = StyleSheet.create({
         textAlign: 'right',
     },
     removeBtnRTL: {
-        marginLeft: 0,
-        marginRight: 10,
+        marginStart: 0,
+        marginEnd: 10,
     },
     addItemBtnRTL: {
         flexDirection: 'row-reverse',
@@ -1043,12 +1043,12 @@ const styles = StyleSheet.create({
         // Deduction row RTL adjustments
     },
     switchLabelRTL: {
-        marginLeft: 0,
-        marginRight: 10,
+        marginStart: 0,
+        marginEnd: 10,
     },
     deductionInputContainerRTL: {
-        marginLeft: 0,
-        marginRight: 50,
+        marginStart: 0,
+        marginEnd: 50,
         flexDirection: 'row-reverse',
     },
     summaryRowRTL: {
@@ -1061,8 +1061,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     avatarRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     // New Styles
     toggleRow: {
@@ -1090,7 +1090,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         borderLeftWidth: 2,
         borderLeftColor: COLORS.primary,
-        marginLeft: 5,
+        marginStart: 5,
     },
     inputLabel: {
         fontSize: 13,

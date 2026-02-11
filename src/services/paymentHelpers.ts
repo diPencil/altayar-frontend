@@ -31,7 +31,7 @@ export async function initiatePayment(data: PaymentInitiationData): Promise<void
         // Create payment
         const paymentRequest: CreatePaymentRequest = {
             amount: data.amount,
-            currency: data.currency || 'EGP',
+            currency: data.currency || 'USD',
             customer_first_name: data.customer_first_name,
             customer_last_name: data.customer_last_name,
             customer_email: data.customer_email,
@@ -39,7 +39,7 @@ export async function initiatePayment(data: PaymentInitiationData): Promise<void
             description: data.description,
             booking_id: data.booking_id,
             order_id: data.order_id,
-            payment_method_id: 1, // Default to Card (changed from Fawry for Fawaterk)
+            payment_method_id: 2, // Fawry (2) - often works when Card returns 422
             save_card: data.save_card,
         };
 
@@ -55,9 +55,11 @@ export async function initiatePayment(data: PaymentInitiationData): Promise<void
         });
     } catch (error: any) {
         console.error('Payment initiation error:', error);
+        const detail = error.response?.data?.detail ?? error.response?.data?.message;
+        const message = typeof detail === 'string' ? detail : (Array.isArray(detail) ? detail.join('\n') : 'فشل إنشاء عملية الدفع. يرجى المحاولة مرة أخرى.');
         Alert.alert(
             'خطأ',
-            error.response?.data?.message || 'فشل إنشاء عملية الدفع. يرجى المحاولة مرة أخرى.'
+            message || error?.message || 'فشل إنشاء عملية الدفع. يرجى المحاولة مرة أخرى.'
         );
     }
 }

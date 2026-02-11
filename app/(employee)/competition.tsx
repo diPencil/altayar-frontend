@@ -36,8 +36,8 @@ const IMAGES = {
 };
 
 const COLORS = {
-    primary: "#0891b2",
-    secondary: "#06b6d4",
+    primary: "#1071b8",
+    secondary: "#167dc1",
     success: "#10b981",
     warning: "#f59e0b",
     background: "#f1f5f9",
@@ -617,7 +617,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 16,
+        marginStart: 16,
     },
     // Summary Cards Styles
     statsRow: {
@@ -650,7 +650,7 @@ const styles = StyleSheet.create({
     statLabel: {
         fontSize: 12,
         color: COLORS.textLight,
-        marginLeft: 6,
+        marginStart: 6,
         fontWeight: '500',
     },
     statValue: {
@@ -721,7 +721,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 8,
+        marginEnd: 8,
     },
     perfTitle: {
         fontSize: 14,
@@ -742,7 +742,7 @@ const styles = StyleSheet.create({
         height: 6,
         borderRadius: 3,
         backgroundColor: '#10b981', // emerald-500
-        marginRight: 4,
+        marginEnd: 4,
     },
     perfLiveText: {
         fontSize: 10,
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: '500',
         color: COLORS.textLight,
-        marginLeft: 4,
+        marginStart: 4,
     },
     perfButton: {
         borderRadius: 8,
@@ -859,7 +859,7 @@ const styles = StyleSheet.create({
         fontSize: 10,
         fontWeight: '600',
         color: 'white',
-        marginRight: 4,
+        marginEnd: 4,
     },
 
     // Existing styles

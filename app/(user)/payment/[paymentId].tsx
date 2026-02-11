@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, Alert, Platform, Text, TouchableOpacity, Linking } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Alert, Platform, Text, TouchableOpacity, Linking, SafeAreaView, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import { useTranslation } from "react-i18next";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function PaymentScreen() {
     const params = useLocalSearchParams<{ paymentId: string; paymentUrl: string }>();
@@ -20,12 +22,12 @@ export default function PaymentScreen() {
             return;
         }
 
-        // Set timeout for slow loading
+        // Set timeout for slow loading (5 seconds warning)
         timeoutRef.current = setTimeout(() => {
             if (isLoading) {
                 setShowSlowWarning(true);
             }
-        }, 10000);
+        }, 5000);
 
         return () => {
             if (timeoutRef.current) {
@@ -36,233 +38,184 @@ export default function PaymentScreen() {
 
     const handleNavigationStateChange = (navState: any) => {
         const { url, loading } = navState;
-        console.log('Navigation URL:', url, 'Loading:', loading);
-
-        // Clear loading when navigation starts
+        
         if (!loading) {
             setIsLoading(false);
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
         }
 
-        // Check for success/fail redirects.
-        // IMPORTANT: don't match generic "success"/"fail" substrings (can false-positive).
         const u = String(url || '').toLowerCase();
         if (u.includes('/payment/success') || u.includes('://payment/success')) {
-            router.replace({
-                pathname: '/(user)/payment/success',
-                params: { paymentId }
-            });
+            router.replace({ pathname: '/(user)/payment/success', params: { paymentId } });
         } else if (u.includes('/payment/fail') || u.includes('://payment/fail')) {
-            router.replace({
-                pathname: '/(user)/payment/fail',
-                params: { paymentId }
-            });
+            router.replace({ pathname: '/(user)/payment/fail', params: { paymentId } });
         }
     };
-
-    const handleLoadEnd = () => {
-        setIsLoading(false);
-        if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
-        }
-    };
-
-    const handleOpenInBrowser = async () => {
-        try {
-            const supported = await Linking.canOpenURL(paymentUrl);
-            if (supported) {
-                await Linking.openURL(paymentUrl);
-                // Don't go back - let user complete payment in browser
-            } else {
-                Alert.alert('خطأ', 'لا يمكن فتح الرابط');
-            }
-        } catch (error) {
-            Alert.alert('خطأ', 'فشل فتح المتصفح');
-        }
-    };
-
-    if (!paymentUrl) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#007AFF" />
-            </View>
-        );
-    }
 
     return (
-        <View style={styles.container}>
-            <WebView
-                source={{ uri: paymentUrl }}
-                onNavigationStateChange={handleNavigationStateChange}
-                onLoadEnd={handleLoadEnd}
-                onLoadStart={() => setIsLoading(true)}
-                javaScriptEnabled={true}
-                domStorageEnabled={true}
-                thirdPartyCookiesEnabled={true}
-                sharedCookiesEnabled={true}
-                startInLoadingState={true}
-                scalesPageToFit={true}
-                mixedContentMode="always"
-                allowsInlineMediaPlayback={true}
-                mediaPlaybackRequiresUserAction={false}
-                onError={(syntheticEvent) => {
-                    const { nativeEvent } = syntheticEvent;
-                    console.error('WebView error:', nativeEvent);
-                    setIsLoading(false);
-                }}
-                onHttpError={(syntheticEvent) => {
-                    const { nativeEvent } = syntheticEvent;
-                    console.error('WebView HTTP error:', nativeEvent);
-                }}
-            />
+        <SafeAreaView style={styles.safeArea}>
+            <StatusBar barStyle="dark-content" backgroundColor="#fff" />
+            
+            {/* Custom Header (Since tabs are hidden) */}
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={24} color="#333" />
+                </TouchableOpacity>
+                <Text style={styles.headerTitle}>{t("payment.secureCheckout") || "Secure Checkout"}</Text>
+                <View style={{ width: 40 }} /> 
+            </View>
 
-            {isLoading && (
-                <View style={styles.loadingOverlay}>
-                    <ActivityIndicator size="large" color="#007AFF" />
-                    <Text style={styles.loadingText}>{t("payment.gatewayLoadingTitle")}</Text>
-                    <Text style={styles.loadingSubText}>{t("payment.gatewayLoadingSubtitle")}</Text>
-                </View>
-            )}
+            <View style={styles.container}>
+                <WebView
+                    source={{ uri: paymentUrl }}
+                    onNavigationStateChange={handleNavigationStateChange}
+                    onLoadEnd={() => setIsLoading(false)}
+                    onLoadStart={() => setIsLoading(true)}
+                    javaScriptEnabled={true}
+                    domStorageEnabled={true}
+                    startInLoadingState={true}
+                    renderLoading={() => (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#007AFF" />
+                            <Text style={styles.loadingText}>{t("payment.processing") || "Connecting to Gateway..."}</Text>
+                        </View>
+                    )}
+                />
 
-            {showSlowWarning && (
-                <View style={styles.warningOverlay}>
-                    <View style={styles.warningCard}>
-                        <Text style={styles.warningTitle}>{t("payment.gatewaySlowTitle")}</Text>
-                        <Text style={styles.warningText}>
-                            {t("payment.gatewaySlowSubtitle")}
-                        </Text>
-                        <TouchableOpacity
-                            style={styles.browserButton}
-                            onPress={handleOpenInBrowser}
-                        >
-                            <Text style={styles.browserButtonText}>{t("payment.openInBrowser")}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.waitButton}
-                            onPress={() => setShowSlowWarning(false)}
-                        >
-                            <Text style={styles.waitButtonText}>{t("payment.wait")}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.cancelButton}
-                            onPress={() => router.back()}
-                        >
-                            <Text style={styles.cancelButtonText}>{t("common.cancel")}</Text>
-                        </TouchableOpacity>
+                {/* Slow Connection Warning */}
+                {showSlowWarning && isLoading && (
+                    <View style={styles.warningOverlay}>
+                        <View style={styles.warningCard}>
+                            <Ionicons name="wifi" size={40} color="#ff9500" style={{ marginBottom: 10 }} />
+                            <Text style={styles.warningTitle}>{t("payment.slowConnection") || "Taking longer than usual..."}</Text>
+                            <Text style={styles.warningText}>
+                                {t("payment.slowConnectionDesc") || "The payment page is taking time to load. Please wait or try opening in browser."}
+                            </Text>
+                            
+                            <TouchableOpacity style={styles.browserButton} onPress={() => Linking.openURL(paymentUrl)}>
+                                <Text style={styles.browserButtonText}>{t("payment.openInBrowser") || "Open in Browser"}</Text>
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity style={styles.waitButton} onPress={() => setShowSlowWarning(false)}>
+                                <Text style={styles.waitButtonText}>{t("payment.keepWaiting") || "Keep Waiting"}</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={styles.cancelButton} onPress={() => router.back()}>
+                                <Text style={styles.cancelButtonText}>{t("common.cancel")}</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
-                </View>
-            )}
-        </View>
+                )}
+            </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    },
+    header: {
+        height: 56,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        backgroundColor: '#fff',
+    },
+    backButton: {
+        padding: 8,
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',
     },
     loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-    },
-    loadingOverlay: {
         position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
+        top: 0, 
+        left: 0, 
+        right: 0, 
         bottom: 0,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        padding: 20,
+        backgroundColor: '#fff',
+        zIndex: 10,
     },
     loadingText: {
-        marginTop: 16,
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
-        textAlign: 'center',
-    },
-    loadingSubText: {
-        marginTop: 8,
-        fontSize: 14,
+        marginTop: 15,
+        fontSize: 16,
         color: '#666',
-        textAlign: 'center',
     },
     warningOverlay: {
         position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.6)',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         padding: 20,
+        zIndex: 20,
     },
     warningCard: {
         backgroundColor: '#fff',
-        borderRadius: 16,
         padding: 24,
+        borderRadius: 16,
         width: '100%',
-        maxWidth: 400,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.3,
-        shadowRadius: 8,
-        elevation: 8,
+        maxWidth: 340,
+        alignItems: 'center',
+        elevation: 10,
     },
     warningTitle: {
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#ff9500',
-        marginBottom: 12,
+        marginBottom: 8,
         textAlign: 'center',
     },
     warningText: {
-        fontSize: 16,
+        fontSize: 14,
         color: '#666',
         textAlign: 'center',
-        marginBottom: 24,
-        lineHeight: 24,
+        marginBottom: 20,
     },
     browserButton: {
         backgroundColor: '#34C759',
-        paddingVertical: 14,
-        borderRadius: 12,
-        marginBottom: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        width: '100%',
+        marginBottom: 10,
     },
     browserButtonText: {
         color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
+        fontWeight: 'bold',
         textAlign: 'center',
     },
     waitButton: {
         backgroundColor: '#007AFF',
-        paddingVertical: 14,
-        borderRadius: 12,
-        marginBottom: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 8,
+        width: '100%',
+        marginBottom: 10,
     },
     waitButtonText: {
         color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
+        fontWeight: 'bold',
         textAlign: 'center',
     },
     cancelButton: {
-        backgroundColor: '#f0f0f0',
-        paddingVertical: 14,
-        borderRadius: 12,
+        paddingVertical: 10,
     },
     cancelButtonText: {
-        color: '#666',
-        fontSize: 16,
+        color: '#FF3B30',
         fontWeight: '600',
-        textAlign: 'center',
     },
 });

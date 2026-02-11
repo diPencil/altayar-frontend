@@ -11,8 +11,8 @@ import Toast from "../../src/components/Toast";
 import * as Clipboard from "expo-clipboard";
 
 const COLORS = {
-    primary: "#0891b2",
-    secondary: "#06b6d4",
+    primary: "#1071b8",
+    secondary: "#167dc1",
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#e0f2fe",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: 12,
+        marginEnd: 12,
     },
     referralContent: {
         flex: 1,

@@ -14,8 +14,8 @@ import OfferActionsMenu from '../../../src/components/OfferActionsMenu';
 import ConfirmModal from '../../../src/components/ConfirmModal';
 
 const COLORS = {
-    primary: "#0891b2",
-    secondary: "#06b6d4",
+    primary: "#1071b8",
+    secondary: "#167dc1",
     background: "#f0f9ff",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -259,7 +259,7 @@ export default function OfferDetailsScreen() {
                             </View>
                         </View>
                         {offer.discount_percentage && (
-                            <View style={[styles.discountBadge, isRTL ? { marginRight: 10, marginLeft: 0 } : { marginLeft: 10, marginRight: 0 }]}>
+                            <View style={[styles.discountBadge, isRTL ? { marginEnd: 10, marginStart: 0 } : { marginStart: 10, marginEnd: 0 }]}>
                                 <Text style={styles.discountText}>{isRTL ? `${offer.discount_percentage}% ${t('common.off', 'OFF')}` : `${offer.discount_percentage}% OFF`}</Text>
                             </View>
                         )}
@@ -281,7 +281,7 @@ export default function OfferDetailsScreen() {
                                     <View style={styles.divider} />
                                     <View style={[styles.rowContainer, isRTL && styles.rowContainerRTL]}>
                                         {offer.includes && (
-                                            <View style={[styles.halfSection, { marginRight: isRTL ? 0 : 10, marginLeft: isRTL ? 10 : 0 }]}>
+                                            <View style={[styles.halfSection, { marginEnd: isRTL ? 0 : 10, marginStart: isRTL ? 10 : 0 }]}>
                                                 <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { color: COLORS.success }]}>{t('offers.includes', 'Included')}</Text>
                                                 <View>
                                                     {(Array.isArray(offer.includes) ? offer.includes : [offer.includes]).map((item, idx) => (
@@ -294,7 +294,7 @@ export default function OfferDetailsScreen() {
                                             </View>
                                         )}
                                         {offer.excludes && (
-                                            <View style={[styles.halfSection, { marginLeft: isRTL ? 0 : 10, marginRight: isRTL ? 10 : 0 }]}>
+                                            <View style={[styles.halfSection, { marginStart: isRTL ? 0 : 10, marginEnd: isRTL ? 10 : 0 }]}>
                                                 <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { color: COLORS.error }]}>{t('offers.excludes', 'Excluded')}</Text>
                                                 <View>
                                                     {(Array.isArray(offer.excludes) ? offer.excludes : [offer.excludes]).map((item, idx) => (
@@ -525,8 +525,8 @@ const styles = StyleSheet.create({
         padding: 20,
         marginTop: -20,
         backgroundColor: COLORS.background,
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
+        borderTopStartRadius: 24,
+        borderTopEndRadius: 24,
         minHeight: 500,
     },
     headerRow: {
@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,
-        marginLeft: 10,
+        marginStart: 10,
     },
     discountText: {
         color: '#fff',
@@ -652,12 +652,12 @@ const styles = StyleSheet.create({
     durationText: {
         fontSize: 12,
         color: COLORS.textLight,
-        marginLeft: 4,
+        marginStart: 4,
         fontWeight: '500',
     },
     durationTextRTL: {
-        marginLeft: 0,
-        marginRight: 4,
+        marginStart: 0,
+        marginEnd: 4,
     },
     sectionTitle: {
         fontSize: 18,
@@ -683,7 +683,7 @@ const styles = StyleSheet.create({
     listText: {
         fontSize: 14,
         color: COLORS.text,
-        marginLeft: 8,
+        marginStart: 8,
     },
     saveCardContainer: {
         flexDirection: 'row',

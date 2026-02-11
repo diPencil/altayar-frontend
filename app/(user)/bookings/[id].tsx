@@ -19,8 +19,8 @@ import { bookingsApi, Booking, ordersApi } from "../../../src/services/api";
 import { formatCurrency } from "../../../src/utils/currency";
 
 const COLORS = {
-    primary: "#0891b2",
-    secondary: "#06b6d4",
+    primary: "#1071b8",
+    secondary: "#167dc1",
     background: "#f0f9ff",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -206,7 +206,7 @@ export default function BookingDetailsScreen() {
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{isRTL ? booking.title_ar : booking.title_en}</Text>
 
                     <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
-                        <Ionicons name="calendar-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12, marginLeft: 0 }]} />
+                        <Ionicons name="calendar-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                         <View>
                             <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.dates") || "Dates"}</Text>
                             <Text style={[styles.detailValue, isRTL && styles.textRTL]}>
@@ -216,7 +216,7 @@ export default function BookingDetailsScreen() {
                     </View>
 
                     <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
-                        <Ionicons name="people-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12, marginLeft: 0 }]} />
+                        <Ionicons name="people-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                         <View>
                             <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.guests") || "Guests"}</Text>
                             <Text style={[styles.detailValue, isRTL && styles.textRTL]}>{booking.guest_count} {t("bookings.person") || "Persons"}</Text>
@@ -225,7 +225,7 @@ export default function BookingDetailsScreen() {
 
                     {booking.booking_type && (
                         <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
-                            <Ionicons name="pricetag-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12, marginLeft: 0 }]} />
+                            <Ionicons name="pricetag-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                             <View>
                                 <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.type") || "Type"}</Text>
                                 <Text style={[styles.detailValue, isRTL && styles.textRTL]}>{booking.booking_type}</Text>
@@ -298,7 +298,7 @@ export default function BookingDetailsScreen() {
                         ) : (
                             <>
                                 <Text style={styles.payButtonText}>{t("bookings.payNow") || "Pay Now"}</Text>
-                                <Ionicons name="card-outline" size={20} color="#fff" style={{ marginLeft: 8 }} />
+                                <Ionicons name="card-outline" size={20} color="#fff" style={{ marginStart: 8 }} />
                             </>
                         )}
                     </TouchableOpacity>
@@ -373,8 +373,8 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     icon: {
-        marginRight: 12,
-        marginLeft: 0,
+        marginEnd: 12,
+        marginStart: 0,
     },
     footer: {
         backgroundColor: COLORS.white,

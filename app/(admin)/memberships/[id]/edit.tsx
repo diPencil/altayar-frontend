@@ -10,7 +10,7 @@ import { useLanguage } from "../../../../src/contexts/LanguageContext";
 import Toast from "../../../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -222,7 +222,7 @@ export default function EditMembershipPlan() {
 
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.planNameEn')}</Text>
                 <TextInput
-                    style={[styles.input, { textAlign: 'left' }]}
+                    style={[styles.input, { textAlign: 'auto' }]}
                     placeholder="e.g. Silver Membership"
                     value={tierNameEn}
                     onChangeText={setTierNameEn}
@@ -248,7 +248,7 @@ export default function EditMembershipPlan() {
 
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.descriptionEn')}</Text>
                 <TextInput
-                    style={[styles.input, styles.textArea, { textAlign: 'left' }]}
+                    style={[styles.input, styles.textArea, { textAlign: 'auto' }]}
                     placeholder="Plan benefits and details..."
                     multiline
                     numberOfLines={3}
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     backBtn: {
-        marginRight: 12,
+        marginEnd: 12,
     },
     title: {
         fontSize: 20,
@@ -505,7 +505,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 14,
         fontWeight: "600",
-        marginLeft: 8,
+        marginStart: 8,
     },
     readOnlyInput: {
         backgroundColor: '#f1f5f9',

@@ -1,17 +1,18 @@
 import { Tabs, Redirect } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { StyleSheet, Platform, ActivityIndicator, View, Text, TouchableOpacity, Dimensions, Animated, Easing } from "react-native";
+import { StyleSheet, Platform, ActivityIndicator, View, Text, TouchableOpacity, Dimensions, Animated, Easing, I18nManager } from "react-native";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
 import { useEffect, useRef, useState } from "react";
 import { MembershipRequiredModal } from "../../src/components/MembershipRequiredModal";
 import { onMembershipRequired } from "../../src/utils/membershipGate";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   primaryDark: "#0e7490",
   background: "#f0f9ff",
   white: "#ffffff",
@@ -22,6 +23,7 @@ const COLORS = {
 // Custom Tab Bar Component
 function CustomTabBar({ state, descriptors, navigation }: any) {
   const { isRTL } = useLanguage();
+  const insets = useSafeAreaInsets();
   const totalTabs = state.routes.length;
   // Filter out hidden tabs (href: null)
   // We use an explicit allow-list to ensure only the main 5 tabs are shown and avoid layout bugs
@@ -59,21 +61,26 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
     'club-gifts': 'profile',
     'club-gifts-history': 'profile',
     'refer': 'profile',
-    'bookings': 'profile', // Bookings list
-    'bookings/[id]': 'profile', // Booking details
+    'bookings': 'profile',
+    'bookings/[id]': 'profile',
     'offer/[id]': 'offers',
     'offer-checkout': 'offers',
     'for-you': 'offers',
     'profile-view': 'profile',
-    'favorites': 'profile', // Favorites is a sub-screen of profile
+    'favorites': 'profile',
     'notifications': 'profile',
     'payment-methods': 'profile',
     'add-card': 'profile',
-    'member-card': 'profile', // Member card is a sub-screen of profile
+    'member-card': 'profile',
     'payment/[paymentId]': 'index',
     'payment/success': 'index',
     'payment/fail': 'index',
     'tier-feed': 'index',
+    'wallet.tsx': 'profile',
+    'points.tsx': 'profile',
+    'bookings.tsx': 'profile',
+    'offers.tsx': 'offers',
+    'invoices.tsx': 'profile',
   };
 
   useEffect(() => {
@@ -84,8 +91,12 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
     const activeIndex = visibleRoutes.findIndex((r: any) => r.name === parentTabName);
 
     if (activeIndex !== -1) {
+      // With Native RTL enabled, we don't need to manually invert the index
+      // The layout engine handles the positioning from Start -> End
+      // However, check if I18nManager.isRTL is actually active. LanguageContext ensures it.
+      // If Native RTL is active, index 0 is at Start (Right).
       Animated.timing(animatedValue, {
-        toValue: isRTL ? (visibleRoutes.length - 1 - activeIndex) : activeIndex,
+        toValue: activeIndex, // Removed manual inversion: isRTL ? (visibleRoutes.length - 1 - activeIndex) : activeIndex
         duration: 400,
         easing: Easing.bezier(0.4, 0, 0.2, 1), // Premium fluid easing
         useNativeDriver: true,
@@ -99,7 +110,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
   });
 
   return (
-    <View style={styles.tabBarContainer}>
+    <View style={[styles.tabBarContainer, { bottom: 8 + (insets?.bottom || 0) }]}>
       {/* Background Bar */}
       <View style={styles.tabBarBackground} />
 
@@ -134,7 +145,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
             const activeRouteName = currentRoute.name;
             const parentTabName = SUB_SCREEN_MAP[activeRouteName] || activeRouteName;
             const parentRoute = visibleRoutes.find((r: any) => r.name === parentTabName);
-            if (parentRoute && descriptors[parentRoute.key]) {
+            if (parentRoute && descriptors[parentRoute.key] && descriptors[parentRoute.key].options.tabBarIcon && typeof descriptors[parentRoute.key].options.tabBarIcon === 'function') {
               return descriptors[parentRoute.key].options.tabBarIcon({
                 focused: true,
                 color: COLORS.white,
@@ -147,7 +158,8 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
       </Animated.View>
 
       {/* Tab Items */}
-      <View style={[styles.tabsRow, isRTL && styles.tabsRowRTL]}>
+      <View style={[styles.tabsRow]}>
+        {/* Removed styles.tabsRowRTL to let Native RTL handle direction */}
         {visibleRoutes.map((route: any, index: number) => {
           const { options } = descriptors[route.key];
           const currentRoute = state.routes[state.index];
@@ -178,7 +190,7 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
               activeOpacity={1}
             >
               <View style={styles.iconWrapper}>
-                {!isFocused && options.tabBarIcon && options.tabBarIcon({
+                {!isFocused && options.tabBarIcon && typeof options.tabBarIcon === 'function' && options.tabBarIcon({
                   focused: isFocused,
                   color: COLORS.gray,
                   size: 24
@@ -209,7 +221,9 @@ export default function UserLayout() {
       setMembershipModalSource(source);
       setMembershipModalVisible(true);
     });
-    return unsub;
+    return () => {
+      unsub();
+    };
   }, []);
 
   if (isLoading) {
@@ -517,7 +531,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 20,
     elevation: 10,
-    zIndex: 1,
+    zIndex: 0, // Changed from 1 to 0 to ensure it stays below tab buttons
+    pointerEvents: 'none', // Prevent blocking touch events on tab buttons
   },
   tabsRow: {
     flexDirection: 'row',

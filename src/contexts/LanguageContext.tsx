@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { loadSavedLanguage, changeLanguage as i18nChangeLanguage } from '../i18n';
 import i18n from '../i18n';
 import { COLORS } from '../utils/theme';
+import * as Updates from 'expo-updates';
 
 type Language = 'en' | 'ar';
 
@@ -68,12 +69,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       setLanguage(lang);
       setIsRTL(lang === 'ar');
 
-      // Force RTL layout if Arabic
-      if (Platform.OS !== 'web' && I18nManager.isRTL !== (lang === 'ar')) {
-        I18nManager.allowRTL(true);
-        I18nManager.forceRTL(lang === 'ar');
-        setRestartRequired(true);
-      }
+      // RTL is already initialized in i18n/index.ts at app startup
+      // We only need to set the state here
+      console.log('LanguageContext initialized with:', { lang, isRTL: lang === 'ar', nativeRTL: I18nManager.isRTL });
     } catch (error) {
       console.log('Error initializing language:', error);
       // Set defaults
@@ -85,14 +83,27 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const requestRestart = async () => {
-    // In dev we can reload; in production we show the prompt and let the user relaunch.
+    // Use expo-updates for production reload, DevSettings for dev
+    try {
+      // Try expo-updates first (works in production and preview builds)
+      if (Platform.OS !== 'web' && Updates.reloadAsync) {
+        console.log('🔄 Attempting Updates.reloadAsync()...');
+        await Updates.reloadAsync();
+        return;
+      }
+    } catch (error) {
+      console.log('expo-updates reload failed:', error);
+    }
+
+    // Fallback to DevSettings in development
     try {
       if (Platform.OS !== 'web' && DevSettings?.reload) {
+        console.log('🔄 Attempting DevSettings.reload()...');
         DevSettings.reload();
         return;
       }
-    } catch {
-      // ignore
+    } catch (error) {
+      console.log('DevSettings reload failed:', error);
     }
   };
 
@@ -101,17 +112,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       console.log('🔄 LanguageContext - Changing language to:', lang);
       await i18nChangeLanguage(lang);
       setLanguage(lang);
-      setIsRTL(lang === 'ar');
-      console.log('✅ LanguageContext - Language changed:', { lang, isRTL: lang === 'ar' });
 
-      // Update RTL layout
-      if (Platform.OS !== 'web' && I18nManager.isRTL !== (lang === 'ar')) {
-        I18nManager.allowRTL(true);
-        I18nManager.forceRTL(lang === 'ar');
-        setRestartRequired(true);
+      const newIsRTL = lang === 'ar';
+      setIsRTL(newIsRTL);
+      console.log('✅ LanguageContext - Language changed:', { lang, isRTL: newIsRTL });
 
-        // Try automatic reload in dev for correct RTL/LTR layout.
-        await requestRestart();
+      if (newIsRTL !== I18nManager.isRTL) {
+        I18nManager.allowRTL(newIsRTL);
+        I18nManager.forceRTL(newIsRTL);
+        // Immediately trigger reload for better UX
+        setTimeout(() => requestRestart(), 500);
       }
     } catch (error) {
       console.log('Error changing language:', error);
@@ -135,7 +145,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   if (restartRequired) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: COLORS.backgroundLight }}>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: COLORS.textPrimary, textAlign: 'center' }}>
+        <Text style={{ fontSize: 18, fontWeight: '800', color: COLORS.text, textAlign: 'center' }}>
           {t('common.restartRequiredTitle')}
         </Text>
         <Text style={{ marginTop: 10, fontSize: 14, color: COLORS.textSecondary, textAlign: 'center', lineHeight: 20 }}>

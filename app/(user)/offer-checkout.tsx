@@ -12,7 +12,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { MembershipRequiredModal } from "../../src/components/MembershipRequiredModal";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",

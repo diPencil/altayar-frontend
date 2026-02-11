@@ -622,7 +622,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginRight: 12,
+        marginEnd: 12,
         overflow: 'hidden',
     },
     userAvatarPlaceholder: {
@@ -632,7 +632,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.border,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     userSummaryInfo: {
         flex: 1,
@@ -884,12 +884,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     userAvatarRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     userAvatarPlaceholderRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     actionTypeContainerRTL: {
         flexDirection: 'row-reverse',

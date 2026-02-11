@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import Toast from "../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2", // Employee theme
+    primary: "#1071b8", // Employee theme
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -29,10 +29,16 @@ export default function EmployeeSettings() {
 
     // Toast state
     const [toast, setToast] = useState({ visible: false, message: '', type: 'success' as 'success' | 'error' | 'info' });
+    const [avatarError, setAvatarError] = useState(false);
 
     const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
         setToast({ visible: true, message, type });
     };
+
+    // Reset avatar error when user avatar changes
+    useEffect(() => {
+        setAvatarError(false);
+    }, [user?.avatar]);
 
     return (
         <ScrollView style={styles.container}>
@@ -40,8 +46,15 @@ export default function EmployeeSettings() {
 
             <View style={styles.profileSection}>
                 <View style={styles.avatar}>
-                    {user?.avatar ? (
-                        <Image source={{ uri: user.avatar }} style={{ width: 80, height: 80, borderRadius: 40 }} />
+                    {user?.avatar && !avatarError ? (
+                        <Image
+                            source={{ uri: user.avatar }}
+                            style={{ width: 80, height: 80, borderRadius: 40 }}
+                            onError={() => {
+                                console.log('Avatar load failed, showing initials');
+                                setAvatarError(true);
+                            }}
+                        />
                     ) : (
                         <Text style={styles.avatarText}>{user?.first_name?.[0]}</Text>
                     )}
@@ -424,7 +437,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
         color: COLORS.textLight,
-        marginLeft: 20,
+        marginStart: 20,
         marginBottom: 10,
         marginTop: 10,
     },
@@ -477,7 +490,7 @@ const styles = StyleSheet.create({
     // RTL Styles
     textRTL: {
         textAlign: 'right',
-        marginRight: 20,
+        marginEnd: 20,
     },
     settingRowRTL: {
         flexDirection: 'row-reverse',

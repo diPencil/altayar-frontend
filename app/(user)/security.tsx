@@ -19,7 +19,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { api } from "../../src/services/api";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -314,8 +314,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: COLORS.text,
-    marginLeft: 12,
+    marginStart: 12,
   },
   form: {
     backgroundColor: COLORS.white,
@@ -424,11 +424,11 @@ const styles = StyleSheet.create({
   requirementText: {
     fontSize: 13,
     color: COLORS.textLight,
-    marginLeft: 8,
+    marginStart: 8,
   },
   requirementTextRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   requirementMet: {
     color: COLORS.success,

@@ -10,7 +10,7 @@ import { useLanguage } from "../../../src/contexts/LanguageContext";
 import Toast from "../../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -88,7 +88,7 @@ export default function CreateMembershipPlan() {
                     points: parseInt(points) || 0,
                 },
                 is_active: isActive,
-                color_hex: "#0891b2" // Default color
+                color_hex: "#1071b8" // Default color
             };
 
             await adminApi.createMembershipPlan(payload);
@@ -120,7 +120,7 @@ export default function CreateMembershipPlan() {
 
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.planNameEn')}</Text>
                     <TextInput
-                        style={[styles.input, { textAlign: 'left' }]}
+                        style={[styles.input, { textAlign: 'auto' }]}
                         placeholder="e.g. Silver Membership"
                         value={tierNameEn}
                         onChangeText={setTierNameEn}
@@ -146,7 +146,7 @@ export default function CreateMembershipPlan() {
 
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.descriptionEn')}</Text>
                     <TextInput
-                        style={[styles.input, styles.textArea, { textAlign: 'left' }]}
+                        style={[styles.input, styles.textArea, { textAlign: 'auto' }]}
                         placeholder="Plan benefits and details..."
                         multiline
                         numberOfLines={3}
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     backBtn: {
-        marginRight: 12,
+        marginEnd: 12,
     },
     title: {
         fontSize: 20,

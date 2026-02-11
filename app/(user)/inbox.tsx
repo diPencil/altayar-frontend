@@ -23,7 +23,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "../../src/components/Toast";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -503,7 +503,11 @@ export default function ChatScreen() {
         </>
       ) : (
         // ===== INDIVIDUAL CHAT SCREEN =====
-        <>
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+        >
           {/* Chat Header */}
           <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
             <TouchableOpacity
@@ -539,8 +543,9 @@ export default function ChatScreen() {
           <ScrollView
             ref={scrollRef}
             style={styles.messagesContainer}
-            contentContainerStyle={[styles.messagesContent, { paddingBottom: 100 }]}
+            contentContainerStyle={[styles.messagesContent, { paddingBottom: 20 }]}
             showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
           >
             {/* Waiting for Agent Indicator */}
             {conversationState === "waiting_agent" && (
@@ -635,73 +640,67 @@ export default function ChatScreen() {
           </ScrollView>
 
           {/* Input */}
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-            keyboardVerticalOffset={90}
-          >
-            <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
-              <TouchableOpacity
-                style={styles.emojiBtn}
-                onPress={() => setShowEmojiPicker(!showEmojiPicker)}
-                disabled={isInputDisabled}
-              >
+          <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL, { paddingBottom: insets.bottom || 8 }]}>
+            <TouchableOpacity
+              style={styles.emojiBtn}
+              onPress={() => setShowEmojiPicker(!showEmojiPicker)}
+              disabled={isInputDisabled}
+            >
+              <Ionicons
+                name={showEmojiPicker ? "close-circle" : "happy-outline"}
+                size={28}
+                color={isInputDisabled ? COLORS.lightGray : COLORS.primary}
+              />
+            </TouchableOpacity>
+            <TextInput
+              style={[
+                styles.input,
+                isRTL && styles.inputRTL,
+                isInputDisabled && styles.disabledInput
+              ]}
+              placeholder={
+                isInputDisabled
+                  ? t('chat.waitingForReply')
+                  : t('chat.typeMessage')
+              }
+              placeholderTextColor={isInputDisabled ? COLORS.lightGray : COLORS.textLight}
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              textAlign={isRTL ? "right" : "left"}
+              editable={!isInputDisabled && !isSending}
+            />
+            <TouchableOpacity
+              style={[
+                styles.sendBtn,
+                (!message.trim() || isInputDisabled || isSending) && styles.sendBtnDisabled
+              ]}
+              onPress={sendMessage}
+              disabled={!message.trim() || isInputDisabled || isSending}
+            >
+              {isSending ? (
+                <ActivityIndicator size="small" color={COLORS.white} />
+              ) : (
                 <Ionicons
-                  name={showEmojiPicker ? "close-circle" : "happy-outline"}
-                  size={28}
-                  color={isInputDisabled ? COLORS.lightGray : COLORS.primary}
+                  name={isRTL ? "arrow-back" : "arrow-forward"}
+                  size={20}
+                  color={COLORS.white}
                 />
-              </TouchableOpacity>
-              <TextInput
-                style={[
-                  styles.input,
-                  isRTL && styles.inputRTL,
-                  isInputDisabled && styles.disabledInput
-                ]}
-                placeholder={
-                  isInputDisabled
-                    ? t('chat.waitingForReply')
-                    : t('chat.typeMessage')
-                }
-                placeholderTextColor={isInputDisabled ? COLORS.lightGray : COLORS.textLight}
-                value={message}
-                onChangeText={setMessage}
-                multiline
-                textAlign={isRTL ? "right" : "left"}
-                editable={!isInputDisabled && !isSending}
-              />
-              <TouchableOpacity
-                style={[
-                  styles.sendBtn,
-                  (!message.trim() || isInputDisabled || isSending) && styles.sendBtnDisabled
-                ]}
-                onPress={sendMessage}
-                disabled={!message.trim() || isInputDisabled || isSending}
-              >
-                {isSending ? (
-                  <ActivityIndicator size="small" color={COLORS.white} />
-                ) : (
-                  <Ionicons
-                    name={isRTL ? "arrow-back" : "arrow-forward"}
-                    size={20}
-                    color={COLORS.white}
-                  />
-                )}
-              </TouchableOpacity>
-            </View>
+              )}
+            </TouchableOpacity>
+          </View>
 
-            {/* Emoji Picker */}
-            {showEmojiPicker && (
-              <EmojiPicker
-                visible={showEmojiPicker}
-                onEmojiSelect={(emoji) => {
-                  setMessage(prev => prev + emoji);
-                }}
-                onClose={() => setShowEmojiPicker(false)}
-              />
-            )}
-          </KeyboardAvoidingView>
-          <View style={{ height: 80, backgroundColor: COLORS.white }} />
-        </>
+          {/* Emoji Picker */}
+          {showEmojiPicker && (
+            <EmojiPicker
+              visible={showEmojiPicker}
+              onEmojiSelect={(emoji) => {
+                setMessage(prev => prev + emoji);
+              }}
+              onClose={() => setShowEmojiPicker(false)}
+            />
+          )}
+        </KeyboardAvoidingView>
       )}
       <Toast
         visible={toast.visible}
@@ -725,8 +724,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -752,7 +751,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0f2fe",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginEnd: 12,
   },
   headerTitle: {
     fontSize: 17,
@@ -774,7 +773,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginRight: 6,
+    marginEnd: 6,
   },
   statusText: {
     fontSize: 12,
@@ -782,7 +781,7 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     padding: 4,
-    marginRight: 12,
+    marginEnd: 12,
   },
   newChatBtn: {
     flexDirection: "row",
@@ -844,7 +843,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: "600",
-    marginLeft: 8,
+    marginStart: 8,
   },
   conversationsList: {
     flex: 1,
@@ -865,7 +864,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0f2fe",
     alignItems: "center",
     justifyContent: "center",
-    marginRight: 12,
+    marginEnd: 12,
   },
   conversationContent: {
     flex: 1,
@@ -904,7 +903,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 6,
-    marginLeft: 8,
+    marginStart: 8,
   },
   unreadBadgeText: {
     color: COLORS.white,
@@ -919,7 +918,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    marginRight: 6,
+    marginEnd: 6,
   },
   statusLabel: {
     fontSize: 12,
@@ -989,22 +988,22 @@ const styles = StyleSheet.create({
   userMessage: {
     backgroundColor: COLORS.primary,
     alignSelf: "flex-end",
-    borderBottomRightRadius: 4,
+    borderBottomEndRadius: 4,
   },
   userMessageRTL: {
     alignSelf: "flex-start",
-    borderBottomRightRadius: 16,
-    borderBottomLeftRadius: 4,
+    borderBottomEndRadius: 16,
+    borderBottomStartRadius: 4,
   },
   supportMessage: {
     backgroundColor: COLORS.white,
     alignSelf: "flex-start",
-    borderBottomLeftRadius: 4,
+    borderBottomStartRadius: 4,
   },
   supportMessageRTL: {
     alignSelf: "flex-end",
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 4,
+    borderBottomStartRadius: 16,
+    borderBottomEndRadius: 4,
   },
   senderName: {
     fontSize: 12,
@@ -1053,7 +1052,7 @@ const styles = StyleSheet.create({
   },
   emojiBtn: {
     padding: 4,
-    marginRight: 8,
+    marginEnd: 8,
     marginBottom: 4,
   },
   input: {

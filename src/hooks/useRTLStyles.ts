@@ -10,23 +10,23 @@ const flipStyle = (style: Style): Style => {
   const flipped: any = { ...style };
   
   // Flip margins
-  if ('marginLeft' in style) {
-    flipped.marginRight = style.marginLeft;
-    delete flipped.marginLeft;
+  if ('marginStart' in style) {
+    flipped.marginEnd = style.marginStart;
+    delete flipped.marginStart;
   }
-  if ('marginRight' in style) {
-    flipped.marginLeft = style.marginRight;
-    delete flipped.marginRight;
+  if ('marginEnd' in style) {
+    flipped.marginStart = style.marginEnd;
+    delete flipped.marginEnd;
   }
   
   // Flip paddings
-  if ('paddingLeft' in style) {
-    flipped.paddingRight = style.paddingLeft;
-    delete flipped.paddingLeft;
+  if ('paddingStart' in style) {
+    flipped.paddingEnd = style.paddingStart;
+    delete flipped.paddingStart;
   }
-  if ('paddingRight' in style) {
-    flipped.paddingLeft = style.paddingRight;
-    delete flipped.paddingRight;
+  if ('paddingEnd' in style) {
+    flipped.paddingStart = style.paddingEnd;
+    delete flipped.paddingEnd;
   }
   
   // Flip absolute positions
@@ -75,21 +75,21 @@ export function useRTLStyles<T extends StyleRecord>(styles: T): T {
 // Simple RTL-aware style helper
 export const rtlStyle = (isRTL: boolean) => ({
   row: {
-    flexDirection: isRTL ? 'row-reverse' : 'row',
+    flexDirection: 'row',
   } as ViewStyle,
   textAlign: {
     textAlign: isRTL ? 'right' : 'left',
   } as TextStyle,
   marginStart: (value: number) => ({
-    [isRTL ? 'marginRight' : 'marginLeft']: value,
+    [isRTL ? 'marginEnd' : 'marginStart']: value,
   }) as ViewStyle,
   marginEnd: (value: number) => ({
-    [isRTL ? 'marginLeft' : 'marginRight']: value,
+    [isRTL ? 'marginStart' : 'marginEnd']: value,
   }) as ViewStyle,
   paddingStart: (value: number) => ({
-    [isRTL ? 'paddingRight' : 'paddingLeft']: value,
+    [isRTL ? 'paddingEnd' : 'paddingStart']: value,
   }) as ViewStyle,
   paddingEnd: (value: number) => ({
-    [isRTL ? 'paddingLeft' : 'paddingRight']: value,
+    [isRTL ? 'paddingStart' : 'paddingEnd']: value,
   }) as ViewStyle,
 });

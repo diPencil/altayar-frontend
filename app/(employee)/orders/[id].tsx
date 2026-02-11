@@ -7,7 +7,7 @@ import { useLanguage } from '../../../src/contexts/LanguageContext';
 import { Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
-    primary: "#0891b2", // Employee theme
+    primary: "#1071b8", // Employee theme
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",

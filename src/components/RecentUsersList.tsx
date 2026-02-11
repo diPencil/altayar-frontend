@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     userCard: {
         alignItems: 'center',
         width: 80,
-        marginRight: 8,
+        marginEnd: 8,
     },
     avatar: {
         width: 48,

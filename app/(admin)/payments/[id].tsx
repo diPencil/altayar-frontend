@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../../src/contexts/LanguageContext";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
     statusText: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginLeft: 12,
+        marginStart: 12,
     },
     amountSection: {
         alignItems: 'center',
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: COLORS.primary,
         fontWeight: '600',
-        marginRight: 8,
+        marginEnd: 8,
     },
     descriptionText: {
         fontSize: 14,

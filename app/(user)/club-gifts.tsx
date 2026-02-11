@@ -19,7 +19,7 @@ import { useAuth } from "../../src/contexts/AuthContext";
 import { cashbackApi, walletApi } from "../../src/services/api";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -260,8 +260,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -371,11 +371,11 @@ const styles = StyleSheet.create({
   },
   recordInfo: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
   },
   recordInfoRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: "flex-end",
   },
   recordDesc: {

@@ -848,14 +848,14 @@ const styles = StyleSheet.create({
         // RTL specific styles if needed
     },
     replyCard: {
-        marginLeft: 32,
+        marginStart: 32,
         backgroundColor: '#fff',
         borderLeftWidth: 3,
         borderLeftColor: '#007AFF',
     },
     replyCardRTL: {
-        marginLeft: 0,
-        marginRight: 32,
+        marginStart: 0,
+        marginEnd: 32,
         borderLeftWidth: 0,
         borderRightWidth: 3,
         borderRightColor: '#007AFF',

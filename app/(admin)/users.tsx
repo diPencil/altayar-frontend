@@ -220,13 +220,13 @@ export default function UsersManagement() {
                     <Text style={styles.avatarText}>{u.first_name?.[0]}{u.last_name?.[0]}</Text>
                   )}
                 </View>
-                <View style={{ flex: 1, [isRTL ? 'marginRight' : 'marginLeft']: 12 }}>
-                  <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ flex: 1, [isRTL ? 'marginEnd' : 'marginStart']: 12 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Text style={styles.userName} numberOfLines={1}>{u.first_name} {u.last_name}</Text>
                     <StatusDot status={u.status} />
                   </View>
                   <Text style={[styles.userEmail, isRTL && styles.textRTL]}>{u.email}</Text>
-                  <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginTop: 4, gap: 8 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 8 }}>
                     {u.plan ? (
                       <PlanBadge
                         code={u.plan.code || u.plan.tier_code}
@@ -665,7 +665,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                 <View style={{ marginTop: 12 }}>
                   {data.assigned_employee && data.assigned_employee.id && data.assigned_employee.name ? (
                     <View style={{ backgroundColor: '#f8fafc', padding: 12, borderRadius: 8 }}>
-                      <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 12 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
                         <View style={[styles.avatar, { width: 40, height: 40, borderRadius: 20 }]}>
                           <Text style={styles.avatarText}>{data.assigned_employee.name?.[0]?.toUpperCase() || 'E'}</Text>
                         </View>
@@ -678,7 +678,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                         </View>
                       </View>
 
-                      <View style={[styles.actionButtons, isRTL && styles.actionButtonsRTL, { flexDirection: isRTL ? 'row-reverse' : 'row', gap: 8, marginTop: 12, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }]}>
+                      <View style={[styles.actionButtons, isRTL && styles.actionButtonsRTL, { flexDirection: 'row', gap: 8, marginTop: 12, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }]}>
                         <TouchableOpacity
                           style={[styles.changeButton, { flex: 1, backgroundColor: 'white', borderWidth: 1, borderColor: COLORS.border, paddingVertical: 8, borderRadius: 6, alignItems: 'center' }]}
                           onPress={() => setShowAssignModal(true)}
@@ -701,7 +701,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                             paddingVertical: 10,
                             borderRadius: 6,
                             marginTop: 12,
-                            flexDirection: isRTL ? 'row-reverse' : 'row',
+                            flexDirection: 'row',
                             alignItems: 'center',
                             justifyContent: 'center',
                             gap: 8,
@@ -732,10 +732,10 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                         {t('admin.manageUsers.noEmployeeAssigned', 'No employee assigned to this customer.')}
                       </Text>
                       <TouchableOpacity
-                        style={[styles.assignButton, { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', backgroundColor: COLORS.primary, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6 }]}
+                        style={[styles.assignButton, { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.primary, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 6 }]}
                         onPress={() => setShowAssignModal(true)}
                       >
-                        <Ionicons name="person-add" size={16} color="white" style={isRTL ? { marginLeft: 8 } : { marginRight: 8 }} />
+                        <Ionicons name="person-add" size={16} color="white" style={isRTL ? { marginStart: 8 } : { marginEnd: 8 }} />
                         <Text style={{ color: 'white', fontWeight: 'bold' }}>{t('admin.manageUsers.assign', 'Assign Employee')}</Text>
                       </TouchableOpacity>
                     </View>
@@ -749,7 +749,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               {/* Row 1: Membership & Wallet */}
               <View style={[styles.grid, isRTL && styles.gridRTL]}>
                 {/* Membership */}
-                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginLeft: 8 } : { marginRight: 8 }]}>
+                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginStart: 8 } : { marginEnd: 8 }]}>
                   <Ionicons name="card-outline" size={24} color={COLORS.purple} />
                   <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.membership', 'Membership')}</Text>
                   {data.membership ? (
@@ -797,7 +797,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                 </View>
 
                 {/* Wallet */}
-                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginRight: 8 } : { marginLeft: 8 }]}>
+                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginEnd: 8 } : { marginStart: 8 }]}>
                   <Ionicons name="wallet-outline" size={24} color={COLORS.success} />
                   <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.walletBalance', 'Wallet Balance')}</Text>
                   <Text style={[styles.highlightValue, { color: COLORS.success }]}>
@@ -810,7 +810,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               {/* Row 2: Cashback & Points */}
               <View style={[styles.grid, isRTL && styles.gridRTL]}>
                 {/* Cashback */}
-                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginLeft: 8 } : { marginRight: 8 }]}>
+                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginStart: 8 } : { marginEnd: 8 }]}>
                   <Ionicons name="gift-outline" size={24} color="#0ea5e9" />
                   <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.cashbackBalance', 'Club Gifts Balance')}</Text>
                   <Text style={[styles.highlightValue, { color: "#0ea5e9" }]}>
@@ -820,7 +820,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                 </View>
 
                 {/* Points */}
-                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginRight: 8 } : { marginLeft: 8 }]}>
+                <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginEnd: 8 } : { marginStart: 8 }]}>
                   <Ionicons name="star-outline" size={24} color={COLORS.warning} />
                   <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.loyaltyPoints', 'Loyalty Points')}</Text>
                   <Text style={[styles.highlightValue, { color: COLORS.warning }]}>
@@ -857,7 +857,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               {competitionStats !== null && data?.user && (data.user.role === 'EMPLOYEE' || data.user.role === 'ADMIN' || data.user.role === 'SUPER_ADMIN') && (
                 <View style={[styles.grid, isRTL && styles.gridRTL, { marginTop: 12 }]}>
                   <View style={[styles.miniCard, { flex: 1, flexDirection: 'column', alignItems: 'flex-start' }]}>
-                    <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                       <Ionicons name="trophy-outline" size={24} color={COLORS.warning} />
                       <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.competition', 'Competition (Cards sold)')}</Text>
                     </View>
@@ -867,7 +867,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                         const color = safePlanColor(tier.tier_code);
                         return (
                           <View key={tier.plan_id} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: `${color}15`, paddingHorizontal: 10, paddingVertical: 6, borderRadius: 8 }}>
-                            <Text style={[styles.miniCardSub, { fontSize: 11, color, fontWeight: '600', marginRight: 4 }]} numberOfLines={1}>{name}</Text>
+                            <Text style={[styles.miniCardSub, { fontSize: 11, color, fontWeight: '600', marginEnd: 4 }]} numberOfLines={1}>{name}</Text>
                             <Text style={{ fontSize: 14, fontWeight: '700', color }}>{tier.count ?? 0}</Text>
                           </View>
                         );
@@ -1084,8 +1084,8 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
         </View>
 
         <View style={styles.modalBody}>
-          <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL, { marginBottom: 16, flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
-            <Ionicons name="search" size={20} color={COLORS.textLight} style={isRTL ? { marginLeft: 8 } : { marginRight: 8 }} />
+          <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL, { marginBottom: 16, flexDirection: 'row' }]}>
+            <Ionicons name="search" size={20} color={COLORS.textLight} style={isRTL ? { marginStart: 8 } : { marginEnd: 8 }} />
             <TextInput
               style={[styles.searchInput, isRTL && styles.searchInputRTL]}
               placeholder={t('admin.manageUsers.searchEmployee', 'Search employee by name or email')}
@@ -1102,7 +1102,7 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
               {currentEmployeeId && (
                 <TouchableOpacity
-                  style={[styles.employeeItem, isRTL && styles.employeeItemRTL, { borderColor: COLORS.error, borderStyle: 'dashed', flexDirection: isRTL ? 'row-reverse' : 'row' }]}
+                  style={[styles.employeeItem, isRTL && styles.employeeItemRTL, { borderColor: COLORS.error, borderStyle: 'dashed', flexDirection: 'row' }]}
                   onPress={() => handleSelect(null)}
                   disabled={assigning}
                 >
@@ -1191,7 +1191,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
-    marginLeft: 8,
+    marginStart: 8,
   },
   // Filter Bar
   filterBar: {
@@ -1213,7 +1213,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    marginLeft: 8,
+    marginStart: 8,
     fontSize: 14,
     color: COLORS.text,
   },
@@ -1256,7 +1256,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   statValue: {
     fontSize: 20,
@@ -1331,7 +1331,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
     color: COLORS.text,
-    marginRight: 4,
+    marginEnd: 4,
   },
   // Filter Modal
   modalOverlay: {
@@ -1341,8 +1341,8 @@ const styles = StyleSheet.create({
   },
   filterModalContent: {
     backgroundColor: 'white',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
     padding: 24,
   },
   filterModalContentRTL: {

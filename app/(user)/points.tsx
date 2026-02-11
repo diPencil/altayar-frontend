@@ -131,7 +131,7 @@ export default function PointsPage() {
             style={styles.mainCard}
           >
             <View style={styles.tierBadge}>
-              <Ionicons name="diamond" size={16} color="#fff" style={{ marginRight: 4 }} />
+              <Ionicons name="diamond" size={16} color="#fff" style={{ marginEnd: 4 }} />
               <Text style={styles.tierText}>
                 {tier ? (`${t(`membershipTiers.${tier.toLowerCase().replace(' membership', '').replace(' plan', '').trim()}.name`, tier)} ${t('common.membership', 'Membership')}`).toUpperCase() : ''}
               </Text>
@@ -209,8 +209,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,

@@ -8,7 +8,7 @@ import { useLanguage } from "../../../src/contexts/LanguageContext";
 import { useRTLStyles } from "../../../src/hooks/useRTLStyles";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",

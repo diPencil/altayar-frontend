@@ -155,28 +155,28 @@ export default function ManageMembers() {
             <View style={[styles.statsRow, isRTL && styles.rowReverse]}>
                 <View style={[styles.miniStat, { backgroundColor: '#eff6ff' }, isRTL && styles.rowReverse]}>
                     <Ionicons name="checkmark-circle" size={20} color="#3b82f6" />
-                    <View style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                    <View style={{ marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                         <Text style={[styles.miniStatValue, isRTL && { textAlign: 'right' }]}>{members.filter(m => m.status === 'ACTIVE').length}</Text>
                         <Text style={[styles.miniStatLabel, isRTL && { textAlign: 'right' }]}>{t('common.statuses.active', 'Active')}</Text>
                     </View>
                 </View>
                 <View style={[styles.miniStat, { backgroundColor: '#fef3c7' }, isRTL && styles.rowReverse]}>
                     <Ionicons name="time" size={20} color="#f59e0b" />
-                    <View style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                    <View style={{ marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                         <Text style={[styles.miniStatValue, isRTL && { textAlign: 'right' }]}>{members.filter(m => m.status === 'PENDING').length}</Text>
                         <Text style={[styles.miniStatLabel, isRTL && { textAlign: 'right' }]}>{t('common.statuses.pending', 'Pending')}</Text>
                     </View>
                 </View>
                 <View style={[styles.miniStat, { backgroundColor: '#fff1f2' }, isRTL && styles.rowReverse]}>
                     <Ionicons name="close-circle" size={20} color="#ef4444" />
-                    <View style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                    <View style={{ marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                         <Text style={[styles.miniStatValue, isRTL && { textAlign: 'right' }]}>{members.filter(m => m.status === 'CANCELLED').length}</Text>
                         <Text style={[styles.miniStatLabel, isRTL && { textAlign: 'right' }]}>{t('common.statuses.cancelled', 'Cancelled')}</Text>
                     </View>
                 </View>
                 <View style={[styles.miniStat, { backgroundColor: '#f3f4f6' }, isRTL && styles.rowReverse]}>
                     <Ionicons name="alert-circle" size={20} color="#6b7280" />
-                    <View style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                    <View style={{ marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                         <Text style={[styles.miniStatValue, isRTL && { textAlign: 'right' }]}>{members.filter(m => m.status === 'EXPIRED').length}</Text>
                         <Text style={[styles.miniStatLabel, isRTL && { textAlign: 'right' }]}>{t('common.statuses.expired', 'Expired')}</Text>
                     </View>
@@ -212,7 +212,7 @@ export default function ManageMembers() {
                         <View style={[styles.searchInputContainer, isRTL && styles.rowReverse, { flex: 1, flexShrink: 1 }]}>
                             <Ionicons name="search" size={18} color={COLORS.textLight} />
                             <TextInput
-                                style={[styles.searchInput, isRTL && { textAlign: 'right', marginRight: 8, marginLeft: 0 }]}
+                                style={[styles.searchInput, isRTL && { textAlign: 'right', marginEnd: 8, marginStart: 0 }]}
                                 placeholder={t('common.search', 'Search')}
                                 value={search}
                                 onChangeText={setSearch}
@@ -305,7 +305,7 @@ export default function ManageMembers() {
                 <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 50 }} />
             ) : (
                 <View style={styles.tableContainer}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={true} contentContainerStyle={{ flexDirection: 'row' }}>
                         <View>
                             {/* Table Head */}
                             <View style={[styles.tHead, isRTL && styles.rowReverse]}>
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
     },
     backBtn: {
         padding: 8,
-        marginRight: 8,
+        marginEnd: 8,
     },
     titleContainer: {
         flex: 1,
@@ -601,7 +601,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         flex: 1,
-        marginLeft: 8,
+        marginStart: 8,
         fontSize: 13,
     },
     searchBtn: {
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         fontWeight: '600',
         color: COLORS.textLight,
-        marginRight: 10, // Assuming LTR default margins, handled in render for RTL
+        marginEnd: 10, // Assuming LTR default margins, handled in render for RTL
     },
     tr: {
         flexDirection: 'row',
@@ -741,7 +741,7 @@ const styles = StyleSheet.create({
     td: {
         fontSize: 13,
         color: COLORS.text,
-        marginRight: 10,
+        marginEnd: 10,
     },
     // Checkbox
     checkboxCell: {

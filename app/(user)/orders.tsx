@@ -21,7 +21,7 @@ import { formatCurrency } from "../../src/utils/currency";
 import { initiateOrderPayment, initiateBookingPayment } from "../../src/services/paymentHelpers";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     white: "#ffffff",
     text: "#1e293b",
@@ -201,13 +201,13 @@ export default function HistoryScreen() {
                                     </View>
 
                                     <View style={[styles.statusBadge, { backgroundColor: getStatusColor(paymentStatus) + '20' }]}>
-                                        {paymentStatus === 'UNPAID' && <Ionicons name="alert-circle" size={12} color={COLORS.error} style={{ marginRight: 4 }} />}
+                                        {paymentStatus === 'UNPAID' && <Ionicons name="alert-circle" size={12} color={COLORS.error} style={{ marginEnd: 4 }} />}
                                         <Text style={[styles.statusText, { color: getStatusColor(paymentStatus) }]}>
                                             {paymentStatus === 'UNPAID' ? t('common.unpaid') :
                                                 paymentStatus === 'PAID' ? t('common.statuses.PAID', 'Paid') :
                                                     paymentStatus}
                                         </Text>
-                                        {paymentStatus === 'PAID' && <Ionicons name="checkmark-circle" size={12} color={COLORS.success} style={{ marginLeft: 4 }} />}
+                                        {paymentStatus === 'PAID' && <Ionicons name="checkmark-circle" size={12} color={COLORS.success} style={{ marginStart: 4 }} />}
                                     </View>
                                 </View>
 
@@ -252,7 +252,7 @@ export default function HistoryScreen() {
                     ) : selectedItem ? (
                         <ScrollView contentContainerStyle={{ padding: 20 }}>
                             {/* Header Info */}
-                            <View style={[styles.detailsSection, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+                            <View style={[styles.detailsSection, { flexDirection: 'row' }]}>
                                 <Text style={styles.detailsLabel}>
                                     {selectedItem._type === 'booking' ? t('common.bookingNumber') : t('common.invoiceNumber')}
                                     {selectedItem.order_number || selectedItem.booking_number || selectedItem.id?.slice(0, 8)}
@@ -357,7 +357,7 @@ export default function HistoryScreen() {
                                         ) : (
                                             <>
                                                 <Text style={styles.payBtnText}>{t('common.payNow') || "Pay Now"}</Text>
-                                                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginLeft: 8 }} />
+                                                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginStart: 8 }} />
                                             </>
                                         )}
                                     </TouchableOpacity>
@@ -391,8 +391,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: COLORS.white,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        borderBottomStartRadius: 30,
+        borderBottomEndRadius: 30,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.05,

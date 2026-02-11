@@ -21,7 +21,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   primaryDark: "#0e7490",
   background: "#f0f9ff",
   white: "#ffffff",
@@ -506,8 +506,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 30,
     paddingHorizontal: 16,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
   },
   headerTop: {
     flexDirection: 'row',
@@ -558,12 +558,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: COLORS.error,
-    marginLeft: 8,
+    marginStart: 8,
     flex: 1,
   },
   errorTextRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
     textAlign: "right",
   },
   nameRow: {
@@ -604,14 +604,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
     fontSize: 16,
     color: COLORS.text,
     writingDirection: "ltr",
   },
   inputRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     writingDirection: "rtl",
   },
   requirements: {
@@ -628,11 +628,11 @@ const styles = StyleSheet.create({
   requirementText: {
     fontSize: 13,
     color: COLORS.textLight,
-    marginLeft: 8,
+    marginStart: 8,
   },
   requirementTextRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   requirementMet: {
     color: COLORS.success,

@@ -216,13 +216,13 @@ export default function TierPostsAdminScreen() {
             {/* Content */}
             {loading ? (
                 <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color="#0891b2" />
+                    <ActivityIndicator size="large" color="#1071b8" />
                 </View>
             ) : (
                 <ScrollView
                     style={styles.content}
                     refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#0891b2" />
+                        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} tintColor="#1071b8" />
                     }
                 >
                     {activeTab === 'comments' ? (
@@ -331,7 +331,7 @@ export default function TierPostsAdminScreen() {
                                             <Ionicons name="chatbubble" size={16} color="#64748b" />
                                             <Text style={styles.statText}>{post.comments_count}</Text>
                                         </View>
-                                        <View style={[styles.statusBadge, { backgroundColor: post.status === 'PENDING' ? '#fef3c7' : post.status === 'APPROVED' ? '#d1fae5' : '#fee2e2' }, isRTL && { marginRight: 'auto', marginLeft: 0 }]}>
+                                        <View style={[styles.statusBadge, { backgroundColor: post.status === 'PENDING' ? '#fef3c7' : post.status === 'APPROVED' ? '#d1fae5' : '#fee2e2' }, isRTL && { marginEnd: 'auto', marginStart: 0 }]}>
                                             <Text style={[styles.statusText, { color: post.status === 'PENDING' ? '#d97706' : post.status === 'APPROVED' ? '#059669' : '#dc2626' }]}>
                                                 {t(`common.statuses.${post.status}`, post.status)}
                                             </Text>
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'transparent',
     },
     tabActive: {
-        borderBottomColor: '#0891b2',
+        borderBottomColor: '#1071b8',
     },
     tabText: {
         fontSize: 14,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
         color: '#64748b',
     },
     tabTextActive: {
-        color: '#0891b2',
+        color: '#1071b8',
         fontWeight: '600',
     },
     loadingContainer: {
@@ -498,7 +498,7 @@ const styles = StyleSheet.create({
     },
     postMeta: {
         flex: 1,
-        marginLeft: 12,
+        marginStart: 12,
     },
     userName: {
         fontSize: 15,
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 8,
-        marginLeft: 'auto',
+        marginStart: 'auto',
     },
     statusText: {
         fontSize: 11,
@@ -604,7 +604,7 @@ const styles = StyleSheet.create({
     },
     commentMeta: {
         flex: 1,
-        marginLeft: 12,
+        marginStart: 12,
     },
     commentContent: {
         fontSize: 14,
@@ -623,8 +623,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     commentMetaRTL: {
-        marginLeft: 0,
-        marginRight: 12,
+        marginStart: 0,
+        marginEnd: 12,
         alignItems: 'flex-end',
     },
     textRTL: {
@@ -637,8 +637,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     postMetaRTL: {
-        marginLeft: 0,
-        marginRight: 12,
+        marginStart: 0,
+        marginEnd: 12,
         alignItems: 'flex-end',
     },
     postStatsRTL: {

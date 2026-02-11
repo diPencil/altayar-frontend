@@ -89,12 +89,63 @@ export default function AdminChatScreen() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  // Load conversations on mount and when filter changes
+  // Define functions first before useEffect
+  const loadConversations = React.useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const params: any = {};
+
+      if (statusFilter !== "all") {
+        params.status = statusFilter.toUpperCase();
+      }
+
+      const convs = await chatApi.getAllConversations(params);
+      setConversations(convs);
+    } catch (error) {
+      console.error("Failed to load conversations:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [statusFilter]);
+
+  const loadMessages = React.useCallback(async (conversationId: string) => {
+    try {
+      const conv = await chatApi.getConversation(conversationId);
+
+      // Convert API messages to local format
+      const formattedMessages: Message[] = (conv.messages || []).map((msg: APIMessage) => ({
+        id: msg.id,
+        text: msg.content,
+        sender: msg.sender_role === "CUSTOMER" ? "user" : "admin",
+        timestamp: new Date(msg.created_at),
+        senderName: msg.sender_name,
+      }));
+
+      setMessages(formattedMessages);
+
+      // Update selected conversation
+      setSelectedConversation(conv);
+
+      // Auto scroll to bottom
+      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
+    } catch (error) {
+      console.error("Failed to load messages:", error);
+    }
+  }, []);
+
+  // Load conversations on mount (filter changes handled separately)
   useEffect(() => {
     if (currentScreen === "list") {
       loadConversations();
     }
-  }, [currentScreen, statusFilter]);
+  }, [currentScreen, loadConversations]);
+
+  // Reload conversations when filter changes
+  useEffect(() => {
+    if (currentScreen === "list") {
+      loadConversations();
+    }
+  }, [statusFilter, loadConversations]);
 
   // Poll for new messages when in chat
   useEffect(() => {
@@ -105,7 +156,7 @@ export default function AdminChatScreen() {
 
       return () => clearInterval(interval);
     }
-  }, [currentScreen, selectedConversation]);
+  }, [currentScreen, selectedConversation?.id, loadMessages]);
 
   // Handle Deep Linking
   useEffect(() => {
@@ -140,50 +191,9 @@ export default function AdminChatScreen() {
 
       return () => clearInterval(interval);
     }
-  }, [currentScreen, statusFilter]);
+  }, [currentScreen, loadConversations]);
 
-  const loadConversations = async () => {
-    try {
-      setIsLoading(true);
-      const params: any = {};
 
-      if (statusFilter !== "all") {
-        params.status = statusFilter.toUpperCase();
-      }
-
-      const convs = await chatApi.getAllConversations(params);
-      setConversations(convs);
-    } catch (error) {
-      console.error("Failed to load conversations:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const loadMessages = async (conversationId: string) => {
-    try {
-      const conv = await chatApi.getConversation(conversationId);
-
-      // Convert API messages to local format
-      const formattedMessages: Message[] = (conv.messages || []).map((msg: APIMessage) => ({
-        id: msg.id,
-        text: msg.content,
-        sender: msg.sender_role === "CUSTOMER" ? "user" : "admin",
-        timestamp: new Date(msg.created_at),
-        senderName: msg.sender_name,
-      }));
-
-      setMessages(formattedMessages);
-
-      // Update selected conversation
-      setSelectedConversation(conv);
-
-      // Auto scroll to bottom
-      setTimeout(() => scrollRef.current?.scrollToEnd({ animated: true }), 100);
-    } catch (error) {
-      console.error("Failed to load messages:", error);
-    }
-  };
 
   const loadEmployees = async () => {
     try {
@@ -568,6 +578,10 @@ export default function AdminChatScreen() {
                         source={{ uri: conversation.customer_avatar }}
                         style={styles.conversationAvatar}
                         resizeMode="cover"
+                        onError={() => {
+                          // Fallback: clear avatar URL to show text avatar
+                          console.log('Failed to load avatar for:', conversation.customer_name);
+                        }}
                       />
                     ) : (
                       <View style={[styles.conversationAvatar, { backgroundColor: getAvatarColor(conversation.customer_name || 'U') }]}>
@@ -787,55 +801,50 @@ export default function AdminChatScreen() {
           </ScrollView>
 
           {/* Message Input Area */}
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : undefined}
-            keyboardVerticalOffset={90}
-          >
-            <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
-              <TouchableOpacity
-                style={styles.attachBtn}
-                onPress={() => setShowEmojiPicker(!showEmojiPicker)}
-              >
-                <Ionicons name={showEmojiPicker ? "close-circle" : "happy-outline"} size={28} color={COLORS.primary} />
-              </TouchableOpacity>
+          <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
+            <TouchableOpacity
+              style={styles.attachBtn}
+              onPress={() => setShowEmojiPicker(!showEmojiPicker)}
+            >
+              <Ionicons name={showEmojiPicker ? "close-circle" : "happy-outline"} size={28} color={COLORS.primary} />
+            </TouchableOpacity>
 
-              <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
-                <TextInput
-                  style={[styles.input, isRTL && styles.inputRTL]}
-                  placeholder={t('chat.typeMessage')}
-                  placeholderTextColor={COLORS.textLight}
-                  value={message}
-                  onChangeText={setMessage}
-                  multiline
-                  maxLength={1000}
-                />
-              </View>
-
-              <TouchableOpacity
-                style={[styles.sendBtn, (!message.trim() || isSending) && styles.sendBtnDisabled]}
-                onPress={sendMessage}
-                disabled={!message.trim() || isSending}
-                activeOpacity={0.7}
-              >
-                {isSending ? (
-                  <ActivityIndicator size="small" color={COLORS.background} />
-                ) : (
-                  <Ionicons name="send" size={20} color={COLORS.background} />
-                )}
-              </TouchableOpacity>
+            <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+              <TextInput
+                style={[styles.input, isRTL && styles.inputRTL]}
+                placeholder={t('chat.typeMessage')}
+                placeholderTextColor={COLORS.textLight}
+                value={message}
+                onChangeText={setMessage}
+                multiline
+                maxLength={1000}
+              />
             </View>
 
-            {/* Emoji Picker */}
-            {showEmojiPicker && (
-              <EmojiPicker
-                visible={showEmojiPicker}
-                onEmojiSelect={(emoji) => {
-                  setMessage(prev => prev + emoji);
-                }}
-                onClose={() => setShowEmojiPicker(false)}
-              />
-            )}
-          </KeyboardAvoidingView>
+            <TouchableOpacity
+              style={[styles.sendBtn, (!message.trim() || isSending) && styles.sendBtnDisabled]}
+              onPress={sendMessage}
+              disabled={!message.trim() || isSending}
+              activeOpacity={0.7}
+            >
+              {isSending ? (
+                <ActivityIndicator size="small" color={COLORS.background} />
+              ) : (
+                <Ionicons name="send" size={20} color={COLORS.background} />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Emoji Picker */}
+          {showEmojiPicker && (
+            <EmojiPicker
+              visible={showEmojiPicker}
+              onEmojiSelect={(emoji) => {
+                setMessage(prev => prev + emoji);
+              }}
+              onClose={() => setShowEmojiPicker(false)}
+            />
+          )}
 
           {/* Employee Assignment Modal */}
           <Modal
@@ -949,8 +958,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
     backgroundColor: COLORS.background,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -986,7 +995,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: COLORS.searchBg,
-    marginRight: 8,
+    marginEnd: 8,
   },
   filterTabActive: {
     backgroundColor: COLORS.primary,
@@ -1015,7 +1024,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   searchIcon: {
-    marginRight: 8,
+    marginEnd: 8,
   },
   searchInput: {
     flex: 1,
@@ -1063,11 +1072,11 @@ const styles = StyleSheet.create({
   },
   avatarContainer: {
     position: 'relative',
-    marginRight: 12,
+    marginEnd: 12,
   },
   avatarContainerRTL: {
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   conversationAvatar: {
     width: 56,
@@ -1103,7 +1112,7 @@ const styles = StyleSheet.create({
   conversationTime: {
     fontSize: 13,
     color: COLORS.textLight,
-    marginLeft: 8,
+    marginStart: 8,
   },
   conversationBottom: {
     flexDirection: 'row',
@@ -1131,7 +1140,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 6,
-    marginLeft: 8,
+    marginStart: 8,
   },
   unreadBadgeText: {
     color: COLORS.background,
@@ -1149,7 +1158,7 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    marginRight: 6,
+    marginEnd: 6,
   },
   statusLabel: {
     fontSize: 12,
@@ -1163,8 +1172,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.background,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -1177,11 +1186,11 @@ const styles = StyleSheet.create({
   },
   backBtn: {
     padding: 4,
-    marginRight: 12,
+    marginEnd: 12,
   },
   backBtnRTL: {
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   chatHeaderInfo: {
     flexDirection: 'row',
@@ -1197,11 +1206,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   chatAvatarRTL: {
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   chatAvatarText: {
     color: COLORS.background,
@@ -1234,7 +1243,7 @@ const styles = StyleSheet.create({
   },
   actionBtn: {
     padding: 8,
-    marginLeft: 4,
+    marginStart: 4,
     zIndex: 10,
     elevation: 10,
   },
@@ -1296,21 +1305,21 @@ const styles = StyleSheet.create({
   },
   userBubble: {
     backgroundColor: COLORS.primary,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 18,
+    borderBottomStartRadius: 4,
+    borderBottomEndRadius: 18,
   },
   userBubbleRTL: {
-    borderBottomLeftRadius: 18,
-    borderBottomRightRadius: 4,
+    borderBottomStartRadius: 18,
+    borderBottomEndRadius: 4,
   },
   adminBubble: {
     backgroundColor: COLORS.messageBg,
-    borderBottomLeftRadius: 18,
-    borderBottomRightRadius: 4,
+    borderBottomStartRadius: 18,
+    borderBottomEndRadius: 4,
   },
   adminBubbleRTL: {
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 18,
+    borderBottomStartRadius: 4,
+    borderBottomEndRadius: 18,
   },
   messageTextContainer: {
     flexDirection: 'row',
@@ -1365,12 +1374,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    marginRight: 8,
+    marginEnd: 8,
     maxHeight: 100,
   },
   inputContainerRTL: {
-    marginRight: 0,
-    marginLeft: 8,
+    marginEnd: 0,
+    marginStart: 8,
   },
   input: {
     fontSize: 15,
@@ -1402,8 +1411,8 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: COLORS.background,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
     maxHeight: '70%',
   },
   modalHeader: {
@@ -1435,7 +1444,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   employeeAvatarText: {
     color: COLORS.background,
@@ -1549,6 +1558,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     textAlign: 'center',
-    marginLeft: 10,
+    marginStart: 10,
   },
 });

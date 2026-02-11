@@ -632,37 +632,32 @@ export default function EmployeeChatsScreen() {
                         })}
                     </ScrollView>
 
-                    <KeyboardAvoidingView
-                        behavior={Platform.OS === "ios" ? "padding" : undefined}
-                        keyboardVerticalOffset={90}
-                    >
-                        <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
-                            <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
-                                <TextInput
-                                    style={[styles.input, isRTL && styles.inputRTL]}
-                                    placeholder={t('employee.chat.typeMessage')}
-                                    placeholderTextColor={COLORS.textLight}
-                                    value={message}
-                                    onChangeText={setMessage}
-                                    multiline
-                                    maxLength={1000}
-                                />
-                            </View>
-
-                            <TouchableOpacity
-                                style={[styles.sendBtn, (!message.trim() || isSending) && styles.sendBtnDisabled]}
-                                onPress={sendMessage}
-                                disabled={!message.trim() || isSending}
-                                activeOpacity={0.7}
-                            >
-                                {isSending ? (
-                                    <ActivityIndicator size="small" color={COLORS.background} />
-                                ) : (
-                                    <Ionicons name="send" size={20} color={COLORS.background} />
-                                )}
-                            </TouchableOpacity>
+                    <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
+                        <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+                            <TextInput
+                                style={[styles.input, isRTL && styles.inputRTL]}
+                                placeholder={t('employee.chat.typeMessage')}
+                                placeholderTextColor={COLORS.textLight}
+                                value={message}
+                                onChangeText={setMessage}
+                                multiline
+                                maxLength={1000}
+                            />
                         </View>
-                    </KeyboardAvoidingView>
+
+                        <TouchableOpacity
+                            style={[styles.sendBtn, (!message.trim() || isSending) && styles.sendBtnDisabled]}
+                            onPress={sendMessage}
+                            disabled={!message.trim() || isSending}
+                            activeOpacity={0.7}
+                        >
+                            {isSending ? (
+                                <ActivityIndicator size="small" color={COLORS.background} />
+                            ) : (
+                                <Ionicons name="send" size={20} color={COLORS.background} />
+                            )}
+                        </TouchableOpacity>
+                    </View>
                 </>
             )}
             {/* Toast Notification */}
@@ -685,7 +680,7 @@ const styles = StyleSheet.create({
     filterContainer: { backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border },
     filterScroll: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
     filterScrollRTL: { flexDirection: 'row-reverse' },
-    filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: COLORS.searchBg, marginRight: 8 },
+    filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: COLORS.searchBg, marginEnd: 8 },
     filterTabActive: { backgroundColor: COLORS.primary },
     filterTabText: { fontSize: 14, fontWeight: '600', color: COLORS.textLight },
     filterTabTextActive: { color: COLORS.background },
@@ -707,26 +702,26 @@ const styles = StyleSheet.create({
     conversationTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
     conversationTopRTL: { flexDirection: 'row-reverse' },
     conversationName: { fontSize: 16, fontWeight: '600', color: COLORS.text, flex: 1 },
-    conversationTime: { fontSize: 13, color: COLORS.textLight, marginLeft: 8 },
-    conversationTimeRTL: { marginLeft: 0, marginRight: 8 },
+    conversationTime: { fontSize: 13, color: COLORS.textLight, marginStart: 8 },
+    conversationTimeRTL: { marginStart: 0, marginEnd: 8 },
     conversationBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
     conversationBottomRTL: { flexDirection: 'row-reverse' },
     conversationMessage: { fontSize: 14, color: COLORS.textLight, flex: 1 },
     conversationMessageUnread: { fontWeight: '600', color: COLORS.text },
-    unreadBadge: { backgroundColor: COLORS.unreadBadge, borderRadius: 10, minWidth: 20, height: 20, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 6, marginLeft: 8 },
-    unreadBadgeRTL: { marginLeft: 0, marginRight: 8 },
+    unreadBadge: { backgroundColor: COLORS.unreadBadge, borderRadius: 10, minWidth: 20, height: 20, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 6, marginStart: 8 },
+    unreadBadgeRTL: { marginStart: 0, marginEnd: 8 },
     unreadBadgeText: { color: COLORS.background, fontSize: 12, fontWeight: '700' },
     statusRow: { flexDirection: 'row', alignItems: 'center' },
     statusRowRTL: { flexDirection: 'row-reverse' },
-    statusDot: { width: 6, height: 6, borderRadius: 3, marginRight: 6 },
-    statusDotRTL: { marginRight: 0, marginLeft: 6 },
+    statusDot: { width: 6, height: 6, borderRadius: 3, marginEnd: 6 },
+    statusDotRTL: { marginEnd: 0, marginStart: 6 },
     statusLabel: { fontSize: 12, color: COLORS.textLight },
     chatHeader: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border },
     chatHeaderRTL: { flexDirection: 'row-reverse' },
-    backBtn: { padding: 4, marginRight: 12 },
+    backBtn: { padding: 4, marginEnd: 12 },
     chatHeaderInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
     chatHeaderInfoRTL: { flexDirection: 'row-reverse' },
-    chatAvatar: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+    chatAvatar: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginEnd: 12 },
     chatAvatarText: { color: COLORS.background, fontSize: 18, fontWeight: '600' },
     chatUserName: { fontSize: 17, fontWeight: '600', color: COLORS.text, marginBottom: 2 },
     statusBadgeContainer: { flexDirection: 'row', alignItems: 'center' },
@@ -739,14 +734,14 @@ const styles = StyleSheet.create({
     messageRowEmployee: { justifyContent: 'flex-start' },
     messageRowUserRTL: { flexDirection: 'row-reverse', justifyContent: 'flex-start' },
     messageRowEmployeeRTL: { flexDirection: 'row-reverse', justifyContent: 'flex-end' },
-    messageAvatarContainer: { width: 32, marginRight: 8 },
+    messageAvatarContainer: { width: 32, marginEnd: 8 },
     messageAvatar: { width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
     messageAvatarText: { color: COLORS.background, fontSize: 12, fontWeight: '600' },
     messageAvatarSpacer: { width: 28, height: 28 },
     messageBubble: { maxWidth: '70%', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 18, marginBottom: 2 },
     messageBubbleFirst: { marginBottom: 8 },
-    userBubble: { backgroundColor: COLORS.primary, borderBottomRightRadius: 4 },
-    employeeBubble: { backgroundColor: COLORS.messageBg, borderBottomLeftRadius: 4 },
+    userBubble: { backgroundColor: COLORS.primary, borderBottomEndRadius: 4 },
+    employeeBubble: { backgroundColor: COLORS.messageBg, borderBottomStartRadius: 4 },
     messageTextContainer: { flexDirection: 'row', flexWrap: 'wrap' },
     messageText: { fontSize: 15, lineHeight: 20, color: COLORS.background, marginBottom: 2 },
     employeeMessageText: { color: COLORS.text },
@@ -756,8 +751,8 @@ const styles = StyleSheet.create({
     employeeMessageTime: { color: COLORS.textLight },
     inputArea: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 12, paddingVertical: 10, backgroundColor: COLORS.background, borderTopWidth: 1, borderTopColor: COLORS.border },
     inputAreaRTL: { flexDirection: 'row-reverse' },
-    inputContainer: { flex: 1, backgroundColor: COLORS.searchBg, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 10, marginRight: 8, maxHeight: 100 },
-    inputContainerRTL: { marginRight: 0, marginLeft: 8 },
+    inputContainer: { flex: 1, backgroundColor: COLORS.searchBg, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 10, marginEnd: 8, maxHeight: 100 },
+    inputContainerRTL: { marginEnd: 0, marginStart: 8 },
     input: { fontSize: 15, color: COLORS.text, paddingVertical: 0 },
     inputRTL: { textAlign: 'right' },
     sendBtn: { width: 36, height: 36, borderRadius: 18, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center', marginBottom: 4 },

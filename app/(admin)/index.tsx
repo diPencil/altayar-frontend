@@ -10,8 +10,8 @@ import Toast from "../../src/components/Toast";
 const { width } = Dimensions.get("window");
 
 const COLORS = {
-  primary: "#0891b2",
-  secondary: "#06b6d4",
+  primary: "#1071b8",
+  secondary: "#167dc1",
   success: "#10b981",
   warning: "#f59e0b",
   error: "#ef4444",
@@ -834,15 +834,16 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     marginBottom: 16,
+    gap: 12,
   },
   statsGridRTL: {
     flexDirection: "row-reverse",
   },
   statCard: {
-    width: (width - 48) / 2,
+    width: (width - 48) / 2 - 6, // Account for gap between cards
     borderRadius: 16,
     padding: 16,
-    marginBottom: 12,
+    marginBottom: 0, // Remove marginBottom since we use gap
     alignItems: 'flex-start',
   },
   statCardRTL: {
@@ -865,7 +866,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     color: COLORS.cardBg,
-    textAlign: 'left',
+    textAlign: 'auto',
   },
   statValueRTL: {
     textAlign: 'right',
@@ -874,7 +875,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "rgba(255,255,255,0.8)",
     marginTop: 2,
-    textAlign: 'left',
+    textAlign: 'auto',
   },
   statLabelRTL: {
     textAlign: 'right',
@@ -890,11 +891,11 @@ const styles = StyleSheet.create({
   changeText: {
     fontSize: 12,
     color: "rgba(255,255,255,0.8)",
-    marginLeft: 4,
+    marginStart: 4,
   },
   changeTextRTL: {
-    marginLeft: 0,
-    marginRight: 4,
+    marginStart: 0,
+    marginEnd: 4,
   },
   card: {
     backgroundColor: COLORS.cardBg,
@@ -934,7 +935,7 @@ const styles = StyleSheet.create({
   empMsgSendToLabel: {
     color: COLORS.textLight,
     fontSize: 13,
-    marginRight: 6,
+    marginEnd: 6,
   },
   empMsgChip: {
     paddingHorizontal: 10,
@@ -1028,11 +1029,11 @@ const styles = StyleSheet.create({
   },
   empMsgEmployeeInfo: {
     flex: 1,
-    marginRight: 10,
+    marginEnd: 10,
   },
   empMsgEmployeeInfoRTL: {
-    marginRight: 0,
-    marginLeft: 10,
+    marginEnd: 0,
+    marginStart: 10,
   },
   empMsgEmployeeName: {
     fontSize: 14,
@@ -1086,7 +1087,7 @@ const styles = StyleSheet.create({
   periodText: {
     fontSize: 13,
     color: COLORS.textLight,
-    marginRight: 4,
+    marginEnd: 4,
   },
   viewAll: {
     fontSize: 14,
@@ -1139,11 +1140,11 @@ const styles = StyleSheet.create({
   },
   activityContent: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
   },
   activityContentRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: "flex-end",
   },
   activityTitle: {

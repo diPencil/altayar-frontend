@@ -9,7 +9,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 const { width } = Dimensions.get("window");
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -147,12 +147,13 @@ const styles = StyleSheet.create({
     grid: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        padding: 10,
+        padding: 16,
+        justifyContent: 'space-between',
     },
     statCard: {
-        width: (width / 2) - 20,
+        width: '48%',
         backgroundColor: COLORS.cardBg,
-        margin: 10,
+        marginBottom: 16,
         padding: 16,
         borderRadius: 16,
         shadowColor: "#000",

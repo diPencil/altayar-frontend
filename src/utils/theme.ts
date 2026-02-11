@@ -4,12 +4,14 @@
  */
 
 export const COLORS = {
-  // Primary Colors
-  primary: "#1a74c6", // Main primary color
-  primaryLight: "#0cb5e9", // Light variant for gradients
+  // Primary Colors - New Blue Scheme
+  primary: "#1071b8", // Main blue
+  secondary: "#167dc1", // Medium blue
+  accent: "#0ba7df", // Light blue
+  primaryLight: "#0ba7df", // Light variant for gradients
 
   // Status Colors
-  success: "#0cb5e9", // Changed from green to blue
+  success: "#10b981", // Green for success
   warning: "#f59e0b",
   error: "#ef4444",
 
@@ -42,12 +44,16 @@ export const COLORS = {
  */
 export const GRADIENTS = {
   primary: {
-    start: COLORS.primary,
-    end: COLORS.primaryLight,
+    start: COLORS.primary, // #1071b8
+    end: COLORS.accent, // #0ba7df
+  },
+  secondary: {
+    start: COLORS.secondary, // #167dc1
+    end: COLORS.accent, // #0ba7df
   },
   success: {
     start: COLORS.success,
-    end: "#1e88e5", // Slightly darker blue for gradient
+    end: "#059669", // Darker green for gradient
   },
 } as const;
 

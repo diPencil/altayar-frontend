@@ -58,11 +58,11 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     padding: 8,
-    marginRight: 8,
+    marginEnd: 8,
   },
   containerRTL: {
-    marginRight: 0,
-    marginLeft: 8,
+    marginEnd: 0,
+    marginStart: 8,
   },
   badge: {
     position: 'absolute',

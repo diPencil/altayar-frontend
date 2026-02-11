@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const COLORS = {
-  primary: '#0891b2',
+  primary: '#1071b8',
   background: '#f0f9ff',
   white: '#ffffff',
   text: '#1e293b',
@@ -48,7 +48,7 @@ export default function LanguageScreen() {
             ]}
             onPress={() => setLanguage(item.code as 'ar' | 'en')}
           >
-            <View style={[styles.flagContainer, isRTL && { marginLeft: 0, marginRight: 0 }]}>
+            <View style={[styles.flagContainer, isRTL && { marginStart: 0, marginEnd: 0 }]}>
               <Text style={styles.flagText}>{item.flag}</Text>
             </View>
             <View style={{ flex: 1, marginHorizontal: 15 }}>
@@ -88,8 +88,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,

@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
     createBtn: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#0891b2',
+        backgroundColor: '#1071b8',
         paddingHorizontal: 16,
         paddingVertical: 10,
         borderRadius: 8,
@@ -581,14 +581,14 @@ const styles = StyleSheet.create({
     createBtnText: {
         color: 'white',
         fontWeight: '600',
-        marginLeft: 6,
+        marginStart: 6,
     },
     createBtnRTL: {
         flexDirection: 'row-reverse',
     },
     createBtnTextRTL: {
-        marginLeft: 0,
-        marginRight: 6,
+        marginStart: 0,
+        marginEnd: 6,
     },
 
     row: {
@@ -609,13 +609,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee', 
         justifyContent: 'center', 
         alignItems: 'center', 
-        marginRight: 15, 
+        marginEnd: 15, 
         borderRadius: 4,
         overflow: 'hidden'
     },
     thumbnailRTL: {
-        marginRight: 0,
-        marginLeft: 15,
+        marginEnd: 0,
+        marginStart: 15,
     },
     thumbnailImage: {
         width: '100%',
@@ -665,7 +665,7 @@ const styles = StyleSheet.create({
     videoTypeLabel: {
         fontSize: 11,
         color: '#999',
-        marginLeft: 4,
+        marginStart: 4,
     },
     deleteBtn: { padding: 10 },
 
@@ -733,7 +733,7 @@ const styles = StyleSheet.create({
         borderStyle: 'dashed',
     },
     filePickerText: {
-        marginLeft: 10,
+        marginStart: 10,
         fontSize: 16,
         color: '#007AFF',
     },

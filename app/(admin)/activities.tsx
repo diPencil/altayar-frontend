@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -80,7 +80,7 @@ export default function AllActivities() {
                     ) : (
                         activities.map((activity, index) => (
                             <View key={index} style={[styles.activityItem, isRTL && styles.activityItemRTL]}>
-                                <View style={[styles.activityIcon, { backgroundColor: `${getActivityColor(activity.type)}15` }, isRTL && { marginLeft: 0, marginRight: 0 }]}>
+                                <View style={[styles.activityIcon, { backgroundColor: `${getActivityColor(activity.type)}15` }, isRTL && { marginStart: 0, marginEnd: 0 }]}>
                                     <Ionicons name={activity.icon || "information-circle"} size={20} color={getActivityColor(activity.type)} />
                                 </View>
                                 <View style={[styles.activityContent, isRTL && styles.activityContentRTL]}>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     backBtn: {
-        marginRight: 16,
+        marginEnd: 16,
     },
     title: {
         fontSize: 20,
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     },
     activityContent: {
         flex: 1,
-        marginLeft: 12,
+        marginStart: 12,
     },
     activityTitle: {
         fontSize: 14,
@@ -174,8 +174,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     backBtnRTL: {
-        marginRight: 0,
-        marginLeft: 16,
+        marginEnd: 0,
+        marginStart: 16,
     },
     listRTL: {
         // alignItems: 'flex-end', // Removed to fix layout shrink-wrap issue
@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     activityContentRTL: {
-        marginLeft: 0,
-        marginRight: 12,
+        marginStart: 0,
+        marginEnd: 12,
         alignItems: 'flex-end',
     },
     timeContainerRTL: {

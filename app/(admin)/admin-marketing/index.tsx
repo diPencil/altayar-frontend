@@ -17,7 +17,7 @@ import Toast from "../../../src/components/Toast";
 import ConfirmModal from "../../../src/components/ConfirmModal";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -161,7 +161,7 @@ export default function AdminMarketingDashboard() {
 
   const renderItem = ({ item }: { item: Offer }) => (
     <TouchableOpacity
-      style={[styles.listItem, { flexDirection: isRTL ? "row-reverse" : "row" }]}
+      style={[styles.listItem, { flexDirection: 'row' }]}
       onPress={() => router.push({ pathname: "/(admin)/admin-marketing/create" as any, params: { id: item.id } })}
     >
       <View
@@ -188,11 +188,11 @@ export default function AdminMarketingDashboard() {
         />
       </View>
 
-      <View style={[styles.itemInfo, { marginLeft: isRTL ? 0 : 12, marginRight: isRTL ? 12 : 0 }]}>
+      <View style={[styles.itemInfo, { marginStart: isRTL ? 0 : 12, marginEnd: isRTL ? 12 : 0 }]}>
         <Text style={[styles.itemTitle, { textAlign: isRTL ? "right" : "left" }]} numberOfLines={1}>
           {isRTL ? item.title_ar : item.title_en}
         </Text>
-        <View style={[styles.itemMeta, { flexDirection: isRTL ? "row-reverse" : "row" }]}>
+        <View style={[styles.itemMeta, { flexDirection: 'row' }]}>
           <Text style={styles.itemType}>{getTypeLabel(item.offer_type)}</Text>
           <Text style={styles.dot}>{t("common.bulletDot")}</Text>
           <Text style={styles.itemDate}>{new Date(item.created_at || "").toLocaleDateString()}</Text>
@@ -246,11 +246,11 @@ export default function AdminMarketingDashboard() {
       </View>
 
       <View style={styles.actionsContainer}>
-        <View style={[styles.actionRow, { flexDirection: isRTL ? "row-reverse" : "row" }]}>
+        <View style={[styles.actionRow, { flexDirection: 'row' }]}>
           {ACTIONS.map((action) => (
             <TouchableOpacity
               key={action.id}
-              style={[styles.actionCard, { flexDirection: isRTL ? "row-reverse" : "row" }]}
+              style={[styles.actionCard, { flexDirection: 'row' }]}
               onPress={() =>
                 router.push({
                   pathname: "/(admin)/admin-marketing/create" as any,
@@ -261,7 +261,7 @@ export default function AdminMarketingDashboard() {
               <View
                 style={[
                   styles.actionIcon,
-                  { backgroundColor: action.color, marginRight: isRTL ? 0 : 10, marginLeft: isRTL ? 10 : 0 },
+                  { backgroundColor: action.color, marginEnd: isRTL ? 0 : 10, marginStart: isRTL ? 10 : 0 },
                 ]}
               >
                 <Ionicons name={action.icon as any} size={20} color="white" />
@@ -344,8 +344,8 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     backgroundColor: COLORS.cardBg,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopStartRadius: 24,
+    borderTopEndRadius: 24,
     paddingHorizontal: 20,
     paddingTop: 24,
     shadowColor: "#000",

@@ -21,7 +21,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   primaryDark: "#0e7490",
   background: "#f0f9ff",
   white: "#ffffff",
@@ -206,8 +206,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 30,
     paddingHorizontal: 16,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
   },
   logoImage: {
     height: 70,
@@ -250,14 +250,14 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
   },
   errorText: {
-    marginLeft: 8,
+    marginStart: 8,
     color: COLORS.error,
     fontWeight: "600",
     flex: 1,
   },
   errorTextRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
     textAlign: "right",
   },
   inputGroup: {
@@ -284,12 +284,12 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: COLORS.text,
-    marginLeft: 10,
+    marginStart: 10,
     writingDirection: "ltr",
   },
   inputRTL: {
-    marginLeft: 0,
-    marginRight: 10,
+    marginStart: 0,
+    marginEnd: 10,
     writingDirection: "rtl",
   },
   eyeBtn: {

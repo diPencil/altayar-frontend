@@ -9,8 +9,8 @@ import Toast from "../../../src/components/Toast";
 import ConfirmModal from "../../../src/components/ConfirmModal";
 
 const COLORS = {
-    primary: "#0891b2",
-    secondary: "#06b6d4",
+    primary: "#1071b8",
+    secondary: "#167dc1",
     background: "#f8fafc",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -151,7 +151,7 @@ export default function MarketingDashboard() {
                 <Text style={[styles.itemTitle, { textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={1}>
                     {isRTL ? item.title_ar : item.title_en}
                 </Text>
-                <View style={[styles.itemMeta, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+                <View style={[styles.itemMeta, { flexDirection: 'row' }]}>
                     <Text style={styles.itemType}>{getTypeLabel(item.offer_type)}</Text>
                     <Text style={styles.dot}>{t("common.bulletDot")}</Text>
                     <Text style={styles.itemDate}>
@@ -197,7 +197,7 @@ export default function MarketingDashboard() {
 
             {/* Compact Action Row */}
             <View style={styles.actionsContainer}>
-                <View style={[styles.actionRow, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+                <View style={[styles.actionRow, { flexDirection: 'row' }]}>
                     {ACTIONS.map((action) => (
                         <TouchableOpacity
                             key={action.id}
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 10,
+        marginEnd: 10,
     },
     actionLabel: {
         fontSize: 13,
@@ -317,8 +317,8 @@ const styles = StyleSheet.create({
     listContainer: {
         flex: 1,
         backgroundColor: COLORS.cardBg,
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
+        borderTopStartRadius: 24,
+        borderTopEndRadius: 24,
         paddingHorizontal: 20,
         paddingTop: 24,
         shadowColor: "#000",

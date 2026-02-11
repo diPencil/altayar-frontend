@@ -14,7 +14,7 @@ import { isMembershipActive } from "../../src/utils/membership";
 import { emitMembershipRequired } from "../../src/utils/membershipGate";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -165,12 +165,12 @@ export default function ProfileViewPage() {
 
                 {/* Info Cards Row */}
                 <View style={[styles.infoCardsRow, isRTL && styles.rowRTL]}>
-                    <View style={[styles.infoCard, { flex: 1, marginRight: isRTL ? 0 : 8, marginLeft: isRTL ? 8 : 0 }]}>
+                    <View style={[styles.infoCard, { flex: 1, marginEnd: isRTL ? 0 : 8, marginStart: isRTL ? 8 : 0 }]}>
                         <Ionicons name="card-outline" size={24} color={COLORS.textLight} />
                         <Text style={[styles.infoCardLabel]}>{t("common.memberId")}</Text>
                         <Text style={[styles.infoCardValue]}>{membershipId}</Text>
                     </View>
-                    <View style={[styles.infoCard, { flex: 1, marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }]}>
+                    <View style={[styles.infoCard, { flex: 1, marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }]}>
                         <Ionicons name="calendar-outline" size={24} color={COLORS.textLight} />
                         <Text style={[styles.infoCardLabel]}>{t("common.joined")}</Text>
                         <Text style={[styles.infoCardValue]}>{joinedDate}</Text>
@@ -191,7 +191,7 @@ export default function ProfileViewPage() {
                     <View style={[styles.statIconContainer, { backgroundColor: '#fef3c7' }]}>
                         <Ionicons name={isMember ? "diamond" : "lock-closed"} size={24} color={isMember ? "#f59e0b" : COLORS.primary} />
                     </View>
-                    <View style={{ flex: 1, marginLeft: isRTL ? 0 : 16, marginRight: isRTL ? 16 : 0, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
+                    <View style={{ flex: 1, marginStart: isRTL ? 0 : 16, marginEnd: isRTL ? 16 : 0, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
                         <Text style={[styles.statLabel]}>{t('profile.membershipCard', 'Membership Card')}</Text>
                         <Text style={[styles.membershipValue]}>{membershipPlan}</Text>
                         <Text style={[styles.statSubtext]}>
@@ -207,7 +207,7 @@ export default function ProfileViewPage() {
                 {/* Cashback & Points Row - CLICKABLE */}
                 <View style={[styles.statsRow, isRTL && styles.rowRTL]}>
                     <TouchableOpacity
-                        style={[styles.statCard, { flex: 1, marginRight: isRTL ? 0 : 8, marginLeft: isRTL ? 8 : 0 }]}
+                        style={[styles.statCard, { flex: 1, marginEnd: isRTL ? 0 : 8, marginStart: isRTL ? 8 : 0 }]}
                         onPress={() => {
                             if (!isMember) {
                                 emitMembershipRequired({ source: "profile-view/club-gifts" });
@@ -227,7 +227,7 @@ export default function ProfileViewPage() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        style={[styles.statCard, { flex: 1, marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }]}
+                        style={[styles.statCard, { flex: 1, marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }]}
                         onPress={() => {
                             if (!isMember) {
                                 emitMembershipRequired({ source: "profile-view/points" });
@@ -286,8 +286,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: COLORS.white,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        borderBottomStartRadius: 30,
+        borderBottomEndRadius: 30,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.05,

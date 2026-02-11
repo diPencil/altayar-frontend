@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     replyCard: {
-        marginLeft: 20,
+        marginStart: 20,
         borderLeftWidth: 3,
         borderLeftColor: '#007AFF',
     },

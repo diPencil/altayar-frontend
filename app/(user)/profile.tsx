@@ -16,7 +16,7 @@ import Toast from "../../src/components/Toast";
 const { width } = Dimensions.get('window');
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -68,6 +68,7 @@ export default function ProfileScreen() {
 
   // Toast State
   const [toast, setToast] = useState({ visible: false, message: '', type: 'success' as 'success' | 'error' | 'info' });
+  const [avatarError, setAvatarError] = useState(false);
 
   const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ visible: true, message, type });
@@ -222,6 +223,11 @@ export default function ProfileScreen() {
     }
   }, [balances.loading, balances.totalEarned, isMember, user?.membership, plans, language]);
 
+  // Reset avatar error when user changes
+  useEffect(() => {
+    setAvatarError(false);
+  }, [user?.avatar]);
+
   const loadBalances = async () => {
     try {
       setBalances((prev: any) => ({ ...prev, loading: true }));
@@ -328,7 +334,7 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Home Style Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
         <Image
           source={{ uri: 'https://customer-assets.emergentagent.com/job_viptraveller/artifacts/hsqancxd_altayarlogo.png' }}
           style={styles.logoImage}
@@ -345,10 +351,14 @@ export default function ProfileScreen() {
             style={styles.profileBtn}
             onPress={() => router.push("/(user)/profile-view")}
           >
-            {user?.avatar ? (
+            {user?.avatar && !avatarError ? (
               <Image
                 source={{ uri: user.avatar }}
                 style={{ width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderColor: COLORS.white }}
+                onError={() => {
+                  console.log('Header avatar failed to load');
+                  setAvatarError(true);
+                }}
               />
             ) : (
               <Ionicons name="person-circle" size={36} color={COLORS.white} />
@@ -376,10 +386,14 @@ export default function ProfileScreen() {
             <View style={[styles.cardTop, isRTL && styles.rowRTL]}>
               <View style={styles.avatarWrapper}>
                 <View style={styles.avatar}>
-                  {user?.avatar ? (
+                  {user?.avatar && !avatarError ? (
                     <Image
                       source={{ uri: user.avatar }}
                       style={{ width: 80, height: 80, borderRadius: 40 }}
+                      onError={() => {
+                        console.log('Profile card avatar failed to load');
+                        setAvatarError(true);
+                      }}
                     />
                   ) : (
                     <Ionicons name="person" size={40} color={COLORS.primary} />
@@ -557,7 +571,7 @@ export default function ProfileScreen() {
 
         {/* Quick Actions Grid */}
         <View style={styles.quickActionsSection}>
-          <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { marginLeft: 16, marginBottom: 16 }]}>
+          <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { marginStart: 16, marginBottom: 16 }]}>
             {t('profile.quickActions')}
           </Text>
           <View style={[styles.quickActionsGrid, isRTL && styles.rowRTL]}>
@@ -802,8 +816,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 15,
     paddingTop: 10,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -906,12 +920,12 @@ const styles = StyleSheet.create({
     right: undefined,
   },
   userInfo: {
-    marginLeft: 16,
+    marginStart: 16,
     flex: 1,
   },
   userInfoRTL: {
-    marginLeft: 0,
-    marginRight: 16,
+    marginStart: 0,
+    marginEnd: 16,
     alignItems: 'flex-end',
   },
   profileName: {
@@ -1164,11 +1178,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: COLORS.text,
-    marginLeft: 12,
+    marginStart: 12,
   },
   languageLabelRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     textAlign: "right",
   },
   languageValue: {
@@ -1207,11 +1221,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: COLORS.text,
-    marginLeft: 12,
+    marginStart: 12,
   },
   menuLabelRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     textAlign: "right",
   },
   logoutBtn: {

@@ -16,7 +16,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { SettingsService, type ContactUsSettings } from "../../src/services/settingsService";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -24,7 +24,7 @@ const COLORS = {
   lightGray: "#e2e8f0",
   success: "#10b981",
   whatsapp: "#25D366",
-  phone: "#0891b2",
+  phone: "#1071b8",
   email: "#f59e0b",
 };
 
@@ -257,8 +257,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -299,8 +299,8 @@ const styles = StyleSheet.create({
     padding: 30,
     paddingBottom: 40,
     marginBottom: 24,
-    borderBottomLeftRadius: 32,
-    borderBottomRightRadius: 32,
+    borderBottomStartRadius: 32,
+    borderBottomEndRadius: 32,
   },
   heroTitle: {
     fontSize: 28,
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: COLORS.text,
-    marginRight: 12,
+    marginEnd: 12,
   },
   faqAnswer: {
     fontSize: 14,
@@ -419,11 +419,11 @@ const styles = StyleSheet.create({
   },
   liveChatInfo: {
     flex: 1,
-    marginLeft: 14,
+    marginStart: 14,
   },
   liveChatInfoRTL: {
-    marginLeft: 0,
-    marginRight: 14,
+    marginStart: 0,
+    marginEnd: 14,
   },
   liveChatTitle: {
     fontSize: 16,

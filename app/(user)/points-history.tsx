@@ -11,7 +11,7 @@ import { isMembershipActive } from "../../src/utils/membership";
 import { LinearGradient } from "expo-linear-gradient";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     white: "#ffffff",
     text: "#1e293b",
@@ -173,8 +173,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: COLORS.white,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        borderBottomStartRadius: 30,
+        borderBottomEndRadius: 30,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.05,
@@ -235,15 +235,15 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
-        marginRight: 12,
+        marginEnd: 12,
     },
     content: {
         flex: 1,
-        marginRight: 12,
+        marginEnd: 12,
     },
     contentRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     title: {
         fontSize: 16,
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
     currency: {
         fontSize: 12,
         color: COLORS.textLight,
-        marginLeft: 4,
+        marginStart: 4,
     },
     emptyState: {
         padding: 40,

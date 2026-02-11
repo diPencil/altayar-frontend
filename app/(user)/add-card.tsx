@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ActivityIndicator, Alert, SafeAreaView, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Alert, TouchableOpacity, Text } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WebView } from 'react-native-webview';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -9,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 
 const COLORS = {
-    primary: '#0891b2',
+    primary: '#1071b8',
     background: '#f0f9ff',
     white: '#ffffff',
     text: '#1e293b',
@@ -18,6 +19,7 @@ const COLORS = {
 export default function AddCardScreen() {
     const [url, setUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const insets = useSafeAreaInsets();
     const { t } = useTranslation();
     const { isRTL } = useLanguage();
 
@@ -97,7 +99,7 @@ export default function AddCardScreen() {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <View style={[styles.header, isRTL && styles.headerRTL]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
                     <Ionicons name="close" size={24} color={COLORS.text} />
@@ -129,7 +131,7 @@ export default function AddCardScreen() {
                     </View>
                 )}
             />
-        </SafeAreaView>
+        </View>
     );
 }
 

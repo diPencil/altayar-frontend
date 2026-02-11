@@ -7,7 +7,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { LinearGradient } from "expo-linear-gradient";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     primaryLight: "#22d3ee",
     background: "#f8fafc",
     white: "#ffffff",
@@ -92,8 +92,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: COLORS.white,
-        borderBottomLeftRadius: 24,
-        borderBottomRightRadius: 24,
+        borderBottomStartRadius: 24,
+        borderBottomEndRadius: 24,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.05,
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
         backgroundColor: `${COLORS.primary}10`,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     sectionTitle: {
         fontSize: 18,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         lineHeight: 26,
         color: COLORS.textLight,
-        textAlign: 'left',
+        textAlign: 'auto',
     },
     textRTL: {
         textAlign: 'right',

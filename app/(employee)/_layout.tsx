@@ -15,8 +15,8 @@ const SIDEBAR_WIDTH = 260;
 const COLORS = {
   sidebarBg: "#1e3a5f",
   sidebarHover: "#2d4a6f",
-  primary: "#0891b2",
-  accent: "#06b6d4",
+  primary: "#1071b8",
+  accent: "#167dc1",
   gold: "#f59e0b",
   white: "#ffffff",
   text: "#e2e8f0",
@@ -32,6 +32,7 @@ export default function EmployeeLayout() {
   const { unreadCount } = useNotifications();
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const pathname = usePathname();
+  const [avatarError, setAvatarError] = React.useState(false);
 
   // Track RTL state
   const [sidebarIsRTL, setSidebarIsRTL] = React.useState(language === 'ar');
@@ -39,6 +40,11 @@ export default function EmployeeLayout() {
   React.useEffect(() => {
     setSidebarIsRTL(language === 'ar');
   }, [isRTL, language]);
+
+  // Reset avatar error when user avatar changes
+  React.useEffect(() => {
+    setAvatarError(false);
+  }, [user?.avatar]);
 
   if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -147,10 +153,14 @@ export default function EmployeeLayout() {
           {/* Profile */}
           <View style={[styles.profileSection, isRTL && styles.profileSectionRTL]}>
             <View style={styles.avatar}>
-              {user?.avatar ? (
+              {user?.avatar && !avatarError ? (
                 <Image
                   source={{ uri: user.avatar }}
                   style={{ width: 40, height: 40, borderRadius: 20 }}
+                  onError={() => {
+                    console.log('Employee sidebar avatar failed to load');
+                    setAvatarError(true);
+                  }}
                 />
               ) : user?.first_name ? (
                 <Text style={{ color: COLORS.gold, fontSize: 18, fontWeight: 'bold' }}>
@@ -308,12 +318,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
-    marginLeft: 10,
-    marginRight: 0,
+    marginStart: 10,
+    marginEnd: 0,
   },
   salesBadgeRTL: {
-    marginLeft: 0,
-    marginRight: 10,
+    marginStart: 0,
+    marginEnd: 10,
   },
   profileSection: {
     flexDirection: "row",
@@ -334,11 +344,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   profileInfo: {
-    marginLeft: 12,
+    marginStart: 12,
   },
   profileInfoRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: "flex-end",
   },
   profileName: {
@@ -375,11 +385,11 @@ const styles = StyleSheet.create({
   menuLabel: {
     fontSize: 14,
     color: COLORS.textMuted,
-    marginLeft: 14,
+    marginStart: 14,
   },
   menuLabelRTL: {
-    marginLeft: 0,
-    marginRight: 14,
+    marginStart: 0,
+    marginEnd: 14,
     textAlign: "right",
   },
   menuLabelActive: {
@@ -407,12 +417,12 @@ const styles = StyleSheet.create({
   navBtnText: {
     fontSize: 14,
     color: COLORS.text,
-    marginLeft: 12,
+    marginStart: 12,
     fontWeight: "500",
   },
   navBtnTextRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     textAlign: "right",
   },
   main: {

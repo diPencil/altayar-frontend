@@ -9,7 +9,7 @@ import { cashbackApi } from '../../src/services/api';
 import Toast from '../../src/components/Toast';
 
 const COLORS = {
-    primary: '#0891b2',
+    primary: '#1071b8',
     background: '#f8fafc',
     white: '#ffffff',
     text: '#1e293b',
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: COLORS.text,
         marginBottom: 4,
-        textAlign: 'left',
+        textAlign: 'auto',
     },
     textRTL: {
         textAlign: 'right',
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     date: {
         fontSize: 12,
         color: COLORS.textLight,
-        textAlign: 'left',
+        textAlign: 'auto',
     },
     amount: {
         fontSize: 18,

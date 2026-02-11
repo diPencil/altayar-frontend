@@ -16,7 +16,7 @@ import { useNotifications } from "../../src/contexts/NotificationsContext";
 import { Notification } from "../../src/services/api";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     white: "#ffffff",
     text: "#1e293b",
@@ -404,11 +404,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#f9fafb',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     notificationIconRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     notificationContent: {
         flex: 1,
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: COLORS.text,
         flex: 1,
-        marginRight: 8,
+        marginEnd: 8,
     },
     notificationTime: {
         fontSize: 12,
@@ -459,11 +459,11 @@ const styles = StyleSheet.create({
     actionText: {
         fontSize: 12,
         color: COLORS.gray,
-        marginLeft: 4,
+        marginStart: 4,
     },
     actionTextRTL: {
-        marginLeft: 0,
-        marginRight: 4,
+        marginStart: 0,
+        marginEnd: 4,
     },
     unreadIndicator: {
         width: 8,
@@ -471,11 +471,11 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         backgroundColor: COLORS.blue,
         alignSelf: 'center',
-        marginLeft: 8,
+        marginStart: 8,
     },
     unreadIndicatorRTL: {
-        marginLeft: 0,
-        marginRight: 8,
+        marginStart: 0,
+        marginEnd: 8,
     },
     emptyState: {
         alignItems: 'center',

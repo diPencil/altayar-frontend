@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 
 const COLORS = {
-    primary: "#0891b2", // Employee theme
+    primary: "#1071b8", // Employee theme
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row-reverse',
     },
     searchIcon: {
-        marginRight: 8,
+        marginEnd: 8,
     },
     searchInput: {
         flex: 1,

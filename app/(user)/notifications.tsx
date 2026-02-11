@@ -258,9 +258,9 @@ export default function NotificationsScreen() {
     }
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top }]}>
                 <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => router.back()}
@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
         borderRadius: 24,
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     contentContainer: {
         flex: 1,
@@ -411,7 +411,7 @@ const styles = StyleSheet.create({
         height: 8,
         borderRadius: 4,
         backgroundColor: '#007AFF',
-        marginLeft: 8,
+        marginStart: 8,
     },
     message: {
         fontSize: 14,

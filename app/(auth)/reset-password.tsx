@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    SafeAreaView,
     ScrollView,
     TextInput,
     TouchableOpacity,
@@ -12,6 +11,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { api } from "../../src/services/api";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     white: "#ffffff",
     text: "#1e293b",
@@ -32,6 +32,7 @@ const COLORS = {
 export default function ResetPasswordScreen() {
     const { isRTL } = useLanguage();
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
     const params = useLocalSearchParams();
     const email = params.email as string || "";
 
@@ -111,7 +112,7 @@ export default function ResetPasswordScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
@@ -246,7 +247,7 @@ export default function ResetPasswordScreen() {
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -380,11 +381,11 @@ const styles = StyleSheet.create({
     requirementText: {
         fontSize: 13,
         color: COLORS.textLight,
-        marginLeft: 8,
+        marginStart: 8,
     },
     requirementTextRTL: {
-        marginLeft: 0,
-        marginRight: 8,
+        marginStart: 0,
+        marginEnd: 8,
     },
     requirementMet: {
         color: COLORS.success,

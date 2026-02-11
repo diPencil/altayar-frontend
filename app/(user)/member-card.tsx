@@ -34,7 +34,7 @@ const TIER_CONFIG: any = {
 };
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     primaryDark: "#0e7490",
     background: "#f0f9ff",
     white: "#ffffff",
@@ -423,8 +423,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 20,
         backgroundColor: COLORS.white,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        borderBottomStartRadius: 30,
+        borderBottomEndRadius: 30,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.05,

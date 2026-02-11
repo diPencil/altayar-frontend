@@ -12,7 +12,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 
 const { width } = Dimensions.get('window');
 const COLORS = {
-    primary: "#0891b2", // Employee theme
+    primary: "#1071b8", // Employee theme
     background: "#f8fafc",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -128,13 +128,13 @@ export default function EmployeeCustomers() {
                                         <Text style={styles.avatarText}>{u.first_name?.[0]}{u.last_name?.[0]}</Text>
                                     )}
                                 </View>
-                                <View style={{ flex: 1, [isRTL ? 'marginRight' : 'marginLeft']: 12 }}>
-                                    <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <View style={{ flex: 1, [isRTL ? 'marginEnd' : 'marginStart']: 12 }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                         <Text style={styles.userName} numberOfLines={1}>{u.first_name} {u.last_name}</Text>
                                         <StatusDot status={u.status} />
                                     </View>
                                     <Text style={[styles.userEmail, isRTL && styles.textRTL]}>{u.email}</Text>
-                                    <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginTop: 4, gap: 8 }}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4, gap: 8 }}>
                                         {u.membership ? (
                                             <PlanBadge
                                                 name={isRTL ? (u.membership.plan_name_ar || u.membership.plan_name) : (u.membership.plan_name_en || u.membership.plan_name)}
@@ -256,7 +256,7 @@ function UserDetailsModal({ userId, visible, onClose }: { userId: string; visibl
                         {/* Membership & Wallet Grid */}
                         <View style={styles.grid}>
                             {/* Membership */}
-                            <View style={[styles.miniCard, { flex: 1, marginRight: 8 }]}>
+                            <View style={[styles.miniCard, { flex: 1, marginEnd: 8 }]}>
                                 <Ionicons name="card-outline" size={24} color={COLORS.purple} />
                                 <Text style={styles.miniCardTitle}>{t('admin.manageUsers.userProfile.membership')}</Text>
                                 {data.membership ? (
@@ -274,7 +274,7 @@ function UserDetailsModal({ userId, visible, onClose }: { userId: string; visibl
                             </View>
 
                             {/* Wallet */}
-                            <View style={[styles.miniCard, { flex: 1, marginLeft: 8 }]}>
+                            <View style={[styles.miniCard, { flex: 1, marginStart: 8 }]}>
                                 <Ionicons name="wallet-outline" size={24} color={COLORS.success} />
                                 <Text style={styles.miniCardTitle}>{t('admin.manageUsers.userProfile.walletBalance')}</Text>
                                 <Text style={[styles.highlightValue, { color: COLORS.success }]}>
@@ -286,7 +286,7 @@ function UserDetailsModal({ userId, visible, onClose }: { userId: string; visibl
                         {/* Club Gifts & Loyalty Points Grid */}
                         <View style={styles.grid}>
                             {/* Club Gifts */}
-                            <View style={[styles.miniCard, { flex: 1, marginRight: 8 }]}>
+                            <View style={[styles.miniCard, { flex: 1, marginEnd: 8 }]}>
                                 <Ionicons name="gift-outline" size={24} color={COLORS.warning} />
                                 <Text style={styles.miniCardTitle}>{t("memberCard.clubGiftsBalance")}</Text>
                                 <Text style={[styles.highlightValue, { color: COLORS.warning }]}>
@@ -296,7 +296,7 @@ function UserDetailsModal({ userId, visible, onClose }: { userId: string; visibl
                             </View>
 
                             {/* Loyalty Points */}
-                            <View style={[styles.miniCard, { flex: 1, marginLeft: 8 }]}>
+                            <View style={[styles.miniCard, { flex: 1, marginStart: 8 }]}>
                                 <Ionicons name="star-outline" size={24} color={COLORS.purple} />
                                 <Text style={styles.miniCardTitle}>{t("dashboard.loyaltyPoints")}</Text>
                                 <Text style={[styles.highlightValue, { color: COLORS.purple }]}>
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
     },
     searchInput: {
         flex: 1,
-        marginLeft: 8,
+        marginStart: 8,
         fontSize: 14,
         color: COLORS.text,
     },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
         fontSize: 13,
         fontWeight: '600',
         color: COLORS.primary,
-        marginRight: 4,
+        marginEnd: 4,
     },
     // Modal Details
     detailsContainer: {
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     },
     closeBtn: {
         padding: 8,
-        marginRight: 8,
+        marginEnd: 8,
     },
     detailsTitle: {
         fontSize: 18,
@@ -619,8 +619,8 @@ const styles = StyleSheet.create({
     },
     searchInputRTL: {
         textAlign: 'right',
-        marginLeft: 0,
-        marginRight: 8,
+        marginStart: 0,
+        marginEnd: 8,
     },
     textRTL: {
         textAlign: 'right',

@@ -284,8 +284,8 @@ export default function CreateUserPage() {
                     </View>
 
                     <View style={styles.row}>
-                        <InputField label={t('admin.manageUsers.firstName') + " *"} value={form.first_name} onChangeText={(tVal: string) => setForm({ ...form, first_name: tVal })} containerStyle={{ flex: 1, marginRight: 8 }} required />
-                        <InputField label={t('admin.manageUsers.lastName') + " *"} value={form.last_name} onChangeText={(tVal: string) => setForm({ ...form, last_name: tVal })} containerStyle={{ flex: 1, marginLeft: 8 }} required />
+                        <InputField label={t('admin.manageUsers.firstName') + " *"} value={form.first_name} onChangeText={(tVal: string) => setForm({ ...form, first_name: tVal })} containerStyle={{ flex: 1, marginEnd: 8 }} required />
+                        <InputField label={t('admin.manageUsers.lastName') + " *"} value={form.last_name} onChangeText={(tVal: string) => setForm({ ...form, last_name: tVal })} containerStyle={{ flex: 1, marginStart: 8 }} required />
                     </View>
                     <InputField label={t('admin.manageUsers.email') + " *"} value={form.email} onChangeText={(tVal: string) => setForm({ ...form, email: tVal })} keyboardType="email-address" required />
                     <InputField label={t('admin.manageUsers.phone')} value={form.phone} onChangeText={(tVal: string) => setForm({ ...form, phone: tVal })} keyboardType="phone-pad" placeholder="+20 123 456 7890" />
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
     secondaryBtnText: {
         color: COLORS.primary,
         fontWeight: '600',
-        marginLeft: 8,
+        marginStart: 8,
     },
     chipsContainer: {
         flexDirection: 'row',
@@ -624,7 +624,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         borderWidth: 1,
         borderColor: COLORS.border,
-        marginRight: 10,
+        marginEnd: 10,
         minWidth: 100,
         alignItems: 'center',
     },

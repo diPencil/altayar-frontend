@@ -111,16 +111,16 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: '600',
-        marginLeft: 12,
-        marginRight: 0,
+        marginStart: 12,
+        marginEnd: 0,
         flex: 1,
     },
     containerRTL: {
         flexDirection: 'row-reverse',
     },
     messageRTL: {
-        marginLeft: 0,
-        marginRight: 12,
+        marginStart: 0,
+        marginEnd: 12,
         textAlign: 'right',
     },
 });

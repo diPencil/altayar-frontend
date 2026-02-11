@@ -15,8 +15,8 @@ const SIDEBAR_WIDTH = 260;
 const COLORS = {
   sidebarBg: "#0f172a",
   sidebarHover: "#1e293b",
-  primary: "#0891b2",
-  accent: "#06b6d4",
+  primary: "#1071b8",
+  accent: "#167dc1",
   gold: "#f59e0b",
   white: "#ffffff",
   text: "#e2e8f0",
@@ -335,11 +335,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
-    marginLeft: 10,
+    marginStart: 10,
   },
   adminBadgeRTL: {
-    marginLeft: 0,
-    marginRight: 10,
+    marginStart: 0,
+    marginEnd: 10,
   },
   profileSection: {
     flexDirection: "row",
@@ -360,11 +360,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   profileInfo: {
-    marginLeft: 12,
+    marginStart: 12,
   },
   profileInfoRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: "flex-end",
   },
   profileName: {
@@ -401,11 +401,11 @@ const styles = StyleSheet.create({
   menuLabel: {
     fontSize: 14,
     color: COLORS.textMuted,
-    marginLeft: 14,
+    marginStart: 14,
   },
   menuLabelRTL: {
-    marginLeft: 0,
-    marginRight: 14,
+    marginStart: 0,
+    marginEnd: 14,
     textAlign: "right",
   },
   menuLabelActive: {
@@ -433,12 +433,12 @@ const styles = StyleSheet.create({
   navBtnText: {
     fontSize: 14,
     color: COLORS.text,
-    marginLeft: 12,
+    marginStart: 12,
     fontWeight: "500",
   },
   navBtnTextRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     textAlign: "right",
   },
   main: {

@@ -6,7 +6,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { router } from "expo-router";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#ffffff",
   text: "#1e293b",
   textLight: "#64748b",

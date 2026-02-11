@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity, ActivityIndicator, Image } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Image } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -8,7 +9,7 @@ import { membershipsApi } from "../../src/services/api";
 import { LinearGradient } from "expo-linear-gradient";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f1f5f9",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -52,7 +53,7 @@ const TIER_THEMES: Record<string, any> = {
     accentColor: "#059669",
   },
   diamond: {
-    color: "#06b6d4",
+    color: "#167dc1",
     gradientColors: ["#E0F2FE", "#F0F9FF"],
     primaryColor: "#0369a1",
     accentColor: "#0284c7",
@@ -77,6 +78,7 @@ const ARABIC_TIER_TITLES: Record<string, string> = {
 export default function MembershipsExploreScreen() {
   const { t } = useTranslation();
   const { isRTL, language } = useLanguage();
+  const insets = useSafeAreaInsets();
   const [loading, setLoading] = useState(true);
   const [plans, setPlans] = useState<any[]>([]);
 
@@ -213,7 +215,7 @@ export default function MembershipsExploreScreen() {
         <View
           style={[
             styles.loungeContent,
-            isRTL ? { paddingLeft: 10, paddingRight: 0, alignItems: "flex-end" } : { paddingRight: 10, alignItems: "flex-start" },
+            isRTL ? { paddingStart: 10, paddingEnd: 0, alignItems: "flex-end" } : { paddingEnd: 10, alignItems: "flex-start" },
           ]}
         >
           <Text style={[styles.loungeTitle, { color: tier.primaryColor, textAlign: isRTL ? "right" : "left" }]}>
@@ -226,7 +228,7 @@ export default function MembershipsExploreScreen() {
             </Text>
           )}
 
-          <View style={{ flexDirection: isRTL ? "row-reverse" : "row", alignItems: "center", gap: 12, marginTop: 4 }}>
+          <View style={{ flexDirection: 'row', alignItems: "center", gap: 12, marginTop: 4 }}>
             {showPoints && (
               <Text style={[styles.loungePoints, { color: tier.accentColor }]}>
                 {Number(tier.pointsNeeded).toLocaleString()} {t("common.pts", "PTS")}
@@ -272,7 +274,7 @@ export default function MembershipsExploreScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View style={[styles.header, isRTL && styles.headerRTL]}>
         <TouchableOpacity onPress={() => (router.canGoBack() ? router.back() : router.push("/(user)"))}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
@@ -330,7 +332,7 @@ export default function MembershipsExploreScreen() {
           )}
         </ScrollView>
       )}
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -471,7 +473,7 @@ const styles = StyleSheet.create({
   },
   loungeContent: {
     flex: 1,
-    paddingRight: 10,
+    paddingEnd: 10,
     zIndex: 2,
     justifyContent: "center",
   },

@@ -22,7 +22,7 @@ import Toast from "../../../src/components/Toast";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
@@ -389,7 +389,7 @@ export default function CreateOffer() {
                             <Text style={styles.sectionTitle}>{t('admin.manageOffers.pricing')}</Text>
 
                             <View style={styles.row}>
-                                <View style={{ flex: 1, marginRight: 8 }}>
+                                <View style={{ flex: 1, marginEnd: 8 }}>
                                     <Text style={styles.label}>{t('admin.manageOffers.originalPrice')} *</Text>
                                     <TextInput
                                         style={styles.input}
@@ -399,7 +399,7 @@ export default function CreateOffer() {
                                         onChangeText={setOriginalPrice}
                                     />
                                 </View>
-                                <View style={{ width: 100, marginLeft: 8 }}>
+                                <View style={{ width: 100, marginStart: 8 }}>
                                     <Text style={styles.label}>{t('common.currencyLabel')}</Text>
                                     <TouchableOpacity
                                         style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 10 }]}
@@ -438,7 +438,7 @@ export default function CreateOffer() {
                             <Text style={styles.sectionTitle}>{t('admin.manageOffers.validity')}</Text>
 
                             <View style={styles.row}>
-                                <View style={{ flex: 1, marginRight: 8 }}>
+                                <View style={{ flex: 1, marginEnd: 8 }}>
                                     <Text style={styles.label}>{t('admin.manageOffers.durationDays')}</Text>
                                     <TextInput
                                         style={styles.input}
@@ -448,7 +448,7 @@ export default function CreateOffer() {
                                         onChangeText={setDurationDays}
                                     />
                                 </View>
-                                <View style={{ flex: 1, marginLeft: 8 }}>
+                                <View style={{ flex: 1, marginStart: 8 }}>
                                     <Text style={styles.label}>{t('admin.manageOffers.durationNights')}</Text>
                                     <TextInput
                                         style={styles.input}

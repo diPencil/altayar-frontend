@@ -13,7 +13,7 @@ import Toast from "../../../src/components/Toast";
 import ConfirmModal from "../../../src/components/ConfirmModal"; // You might need to ensure this path is correct or create a simple confirm modal if not exists
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -419,7 +419,7 @@ export default function BookingDetails() {
                 {/* Back View Button */}
                 <TouchableOpacity style={{ marginBottom: 16, flexDirection: 'row', alignItems: 'center' }} onPress={() => setMode('VIEW')}>
                     <Ionicons name="arrow-back" size={24} color={COLORS.text} />
-                    <Text style={{ marginLeft: 8, color: COLORS.text, fontWeight: '600' }}>{t('common.cancel')}</Text>
+                    <Text style={{ marginStart: 8, color: COLORS.text, fontWeight: '600' }}>{t('common.cancel')}</Text>
                 </TouchableOpacity>
 
                 {/* Step 1: User (Read Only) */}
@@ -493,7 +493,7 @@ export default function BookingDetails() {
                                 </TouchableOpacity>
                             )}
                         </View>
-                        <View style={{ flex: 1, marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                        <View style={{ flex: 1, marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.endDate')}</Text>
                             {Platform.OS === 'web' ? (
                                 <TextInput
@@ -551,7 +551,7 @@ export default function BookingDetails() {
                         <View style={{ width: 100 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.currency')}</Text>
                             <TouchableOpacity
-                                style={[styles.input, { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' }]}
+                                style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
                                 onPress={() => {
                                     const currencies = ['USD', 'EUR', 'SAR', 'EGP'];
                                     const nextIndex = (currencies.indexOf(currency) + 1) % currencies.length;
@@ -669,7 +669,7 @@ const styles = StyleSheet.create({
     label: { fontSize: 14, fontWeight: "500", color: COLORS.textLight, marginTop: 4, marginBottom: 2 },
     labelRTL: { textAlign: 'right' },
     value: { fontSize: 15, fontWeight: "600", color: COLORS.text },
-    input: { backgroundColor: "#f8fafc", borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: COLORS.text, textAlign: 'left' },
+    input: { backgroundColor: "#f8fafc", borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: COLORS.text, textAlign: 'auto' },
     inputRTL: { textAlign: 'right' },
     row: { flexDirection: "row", gap: 12, alignItems: 'center', justifyContent: 'space-between' },
     rowRTL: { flexDirection: "row-reverse" },

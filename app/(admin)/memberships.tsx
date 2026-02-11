@@ -8,7 +8,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import Toast from "../../src/components/Toast";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
-    marginLeft: 8,
+    marginStart: 8,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   statContent: {
     flex: 1,
@@ -545,8 +545,8 @@ const styles = StyleSheet.create({
 
   statContentRTL: {
     alignItems: 'flex-end',
-    marginRight: 12,
-    marginLeft: 0,
+    marginEnd: 12,
+    marginStart: 0,
   },
   statValue: {
     fontSize: 18,
@@ -573,8 +573,8 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
     backgroundColor: '#f8fafc',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderTopStartRadius: 12,
+    borderTopEndRadius: 12,
   },
   th: {
     fontSize: 12,
@@ -683,7 +683,7 @@ const styles = StyleSheet.create({
   },
   memberPlan: {
     fontSize: 12,
-    marginLeft: 4,
+    marginStart: 4,
   },
   memberExp: {
     fontSize: 11,

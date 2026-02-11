@@ -20,7 +20,7 @@ export default function FavoritesScreen() {
     const insets = useSafeAreaInsets();
     const { t } = useTranslation();
     const { isRTL, language } = useLanguage();
-    
+
     const initialTab = String((params as any)?.tab || '').toLowerCase() === 'offers' ? 'offers' : 'reels';
     const [activeTab, setActiveTab] = useState<'reels' | 'offers'>(initialTab as any);
 
@@ -162,14 +162,14 @@ export default function FavoritesScreen() {
         }
         const manifest = Constants.expoConfig || Constants.manifest;
         let ip: string | null = null;
-        if (manifest?.hostUri) {
+        if (manifest && 'hostUri' in manifest && manifest.hostUri) {
             ip = manifest.hostUri.split(':')[0];
         }
         if (!ip && Constants.debuggerHost) {
             ip = Constants.debuggerHost.split(':')[0];
         }
-        if (!ip && manifest?.extra?.devServerIp) {
-            ip = manifest.extra.devServerIp;
+        if (!ip && manifest && 'extra' in manifest && manifest.extra && typeof manifest.extra === 'object' && 'devServerIp' in manifest.extra) {
+            ip = manifest.extra.devServerIp as string;
         }
         if (!ip) {
             ip = '192.168.1.27';
@@ -181,7 +181,7 @@ export default function FavoritesScreen() {
         // Get thumbnail URL - use existing or generate for YouTube
         let thumbnailUrl = item.thumbnail_url;
         let videoSource = null;
-        
+
         if (!thumbnailUrl && item.video_type === 'YOUTUBE' && item.video_url) {
             thumbnailUrl = getYouTubeThumbnail(item.video_url);
         } else if (item.video_type === 'UPLOAD' && item.video_url) {
@@ -201,82 +201,82 @@ export default function FavoritesScreen() {
         }
 
         return (
-        <TouchableOpacity
-            style={styles.reelCard}
-            onPress={() => handleReelPress(item.id)}
-            activeOpacity={0.9}
-        >
-            {/* Thumbnail */}
-            <View style={styles.thumbnailContainer}>
-                {thumbnailUrl ? (
-                    <Image 
-                        source={{ uri: thumbnailUrl }} 
-                        style={styles.thumbnail}
-                        resizeMode="cover"
-                    />
-                ) : videoSource ? (
-                    // Use Video component to show first frame for uploaded videos
-                    <Video
-                        source={{ uri: videoSource }}
-                        style={styles.thumbnail}
-                        resizeMode={ResizeMode.COVER}
-                        shouldPlay={false}
-                        useNativeControls={false}
-                        isMuted={true}
-                        isLooping={false}
-                    />
-                ) : item.video_type === 'YOUTUBE' ? (
-                    <View style={[styles.thumbnail, styles.placeholderContainer]}>
-                        <Ionicons name="logo-youtube" size={40} color="#FF0000" />
+            <TouchableOpacity
+                style={styles.reelCard}
+                onPress={() => handleReelPress(item.id)}
+                activeOpacity={0.9}
+            >
+                {/* Thumbnail */}
+                <View style={styles.thumbnailContainer}>
+                    {thumbnailUrl ? (
+                        <Image
+                            source={{ uri: thumbnailUrl }}
+                            style={styles.thumbnail}
+                            resizeMode="cover"
+                        />
+                    ) : videoSource ? (
+                        // Use Video component to show first frame for uploaded videos
+                        <Video
+                            source={{ uri: videoSource }}
+                            style={styles.thumbnail}
+                            resizeMode={ResizeMode.COVER}
+                            shouldPlay={false}
+                            useNativeControls={false}
+                            isMuted={true}
+                            isLooping={false}
+                        />
+                    ) : item.video_type === 'YOUTUBE' ? (
+                        <View style={[styles.thumbnail, styles.placeholderContainer]}>
+                            <Ionicons name="logo-youtube" size={40} color="#FF0000" />
+                        </View>
+                    ) : (
+                        <View style={[styles.thumbnail, styles.placeholderContainer]}>
+                            <Ionicons name="videocam" size={40} color="#999" />
+                        </View>
+                    )}
+
+                    {/* Play overlay */}
+                    <View style={styles.playOverlay}>
+                        <View style={styles.playButton}>
+                            <Ionicons name="play" size={24} color="white" />
+                        </View>
                     </View>
-                ) : (
-                    <View style={[styles.thumbnail, styles.placeholderContainer]}>
-                        <Ionicons name="videocam" size={40} color="#999" />
-                    </View>
-                )}
-                
-                {/* Play overlay */}
-                <View style={styles.playOverlay}>
-                    <View style={styles.playButton}>
-                        <Ionicons name="play" size={24} color="white" />
+
+                    {/* Remove button */}
+                    <TouchableOpacity
+                        style={[styles.removeButton, isRTL && styles.removeButtonRTL]}
+                        onPress={(e) => {
+                            e.stopPropagation();
+                            handleRemoveFavorite(item.id);
+                        }}
+                    >
+                        <Ionicons name="heart" size={20} color="#FF3B30" />
+                    </TouchableOpacity>
+
+                    {/* Views count */}
+                    <View style={[styles.viewsCount, isRTL && styles.viewsCountRTL]}>
+                        <Ionicons name="eye" size={14} color="white" />
+                        <Text style={styles.viewsText}>{formatCount(item.views_count)}</Text>
                     </View>
                 </View>
 
-                {/* Remove button */}
-                <TouchableOpacity 
-                    style={[styles.removeButton, isRTL && styles.removeButtonRTL]}
-                    onPress={(e) => {
-                        e.stopPropagation();
-                        handleRemoveFavorite(item.id);
-                    }}
-                >
-                    <Ionicons name="heart" size={20} color="#FF3B30" />
-                </TouchableOpacity>
-
-                {/* Views count */}
-                <View style={[styles.viewsCount, isRTL && styles.viewsCountRTL]}>
-                    <Ionicons name="eye" size={14} color="white" />
-                    <Text style={styles.viewsText}>{formatCount(item.views_count)}</Text>
-                </View>
-            </View>
-
-            {/* Info */}
-            <View style={styles.infoContainer}>
-                <Text style={styles.reelTitle} numberOfLines={2}>
-                    {item.title || 'Untitled Reel'}
-                </Text>
-                <View style={styles.statsRow}>
-                    <View style={styles.stat}>
-                        <Ionicons name="heart" size={14} color="#FF3B30" />
-                        <Text style={styles.statText}>{formatCount(item.likes_count)}</Text>
-                    </View>
-                    <View style={styles.stat}>
-                        <Ionicons name="chatbubble" size={14} color="#007AFF" />
-                        <Text style={styles.statText}>{formatCount(item.comments_count)}</Text>
+                {/* Info */}
+                <View style={styles.infoContainer}>
+                    <Text style={styles.reelTitle} numberOfLines={2}>
+                        {item.title || 'Untitled Reel'}
+                    </Text>
+                    <View style={styles.statsRow}>
+                        <View style={styles.stat}>
+                            <Ionicons name="heart" size={14} color="#FF3B30" />
+                            <Text style={styles.statText}>{formatCount(item.likes_count)}</Text>
+                        </View>
+                        <View style={styles.stat}>
+                            <Ionicons name="chatbubble" size={14} color="#007AFF" />
+                            <Text style={styles.statText}>{formatCount(item.comments_count)}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
         );
     };
 
@@ -344,17 +344,17 @@ export default function FavoritesScreen() {
     }
 
     return (
-        <View style={[styles.container, { paddingTop: insets.top }]}>
+        <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
-                <TouchableOpacity 
+            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top }]}>
+                <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => router.back()}
                 >
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color="#333" />
                 </TouchableOpacity>
                 <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>{t('favorites.title')}</Text>
-                <TouchableOpacity 
+                <TouchableOpacity
                     style={styles.refreshButton}
                     onPress={onRefresh}
                 >

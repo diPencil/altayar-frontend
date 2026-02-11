@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    SafeAreaView,
     TextInput,
     TouchableOpacity,
     ActivityIndicator,
@@ -11,6 +10,7 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { api } from "../../src/services/api";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f0f9ff",
     white: "#ffffff",
     text: "#1e293b",
@@ -31,6 +31,7 @@ const COLORS = {
 export default function ForgotPasswordScreen() {
     const { isRTL } = useLanguage();
     const { t } = useTranslation();
+    const insets = useSafeAreaInsets();
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -75,7 +76,7 @@ export default function ForgotPasswordScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={{ flex: 1 }}
@@ -135,7 +136,7 @@ export default function ForgotPasswordScreen() {
                     </View>
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 

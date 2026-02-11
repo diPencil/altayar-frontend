@@ -418,7 +418,7 @@ export default function TierFeedScreen() {
                                     source={{ uri: post.user_avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
                                     style={styles.postAvatar}
                                 />
-                                <View style={[styles.postMeta, isRTL ? { marginRight: 12, marginLeft: 0 } : { marginLeft: 12 }]}>
+                                <View style={[styles.postMeta, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>
                                     <Text style={[styles.postAuthor, isRTL && { textAlign: 'right' }]}>
                                         {post.user_first_name || ''} {post.user_last_name || ''}
                                     </Text>
@@ -508,21 +508,21 @@ export default function TierFeedScreen() {
                             onPress={() => { setSortBy('recent'); setShowMenu(false); }}
                         >
                             <Ionicons name="time-outline" size={20} color={sortBy === 'recent' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'recent' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginRight: 12, marginLeft: 0 } : { marginLeft: 12 }]}>{t('community.mostRecent', 'Most Recent')}</Text>
+                            <Text style={[styles.menuText, sortBy === 'recent' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostRecent', 'Most Recent')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.menuItem, sortBy === 'liked' && styles.menuItemActive, isRTL && { flexDirection: 'row-reverse' }]}
                             onPress={() => { setSortBy('liked'); setShowMenu(false); }}
                         >
                             <Ionicons name="heart-outline" size={20} color={sortBy === 'liked' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'liked' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginRight: 12, marginLeft: 0 } : { marginLeft: 12 }]}>{t('community.mostLiked', 'Most Liked')}</Text>
+                            <Text style={[styles.menuText, sortBy === 'liked' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostLiked', 'Most Liked')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.menuItem, sortBy === 'discussed' && styles.menuItemActive, isRTL && { flexDirection: 'row-reverse' }]}
                             onPress={() => { setSortBy('discussed'); setShowMenu(false); }}
                         >
                             <Ionicons name="chatbubbles-outline" size={20} color={sortBy === 'discussed' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'discussed' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginRight: 12, marginLeft: 0 } : { marginLeft: 12 }]}>{t('community.mostDiscussed', 'Most Discussed')}</Text>
+                            <Text style={[styles.menuText, sortBy === 'discussed' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostDiscussed', 'Most Discussed')}</Text>
                         </TouchableOpacity>
 
                         <View style={styles.menuDivider} />
@@ -539,7 +539,7 @@ export default function TierFeedScreen() {
                             }}
                         >
                             <Ionicons name="information-circle-outline" size={20} color="#475569" />
-                            <Text style={[styles.menuText, isRTL ? { marginRight: 12, marginLeft: 0 } : { marginLeft: 12 }]}>{t('community.guidelines', 'Guidelines')}</Text>
+                            <Text style={[styles.menuText, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.guidelines', 'Guidelines')}</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     },
     heroContent: {
         flex: 1,
-        paddingRight: 10,
+        paddingEnd: 10,
         zIndex: 2,
     },
     heroImage: {
@@ -907,7 +907,7 @@ const styles = StyleSheet.create({
     },
     postMeta: {
         flex: 1,
-        marginLeft: 12,
+        marginStart: 12,
     },
     postAuthor: {
         fontSize: 16,
@@ -967,8 +967,8 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: '#fff',
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
+        borderTopStartRadius: 24,
+        borderTopEndRadius: 24,
         padding: 24,
         minHeight: 300,
     },
@@ -1068,7 +1068,7 @@ const styles = StyleSheet.create({
     menuText: {
         fontSize: 15,
         color: '#475569',
-        marginLeft: 12,
+        marginStart: 12,
         fontWeight: '500',
     },
     menuDivider: {
@@ -1096,7 +1096,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f9fa',
     },
     sourceButtonActive: {
-        borderColor: '#0891b2',
+        borderColor: '#1071b8',
         backgroundColor: '#e0f2fe',
     },
     sourceButtonText: {
@@ -1141,7 +1141,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f9fa',
         padding: 12,
         borderRadius: 12,
-        borderTopLeftRadius: 4,
+        borderTopStartRadius: 4,
     },
     commentHeader: {
         flexDirection: 'row',

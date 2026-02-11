@@ -58,8 +58,8 @@ export default function EmojiPicker({ visible, onEmojiSelect, onClose }: EmojiPi
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
     maxHeight: 300,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },

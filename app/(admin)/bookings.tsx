@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     createBtnText: {
         color: 'white',
         fontWeight: '600',
-        marginLeft: 6,
+        marginStart: 6,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
         flex: 1,
         fontSize: 14,
         color: COLORS.text,
-        textAlign: 'left',
+        textAlign: 'auto',
     },
     pill: {
         paddingHorizontal: 16,
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderWidth: 1,
         borderColor: COLORS.border,
-        marginRight: 8,
+        marginEnd: 8,
     },
     pillActive: {
         borderColor: 'transparent',

@@ -7,7 +7,7 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useRouter } from "expo-router";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   success: "#10b981",
   warning: "#f59e0b",
   error: "#ef4444",
@@ -77,7 +77,7 @@ export default function AdminPayments() {
         <View style={[styles.statCard, { backgroundColor: `${COLORS.success}15` }]}>
           <View style={[styles.statCardContent, isRTL && styles.statCardContentRTL]}>
             <Ionicons name="checkmark-circle" size={28} color={COLORS.success} />
-            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginRight: 12, marginLeft: 0 }]}>
+            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginEnd: 12, marginStart: 0 }]}>
               <Text style={[styles.statValue, isRTL && styles.textRTL]}>{totalPaid.toLocaleString()}</Text>
               <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{t('admin.managePayments.totalPaid')}</Text>
             </View>
@@ -86,7 +86,7 @@ export default function AdminPayments() {
         <View style={[styles.statCard, { backgroundColor: `${COLORS.warning}15` }]}>
           <View style={[styles.statCardContent, isRTL && styles.statCardContentRTL]}>
             <Ionicons name="time" size={28} color={COLORS.warning} />
-            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginRight: 12, marginLeft: 0 }]}>
+            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginEnd: 12, marginStart: 0 }]}>
               <Text style={[styles.statValue, isRTL && styles.textRTL]}>
                 {payments.filter(p => p.status === 'PENDING' || p.status === 'UNPAID').length}
               </Text>
@@ -123,6 +123,7 @@ export default function AdminPayments() {
               key={index}
               user={payment.user ? `${payment.user.first_name} ${payment.user.last_name}` : (payment.user_id ? `${t('common.user')} ${payment.user_id.substring(0, 5)}` : t('common.unknown'))}
               amount={payment.amount}
+              currency={payment.currency}
               status={payment.status}
               method={payment.payment_method || t('admin.managePayments.method')}
               time={new Date(payment.created_at).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}
@@ -179,7 +180,7 @@ export default function AdminPayments() {
   );
 }
 
-function PaymentRow({ user, amount, status, method, time, isRTL, onPress }: any) {
+function PaymentRow({ user, amount, currency, status, method, time, isRTL, onPress }: any) {
   const { t } = useTranslation();
   const statusColors: any = {
     PAID: COLORS.success,
@@ -206,7 +207,7 @@ function PaymentRow({ user, amount, status, method, time, isRTL, onPress }: any)
         <Text style={[styles.paymentMeta, isRTL && styles.textRTL]}>{method} • {time}</Text>
       </View>
       <View style={[styles.paymentRight, isRTL && styles.paymentRightRTL]}>
-        <Text style={[styles.paymentAmount, isRTL && styles.textRTL]}>{amount} {t('common.currency.usd')}</Text>
+        <Text style={[styles.paymentAmount, isRTL && styles.textRTL]}>{amount} {currency || t('common.currency.usd')}</Text>
         <View style={[styles.statusBadge, { backgroundColor: `${color}15` }]}>
           <Text style={[styles.statusText, { color: color }]}>{statusLabels[status] || status}</Text>
         </View>
@@ -257,11 +258,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   statTextContainer: {
-    marginLeft: 12,
+    marginStart: 12,
   },
   statTextContainerRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: 'flex-end',
   },
   statValue: {
@@ -303,12 +304,12 @@ const styles = StyleSheet.create({
   filterText: {
     fontSize: 13,
     color: COLORS.primary,
-    marginLeft: 4,
-    textAlign: 'left',
+    marginStart: 4,
+    textAlign: 'auto',
   },
   filterTextRTL: {
-    marginLeft: 0,
-    marginRight: 4,
+    marginStart: 0,
+    marginEnd: 4,
     textAlign: 'right',
   },
   paymentRow: {
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
   },
   paymentInfo: {
     flex: 1,
-    marginRight: 12,
+    marginEnd: 12,
   },
   paymentUser: {
     fontSize: 15,
@@ -374,8 +375,8 @@ const styles = StyleSheet.create({
   },
   paymentInfoRTL: {
     alignItems: 'flex-end',
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   paymentRightRTL: {
     alignItems: 'flex-start',
@@ -421,7 +422,7 @@ const styles = StyleSheet.create({
   modalOptionText: {
     fontSize: 16,
     color: COLORS.text,
-    textAlign: 'left',
+    textAlign: 'auto',
     flex: 1,
   },
   selectedOptionText: {

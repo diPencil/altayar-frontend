@@ -770,8 +770,8 @@ const styles = StyleSheet.create({
         height: 8,
         borderRadius: 4,
         marginTop: 9,
-        marginRight: 16,
-        marginLeft: 0,
+        marginEnd: 16,
+        marginStart: 0,
     },
     modernListItemContent: {
         flex: 1,
@@ -791,7 +791,7 @@ const styles = StyleSheet.create({
     itemDivider: {
         height: 1,
         backgroundColor: '#f1f5f9',
-        marginLeft: 24,
+        marginStart: 24,
     },
     modernTextCard: {
         padding: 24,

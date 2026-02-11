@@ -16,7 +16,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { employeeApi } from "../../../src/services/api";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     },
     backIcon: {
         padding: 4,
-        marginRight: 12,
+        marginEnd: 12,
     },
     headerTitleWrap: {
         flex: 1,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#e0f2fe",
         alignItems: "center",
         justifyContent: "center",
-        marginRight: 14,
+        marginEnd: 14,
     },
     rowContent: {
         flex: 1,

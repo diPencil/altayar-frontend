@@ -4,15 +4,15 @@ import {
     Text,
     StyleSheet,
     ScrollView,
-    SafeAreaView,
     Dimensions,
     TouchableOpacity,
     ActivityIndicator,
     Image,
     Modal,
     Alert,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -25,7 +25,7 @@ import { emitMembershipRequired } from '../../src/utils/membershipGate';
 const { width } = Dimensions.get('window');
 
 const COLORS = {
-    primary: '#0891b2',
+    primary: '#1071b8',
     gold: '#f59e0b',
     silver: '#9ca3af',
     platinum: '#8b5cf6',
@@ -34,6 +34,8 @@ const COLORS = {
     text: '#1e293b',
     textLight: '#64748b',
     lightGray: '#e2e8f0',
+    cardBg: '#ffffff',
+    border: '#e2e8f0',
 };
 
 const TIER_IMAGES: Record<string, any> = {
@@ -72,7 +74,7 @@ const TIER_THEMES: Record<string, any> = {
         accentColor: '#059669',
     },
     diamond: {
-        color: '#06b6d4',
+        color: '#167dc1',
         gradientColors: ['#E0F2FE', '#F0F9FF'],
         primaryColor: '#0369a1',
         accentColor: '#0284c7',
@@ -98,6 +100,7 @@ export default function MembershipJourneyScreen() {
     const { t } = useTranslation();
     const { isRTL, language } = useLanguage();
     const { user } = useAuth();
+    const insets = useSafeAreaInsets();
     const isMember = isMembershipActive(user);
     const [loading, setLoading] = useState(true);
     const [currentPoints, setCurrentPoints] = useState(0);
@@ -186,7 +189,7 @@ export default function MembershipJourneyScreen() {
                     ...p,
                     pointsNeeded: p.pointsNeeded !== 1000 ? p.pointsNeeded : (POINTS_MAP[p.code] || 0)
                 }));
-                enrichedPlans.sort((a, b) => a.pointsNeeded - b.pointsNeeded);
+                enrichedPlans.sort((a: any, b: any) => a.pointsNeeded - b.pointsNeeded);
                 setTierHierarchy(enrichedPlans);
                 return;
             }
@@ -276,7 +279,7 @@ export default function MembershipJourneyScreen() {
             }));
 
             // Re-sort enriched plans by pointsNeeded to be absolutely sure
-            enrichedPlans.sort((a, b) => a.pointsNeeded - b.pointsNeeded);
+            enrichedPlans.sort((a: any, b: any) => a.pointsNeeded - b.pointsNeeded);
 
             setTierHierarchy(enrichedPlans);
 
@@ -467,7 +470,7 @@ export default function MembershipJourneyScreen() {
             >
                 <View style={[
                     styles.loungeContent,
-                    isRTL ? { paddingLeft: 10, paddingRight: 0, alignItems: 'flex-end' } : { paddingRight: 10, alignItems: 'flex-start' }
+                    isRTL ? { paddingStart: 10, paddingEnd: 0, alignItems: 'flex-end' } : { paddingEnd: 10, alignItems: 'flex-start' }
                 ]}>
                     {isCurrent && (
                         <View style={[styles.badgeContainer, { backgroundColor: primaryColor, alignSelf: isRTL ? 'flex-end' : 'flex-start' }]}>
@@ -496,14 +499,14 @@ export default function MembershipJourneyScreen() {
 
                     {/* Hide Price/Points for Main Card, Show for List */}
                     {!isMain && (
-                        <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4 }}>
                             <Text style={[styles.loungePoints, { color: accentColor }]}>
                                 {tier.pointsNeeded?.toLocaleString()} {t('common.pts', 'PTS')}
                             </Text>
 
                             {tier.price && tier.price > 0 && (
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                    <View style={{ width: 1, height: 12, backgroundColor: accentColor, opacity: 0.3, marginRight: 12 }} />
+                                    <View style={{ width: 1, height: 12, backgroundColor: accentColor, opacity: 0.3, marginEnd: 12 }} />
                                     <Text style={[styles.loungePoints, { color: primaryColor, fontWeight: '800' }]}>
                                         ${tier.price.toLocaleString()}
                                     </Text>
@@ -531,7 +534,7 @@ export default function MembershipJourneyScreen() {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={[styles.container, { paddingTop: insets.top }]}>
             {/* Header */}
             <View style={[styles.header, isRTL && styles.headerRTL]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -568,63 +571,63 @@ export default function MembershipJourneyScreen() {
 
                                     {nextTier ? (
                                         <>
-                                    {/* Points Display */}
-                                    <View style={[styles.pointsDisplay, isRTL && { flexDirection: 'row-reverse' }]}>
-                                        <View style={styles.pointsBox}>
-                                            <Text style={styles.pointsValue}>{currentPoints.toLocaleString()}</Text>
-                                            <Text style={styles.pointsLabel}>
-                                                {t('profile.currentPoints', 'Current Points')}
-                                            </Text>
-                                        </View>
-                                        <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={24} color={COLORS.gold} />
-                                        <View style={styles.pointsBox}>
-                                            <Text style={[styles.pointsValue, { color: nextTier.color }]}>
-                                                {nextTier.pointsNeeded?.toLocaleString()}
-                                            </Text>
-                                            <Text style={styles.pointsLabel}>
-                                                {t('profile.targetPoints', 'Target Points')}
-                                            </Text>
-                                        </View>
-                                    </View>
+                                            {/* Points Display */}
+                                            <View style={[styles.pointsDisplay, isRTL && { flexDirection: 'row-reverse' }]}>
+                                                <View style={styles.pointsBox}>
+                                                    <Text style={styles.pointsValue}>{currentPoints.toLocaleString()}</Text>
+                                                    <Text style={styles.pointsLabel}>
+                                                        {t('profile.currentPoints', 'Current Points')}
+                                                    </Text>
+                                                </View>
+                                                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={24} color={COLORS.gold} />
+                                                <View style={styles.pointsBox}>
+                                                    <Text style={[styles.pointsValue, { color: nextTier.color }]}>
+                                                        {nextTier.pointsNeeded?.toLocaleString()}
+                                                    </Text>
+                                                    <Text style={styles.pointsLabel}>
+                                                        {t('profile.targetPoints', 'Target Points')}
+                                                    </Text>
+                                                </View>
+                                            </View>
 
-                                    {/* Progress Bar */}
-                                    <View style={styles.progressBarContainer}>
-                                        <View style={styles.progressBarWrapper}>
-                                            <LinearGradient
-                                                colors={['#f59e0b', '#d97706', '#b45309']}
-                                                start={{ x: 0, y: 0 }}
-                                                end={{ x: 1, y: 0 }}
-                                                style={[styles.progressBarFill, { width: `${Math.max(2, Math.round(progressPercent))}%` }]}
-                                            />
-                                        </View>
-                                        <Text style={styles.progressPercent}>{Math.round(progressPercent)}%</Text>
-                                    </View>
+                                            {/* Progress Bar */}
+                                            <View style={styles.progressBarContainer}>
+                                                <View style={styles.progressBarWrapper}>
+                                                    <LinearGradient
+                                                        colors={['#f59e0b', '#d97706', '#b45309']}
+                                                        start={{ x: 0, y: 0 }}
+                                                        end={{ x: 1, y: 0 }}
+                                                        style={[styles.progressBarFill, { width: `${Math.max(2, Math.round(progressPercent))}%` }]}
+                                                    />
+                                                </View>
+                                                <Text style={styles.progressPercent}>{Math.round(progressPercent)}%</Text>
+                                            </View>
 
-                                    {/* Points Needed */}
-                                    <View style={[styles.pointsNeededCard, { flexDirection: isRTL ? 'row' : 'row-reverse' }]}>
-                                        <Ionicons
-                                            name="trending-up"
-                                            size={32}
-                                            color={COLORS.gold}
-                                            style={isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
-                                        />
-                                        <View style={[
-                                            styles.pointsNeededContent,
-                                            isRTL ? { marginLeft: 16, marginRight: 0, alignItems: 'flex-end' } : { marginRight: 16, marginLeft: 0, alignItems: 'flex-start' }
-                                        ]}>
-                                            <Text style={[styles.pointsNeededTitle, isRTL && styles.textRTL]}>
-                                                {t('profile.pointsNeeded', 'Points Needed')}
-                                            </Text>
-                                            <Text style={[styles.pointsNeededValue, isRTL && styles.textRTL]}>
-                                                {pointsNeeded > 0 ? pointsNeeded.toLocaleString() : 0} {t('common.pts', 'pts')}
-                                            </Text>
-                                            <Text style={[styles.pointsNeededSubtitle, isRTL && styles.textRTL]}>
-                                                {language === 'ar'
-                                                    ? `${t('profile.to')} ${nextTierName}`
-                                                    : `${t('profile.to')} ${nextTierName}`}
-                                            </Text>
-                                        </View>
-                                    </View>
+                                            {/* Points Needed */}
+                                            <View style={[styles.pointsNeededCard, { flexDirection: isRTL ? 'row' : 'row-reverse' }]}>
+                                                <Ionicons
+                                                    name="trending-up"
+                                                    size={32}
+                                                    color={COLORS.gold}
+                                                    style={isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
+                                                />
+                                                <View style={[
+                                                    styles.pointsNeededContent,
+                                                    isRTL ? { marginStart: 16, marginEnd: 0, alignItems: 'flex-end' } : { marginEnd: 16, marginStart: 0, alignItems: 'flex-start' }
+                                                ]}>
+                                                    <Text style={[styles.pointsNeededTitle, isRTL && styles.textRTL]}>
+                                                        {t('profile.pointsNeeded', 'Points Needed')}
+                                                    </Text>
+                                                    <Text style={[styles.pointsNeededValue, isRTL && styles.textRTL]}>
+                                                        {pointsNeeded > 0 ? pointsNeeded.toLocaleString() : 0} {t('common.pts', 'pts')}
+                                                    </Text>
+                                                    <Text style={[styles.pointsNeededSubtitle, isRTL && styles.textRTL]}>
+                                                        {language === 'ar'
+                                                            ? `${t('profile.to')} ${nextTierName}`
+                                                            : `${t('profile.to')} ${nextTierName}`}
+                                                    </Text>
+                                                </View>
+                                            </View>
                                         </>
                                     ) : (
                                         <View style={styles.maxLevelCard}>
@@ -720,7 +723,7 @@ export default function MembershipJourneyScreen() {
                                                     >
                                                         {saveCard && <Ionicons name="checkmark" size={16} color="#fff" />}
                                                     </TouchableOpacity>
-                                                    <Text style={[styles.saveCardText, isRTL && styles.textRTL, isRTL ? { marginRight: 8 } : { marginLeft: 8 }]}>
+                                                    <Text style={[styles.saveCardText, isRTL && styles.textRTL, isRTL ? { marginEnd: 8 } : { marginStart: 8 }]}>
                                                         {t('membership.saveCard', 'Save card for future payments')}
                                                     </Text>
                                                 </View>
@@ -752,7 +755,7 @@ export default function MembershipJourneyScreen() {
                     </>
                 )}
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -861,7 +864,7 @@ const styles = StyleSheet.create({
     },
     loungeContent: {
         flex: 1,
-        paddingRight: 10,
+        paddingEnd: 10,
         zIndex: 2,
         justifyContent: 'center',
     },
@@ -985,7 +988,7 @@ const styles = StyleSheet.create({
         borderColor: '#fde68a',
     },
     pointsNeededContent: {
-        marginLeft: 16,
+        marginStart: 16,
         flex: 1,
     },
     pointsNeededTitle: {
@@ -1029,7 +1032,7 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         color: COLORS.text,
         marginBottom: 16,
-        marginLeft: 4,
+        marginStart: 4,
     },
 
     // Modal Styles
@@ -1040,8 +1043,8 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         backgroundColor: COLORS.white,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        borderTopStartRadius: 30,
+        borderTopEndRadius: 30,
         padding: 24,
         paddingBottom: 40,
         minHeight: 400,

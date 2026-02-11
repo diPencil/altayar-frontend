@@ -45,7 +45,7 @@ export default function Index() {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color="#0891b2" />
+        <ActivityIndicator size="large" color="#1071b8" />
       </View>
     );
   }
@@ -115,8 +115,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     backgroundColor: "#fff",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderTopStartRadius: 30,
+    borderTopEndRadius: 30,
     marginTop: -30, // Overlap the image
     paddingHorizontal: 24,
     paddingTop: 40,
@@ -143,12 +143,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   button: {
-    backgroundColor: "#0891b2",
+    backgroundColor: "#1071b8",
     width: "100%",
     paddingVertical: 18,
     borderRadius: 30,
     alignItems: "center",
-    shadowColor: "#0891b2",
+    shadowColor: "#1071b8",
     shadowOffset: {
       width: 0,
       height: 4,

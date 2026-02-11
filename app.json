@@ -4,14 +4,14 @@
     "slug": "altayarvip",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appicon.png",
     "scheme": "altayarvip",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash-image.png",
       "resizeMode": "contain",
-      "backgroundColor": "#000000"
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -44,6 +44,7 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
+      "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true,
       "usesCleartextTraffic": true
     },
@@ -54,14 +55,20 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-localization",
+        {
+          "supportsRTL": true
+        }
+      ],
       "expo-notifications",
       [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-image.png",
-          "imageWidth": 200,
+          "imageWidth": 600,
           "resizeMode": "contain",
-          "backgroundColor": "#000000"
+          "backgroundColor": "#FFFFFF"
         }
       ],
       "@react-native-community/datetimepicker"
@@ -71,10 +78,11 @@
     },
     "extra": {
       "eas": {
-        "projectId": ""
+        "projectId": "b6ad6ef4-815f-4206-90d5-a8a0e28325e1"
       },
       "apiUrl": "https://api.altayarvip.sbs/api",
-      "devServerIp": "192.168.1.17"
+      "devServerIp": "192.168.1.17",
+      "router": {}
     }
   }
 }

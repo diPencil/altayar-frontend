@@ -13,7 +13,7 @@ export interface RTLStyleOptions {
  * Creates a flexDirection style that adapts to RTL
  */
 export const rtlRow = (isRTL: boolean): ViewStyle => ({
-  flexDirection: isRTL ? 'row-reverse' : 'row',
+  flexDirection: 'row',
 });
 
 /**
@@ -24,31 +24,31 @@ export const rtlTextAlign = (isRTL: boolean): TextStyle => ({
 });
 
 /**
- * Creates marginStart (marginLeft in LTR, marginRight in RTL)
+ * Creates marginStart (marginStart in LTR, marginEnd in RTL)
  */
 export const rtlMarginStart = (value: number, isRTL: boolean): ViewStyle => ({
-  [isRTL ? 'marginRight' : 'marginLeft']: value,
+  [isRTL ? 'marginEnd' : 'marginStart']: value,
 });
 
 /**
- * Creates marginEnd (marginRight in LTR, marginLeft in RTL)
+ * Creates marginEnd (marginEnd in LTR, marginStart in RTL)
  */
 export const rtlMarginEnd = (value: number, isRTL: boolean): ViewStyle => ({
-  [isRTL ? 'marginLeft' : 'marginRight']: value,
+  [isRTL ? 'marginStart' : 'marginEnd']: value,
 });
 
 /**
- * Creates paddingStart (paddingLeft in LTR, paddingRight in RTL)
+ * Creates paddingStart (paddingStart in LTR, paddingEnd in RTL)
  */
 export const rtlPaddingStart = (value: number, isRTL: boolean): ViewStyle => ({
-  [isRTL ? 'paddingRight' : 'paddingLeft']: value,
+  [isRTL ? 'paddingEnd' : 'paddingStart']: value,
 });
 
 /**
- * Creates paddingEnd (paddingRight in LTR, paddingLeft in RTL)
+ * Creates paddingEnd (paddingEnd in LTR, paddingStart in RTL)
  */
 export const rtlPaddingEnd = (value: number, isRTL: boolean): ViewStyle => ({
-  [isRTL ? 'paddingLeft' : 'paddingRight']: value,
+  [isRTL ? 'paddingStart' : 'paddingEnd']: value,
 });
 
 /**

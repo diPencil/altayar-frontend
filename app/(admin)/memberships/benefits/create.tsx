@@ -22,8 +22,8 @@ const isSmallScreen = width < 375;
 const isMediumScreen = width >= 375 && width < 414;
 
 const COLORS = {
-  primary: "#0891b2",
-  secondary: "#06b6d4",
+  primary: "#1071b8",
+  secondary: "#167dc1",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -1108,11 +1108,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   pickerIcon: {
-    marginRight: 12,
+    marginEnd: 12,
   },
   pickerIconRTL: {
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   picker: {
     flex: 1,
@@ -1161,7 +1161,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.text,
     fontWeight: '600',
-    marginLeft: 6,
+    marginStart: 6,
   },
   listItemCard: {
     backgroundColor: COLORS.cardBg,

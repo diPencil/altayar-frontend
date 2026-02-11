@@ -9,8 +9,8 @@ import { useLanguage } from "../../src/contexts/LanguageContext";
 const { width } = Dimensions.get("window");
 
 const COLORS = {
-  primary: "#0891b2",
-  secondary: "#06b6d4",
+  primary: "#1071b8",
+  secondary: "#167dc1",
   success: "#10b981",
   warning: "#f59e0b",
   error: "#ef4444",
@@ -443,11 +443,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     color: COLORS.text,
-    marginLeft: 8,
+    marginStart: 8,
   },
   cardTitleRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   newBadge: {
     backgroundColor: COLORS.error,
@@ -488,11 +488,11 @@ const styles = StyleSheet.create({
   },
   messageContent: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
   },
   messageContentRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
   },
   messageHeader: {
     flexDirection: "row",
@@ -511,7 +511,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 8,
-    marginLeft: 8,
+    marginStart: 8,
   },
   urgentText: {
     color: "#ffffff",
@@ -553,11 +553,11 @@ const styles = StyleSheet.create({
   },
   chatContent: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
   },
   chatContentRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
   },
   chatHeader: {
     flexDirection: "row",
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
-    marginLeft: 8,
+    marginStart: 8,
   },
   unreadText: {
     color: "#ffffff",

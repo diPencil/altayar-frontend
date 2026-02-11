@@ -12,7 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Toast from "../../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -369,7 +369,7 @@ export default function CreateBooking() {
                                 </>
                             )}
                         </View>
-                        <View style={{ flex: 1, marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }}>
+                        <View style={{ flex: 1, marginStart: isRTL ? 0 : 8, marginEnd: isRTL ? 8 : 0 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>
                                 {bookingType === 'HOTEL' ? t('admin.bookings.checkOutDate') :
                                     bookingType === 'FLIGHT' ? t('admin.bookings.arrivalDate') :
@@ -456,7 +456,7 @@ export default function CreateBooking() {
                         <View style={{ width: 100 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.currency')}</Text>
                             <TouchableOpacity
-                                style={[styles.input, { flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' }]}
+                                style={[styles.input, { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
                                 onPress={() => {
                                     const currencies = ['USD', 'EUR', 'SAR', 'EGP'];
                                     const currentIndex = currencies.indexOf(currency);
@@ -605,7 +605,7 @@ export default function CreateBooking() {
 
                             {/* Use Wallet Toggle */}
                             <View style={styles.deductionRow}>
-                                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Text style={styles.switchLabel}>{t('admin.bookings.useWallet')}</Text>
                                     <TouchableOpacity
                                         style={[styles.switch, useWallet && styles.switchActive]}
@@ -706,7 +706,7 @@ export default function CreateBooking() {
                                         </Text>
                                     </View>
                                     <View>
-                                        <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8 }}>
+                                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                                             <Text style={[styles.userName, isRTL && { textAlign: 'right' }]}>{item.first_name} {item.last_name}</Text>
                                             <View style={[
                                                 styles.roleBadge,
@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 6,
         paddingVertical: 2,
         borderRadius: 4,
-        marginLeft: 8,
+        marginStart: 8,
     },
     roleText: {
         fontSize: 10,
@@ -951,11 +951,11 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     avatarRTL: {
-        marginRight: 0,
-        marginLeft: 12,
+        marginEnd: 0,
+        marginStart: 12,
     },
     balanceRow: {
         flexDirection: 'row',
@@ -1020,12 +1020,12 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 8,
         flex: 1,
-        marginRight: 8,
+        marginEnd: 8,
     },
     deductionInputRTL: {
         textAlign: 'right',
-        marginRight: 0,
-        marginLeft: 8,
+        marginEnd: 0,
+        marginStart: 8,
     },
     deductionHint: {
         fontSize: 12,

@@ -28,13 +28,14 @@ import { ResizeMode } from 'expo-av/build/Video.types';
 import { initiateBookingPayment, initiateOrderPayment } from "../../src/services/paymentHelpers";
 import { formatCurrency } from "../../src/utils/currency";
 import { isMembershipActive } from "../../src/utils/membership";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const { width } = Dimensions.get("window");
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   primaryDark: "#0e7490",
-  secondary: "#06b6d4",
+  secondary: "#167dc1",
   accent: "#f59e0b",
   gold: "#d4a537",
   silver: "#9ca3af",
@@ -60,6 +61,7 @@ export default function UserDashboard() {
   const { t } = useTranslation();
   const { isRTL, toggleLanguage, language } = useLanguage();
   const { user, isAuthenticated, logout } = useAuth();
+  const insets = useSafeAreaInsets();
   const isMember = isMembershipActive(user);
   const [activeSlide, setActiveSlide] = useState(0);
   const [userData, setUserData] = useState<UserData>({
@@ -92,6 +94,7 @@ export default function UserDashboard() {
   const [paymentModalVisible, setPaymentModalVisible] = useState(false);
   const [loadingPaymentDetails, setLoadingPaymentDetails] = useState(false);
   const [saveCard, setSaveCard] = useState(true);
+  const [avatarError, setAvatarError] = useState(false);
 
   // Auto-play Effect
   useEffect(() => {
@@ -120,6 +123,11 @@ export default function UserDashboard() {
       loadDashboardData();
     }
   }, [isAuthenticated, language]); // Reload on language change for translated offers
+
+  // Reset avatar error when user changes (e.g., switching from employee to user view)
+  useEffect(() => {
+    setAvatarError(false);
+  }, [user?.avatar]);
 
   const loadDashboardData = async () => {
     try {
@@ -289,7 +297,7 @@ export default function UserDashboard() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
         <Image
           source={{ uri: 'https://customer-assets.emergentagent.com/job_viptraveller/artifacts/hsqancxd_altayarlogo.png' }}
           style={styles.logoImage}
@@ -309,10 +317,14 @@ export default function UserDashboard() {
               style={styles.profileBtn}
               onPress={() => setShowProfileMenu(!showProfileMenu)}
             >
-              {user?.avatar ? (
+              {user?.avatar && !avatarError ? (
                 <Image
                   source={{ uri: user.avatar }}
                   style={{ width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderColor: COLORS.white }}
+                  onError={() => {
+                    console.log('Avatar failed to load');
+                    setAvatarError(true);
+                  }}
                 />
               ) : (
                 <Ionicons name="person-circle" size={36} color={COLORS.white} />
@@ -413,7 +425,7 @@ export default function UserDashboard() {
                   title={language === 'ar' ? offer.title_ar : offer.title_en}
                   subtitle={offer.discount_percentage ? `${offer.discount_percentage}% ${t("common.off")}` : (language === 'ar' ? offer.description_ar : offer.description_en)}
                   image={offer.image_url}
-                  gradient={index % 2 === 0 ? ["#0891b2", "#06b6d4"] : ["#7c3aed", "#a78bfa"]}
+                  gradient={index % 2 === 0 ? ["#1071b8", "#167dc1"] : ["#7c3aed", "#a78bfa"]}
                   icon="sunny"
                   isRTL={isRTL}
                   learnMore={t("common.learnMore")}
@@ -749,7 +761,7 @@ export default function UserDashboard() {
           ) : selectedPayment ? (
             <ScrollView contentContainerStyle={{ padding: 20 }}>
               {/* Header Info */}
-              <View style={[styles.detailsSection, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+              <View style={[styles.detailsSection, { flexDirection: 'row' }]}>
                 <Text style={styles.detailsLabel}>
                   {selectedPayment._type === 'booking' ?
                     `#${selectedPayment.booking_number || selectedPayment.id?.slice(0, 8)}` :
@@ -852,7 +864,7 @@ export default function UserDashboard() {
                 onPress={handleModalPay}
               >
                 <Text style={styles.payBtnText}>{t('invoices.payNow') || "Pay Now"}</Text>
-                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginLeft: 8 }} />
+                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginStart: 8 }} />
               </TouchableOpacity>
             </ScrollView>
           ) : null}
@@ -1205,7 +1217,7 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
 
 function OfferCard({ id, title, discount, price, image, isRTL, currency, offer_type, t, onPress, onNavigate }: any) {
   const bgColors: any = {
-    beach: ["#0891b2", "#06b6d4"],
+    beach: ["#1071b8", "#167dc1"],
     city: ["#8b5cf6", "#a78bfa"],
     desert: ["#f59e0b", "#fbbf24"],
   };
@@ -1361,8 +1373,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 15,
     paddingTop: 10,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -1404,7 +1416,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    marginLeft: 6,
+    marginStart: 6,
     minWidth: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1458,7 +1470,7 @@ const styles = StyleSheet.create({
     width: width - 32,
     height: 180, // Increased height for better aspect ratio
     borderRadius: 20,
-    marginRight: 12,
+    marginEnd: 12,
     flexDirection: "row",
     overflow: "hidden",
   },
@@ -1492,11 +1504,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12, // Reduced from 16
     paddingVertical: 6, // Reduced from 8
     borderRadius: 20,
-    marginLeft: 12,
+    marginStart: 12,
   },
   bannerBtnRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
   },
   bannerBtnText: {
     color: COLORS.white,
@@ -1558,11 +1570,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: COLORS.gold,
-    marginLeft: 6,
+    marginStart: 6,
   },
   membershipTierTextRTL: {
-    marginLeft: 0,
-    marginRight: 6,
+    marginStart: 0,
+    marginEnd: 6,
   },
   manageBtn: {
     backgroundColor: "rgba(255,255,255,0.15)",
@@ -1623,7 +1635,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     color: COLORS.gold,
-    marginLeft: 3,
+    marginStart: 3,
   },
   statsRow: {
     flexDirection: "row",
@@ -1674,11 +1686,11 @@ const styles = StyleSheet.create({
   statUnit: {
     fontSize: 11,
     color: COLORS.textLight,
-    marginLeft: 3,
+    marginStart: 3,
   },
   statUnitRTL: {
-    marginLeft: 0,
-    marginRight: 3,
+    marginStart: 0,
+    marginEnd: 3,
   },
   card: {
     backgroundColor: COLORS.white,
@@ -1711,11 +1723,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     color: COLORS.text,
-    marginLeft: 8,
+    marginStart: 8,
   },
   cardTitleRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   cardAction: {
     fontSize: 13,
@@ -1741,11 +1753,11 @@ const styles = StyleSheet.create({
   },
   paymentInfo: {
     flex: 1,
-    marginLeft: 12,
+    marginStart: 12,
   },
   paymentInfoRTL: {
-    marginLeft: 0,
-    marginRight: 12,
+    marginStart: 0,
+    marginEnd: 12,
     alignItems: "flex-end",
   },
   paymentTitle: {
@@ -1778,7 +1790,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 15,
     fontWeight: "600",
-    marginRight: 8,
+    marginEnd: 8,
   },
   pointsMain: {
     alignItems: "center",
@@ -1827,7 +1839,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "800",
     color: "#fff",
-    marginLeft: 8,
+    marginStart: 8,
   },
   pointsLockedAction: {
     fontSize: 13,
@@ -1905,13 +1917,13 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   offersScroll: {
-    marginLeft: -16,
-    paddingLeft: 16,
+    marginStart: -16,
+    paddingStart: 16,
     marginBottom: 16,
   },
   offerCard: {
     width: 160,
-    marginRight: 12,
+    marginEnd: 12,
     backgroundColor: COLORS.white,
     borderRadius: 16,
     overflow: "hidden",
@@ -1973,24 +1985,24 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 14,
     color: COLORS.text,
-    marginLeft: 10,
+    marginStart: 10,
   },
   adminBtnTextRTL: {
-    marginLeft: 0,
-    marginRight: 10,
+    marginStart: 0,
+    marginEnd: 10,
     textAlign: "right",
   },
   bottomSpacer: {
     height: 100,
   },
   reelsScroll: {
-    marginLeft: -16,
-    paddingLeft: 16,
+    marginStart: -16,
+    paddingStart: 16,
     marginBottom: 16,
   },
   reelCard: {
     width: 140,
-    marginRight: 12,
+    marginEnd: 12,
     backgroundColor: COLORS.white,
     borderRadius: 16,
     overflow: "hidden",
@@ -2050,7 +2062,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 10,
     fontWeight: '600',
-    marginLeft: 4,
+    marginStart: 4,
   },
   reelInfo: {
     padding: 12,

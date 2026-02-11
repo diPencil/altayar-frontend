@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
         width: 36,
         height: 36,
         borderRadius: 18,
-        marginRight: 12,
+        marginEnd: 12,
     },
     avatarPlaceholder: {
         width: 36,
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f1f5f9',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 12,
+        marginEnd: 12,
     },
     content: {
         flex: 1,

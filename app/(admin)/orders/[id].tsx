@@ -9,7 +9,7 @@ import ConfirmModal from '../../../src/components/ConfirmModal';
 import Toast from '../../../src/components/Toast';
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     success: "#10b981",
     warning: "#f59e0b",
     error: "#ef4444",

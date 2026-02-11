@@ -16,8 +16,8 @@ import { adminApi } from '../../../../src/services/api';
 import Toast from '../../../../src/components/Toast';
 
 const COLORS = {
-  primary: "#0891b2",
-  secondary: "#06b6d4",
+  primary: "#1071b8",
+  secondary: "#167dc1",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",

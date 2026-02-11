@@ -9,7 +9,7 @@ import { SettingsService, OnboardingSettings, type ContactUsSettings, type About
 import Toast from "../../src/components/Toast";
 
 const COLORS = {
-    primary: "#0891b2",
+    primary: "#1071b8",
     background: "#f1f5f9",
     cardBg: "#ffffff",
     text: "#1e293b",
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '600',
         color: COLORS.textLight,
-        marginLeft: 20,
+        marginStart: 20,
         marginBottom: 10,
         marginTop: 10,
     },
@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     // RTL Styles
     textRTL: {
         textAlign: 'right',
-        marginRight: 20,
+        marginEnd: 20,
     },
     settingRowRTL: {
         flexDirection: 'row-reverse',

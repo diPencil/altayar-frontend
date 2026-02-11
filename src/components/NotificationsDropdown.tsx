@@ -294,8 +294,8 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     backgroundColor: '#ffffff',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    borderTopStartRadius: 24,
+    borderTopEndRadius: 24,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.1,
@@ -351,7 +351,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9fafb',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   notificationContent: {
     flex: 1,
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#111827',
     flex: 1,
-    marginRight: 8,
+    marginEnd: 8,
   },
   notificationTime: {
     fontSize: 12,
@@ -393,7 +393,7 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 12,
     color: '#6b7280',
-    marginLeft: 4,
+    marginStart: 4,
   },
   unreadIndicator: {
     width: 8,
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#3b82f6',
     alignSelf: 'center',
-    marginLeft: 8,
+    marginStart: 8,
   },
   emptyState: {
     alignItems: 'center',
@@ -438,12 +438,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   closeButtonRTL: {
-    marginRight: 0,
-    marginLeft: 16,
+    marginEnd: 0,
+    marginStart: 16,
   },
   notificationIconRTL: {
-    marginRight: 0,
-    marginLeft: 12,
+    marginEnd: 0,
+    marginStart: 12,
   },
   notificationHeaderRTL: {
     flexDirection: 'row-reverse',
@@ -452,8 +452,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row-reverse',
   },
   unreadIndicatorRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   textRTL: {
     textAlign: 'right',

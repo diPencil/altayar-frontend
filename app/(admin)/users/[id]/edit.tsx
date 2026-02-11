@@ -290,7 +290,7 @@ export default function EditUserPage() {
                             label={t('admin.manageUsers.firstName') + " *"}
                             value={form.first_name}
                             onChangeText={(t: string) => setForm({ ...form, first_name: t })}
-                            containerStyle={{ flex: 1, [isRTL ? 'marginLeft' : 'marginRight']: 8 }}
+                            containerStyle={{ flex: 1, [isRTL ? 'marginStart' : 'marginEnd']: 8 }}
                             required
                             isRTL={isRTL}
                         />
@@ -298,7 +298,7 @@ export default function EditUserPage() {
                             label={t('admin.manageUsers.lastName') + " *"}
                             value={form.last_name}
                             onChangeText={(t: string) => setForm({ ...form, last_name: t })}
-                            containerStyle={{ flex: 1, [isRTL ? 'marginRight' : 'marginLeft']: 8 }}
+                            containerStyle={{ flex: 1, [isRTL ? 'marginEnd' : 'marginStart']: 8 }}
                             required
                             isRTL={isRTL}
                         />

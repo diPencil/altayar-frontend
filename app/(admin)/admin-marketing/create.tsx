@@ -21,7 +21,7 @@ import Toast from "../../../src/components/Toast";
 import ConfirmModal from "../../../src/components/ConfirmModal";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -296,7 +296,7 @@ export default function CreateAdminMarketingOffer() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { flexDirection: isRTL ? "row-reverse" : "row" }]}>
+      <View style={[styles.header, { flexDirection: 'row' }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -350,7 +350,7 @@ export default function CreateAdminMarketingOffer() {
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                style={{ marginBottom: 15, flexDirection: isRTL ? "row-reverse" : "row" }}
+                style={{ marginBottom: 15, flexDirection: 'row' }}
               >
                 {categories.map((cat) => (
                   <TouchableOpacity
@@ -427,7 +427,7 @@ export default function CreateAdminMarketingOffer() {
           <View style={styles.section}>
             <Text style={styles.sectionHeader}>{t("offers.validity", "Validity")}</Text>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <View style={{ flex: 1, marginRight: 10 }}>
+              <View style={{ flex: 1, marginEnd: 10 }}>
                 <Text style={styles.dateLabel}>{t("common.validFrom", "Valid From")}</Text>
                 <TextInput
                   style={styles.input}
@@ -440,7 +440,7 @@ export default function CreateAdminMarketingOffer() {
                 {dates.valid_from && !isValidDate(dates.valid_from) && <Text style={styles.errorText}>{t("common.invalidDate")}</Text>}
               </View>
 
-              <View style={{ flex: 1, marginLeft: 10 }}>
+              <View style={{ flex: 1, marginStart: 10 }}>
                 <Text style={styles.dateLabel}>{t("common.validUntil", "Valid Until")}</Text>
                 <TextInput
                   style={styles.input}
@@ -465,7 +465,7 @@ export default function CreateAdminMarketingOffer() {
                 style={[
                   styles.targetOption,
                   formData.target_audience === opt.key && styles.targetOptionActive,
-                  { flexDirection: isRTL ? "row-reverse" : "row" },
+                  { flexDirection: 'row' },
                 ]}
                 onPress={() => {
                   setFormData((prev) => ({ ...prev, target_audience: opt.key as any }));
@@ -480,7 +480,7 @@ export default function CreateAdminMarketingOffer() {
                   style={[
                     styles.targetText,
                     formData.target_audience === opt.key && styles.targetTextActive,
-                    { [isRTL ? "marginRight" : "marginLeft"]: 10, textAlign: isRTL ? "right" : "left" } as any,
+                    { [isRTL ? "marginEnd" : "marginStart"]: 10, textAlign: isRTL ? "right" : "left" } as any,
                   ]}
                 >
                   {opt.label}
@@ -511,10 +511,10 @@ export default function CreateAdminMarketingOffer() {
               {usersList.map((u) => (
                 <TouchableOpacity
                   key={u.id}
-                  style={[styles.userItem, selectedUsers.has(u.id) && styles.userItemActive, { flexDirection: isRTL ? "row-reverse" : "row" }]}
+                  style={[styles.userItem, selectedUsers.has(u.id) && styles.userItemActive, { flexDirection: 'row' }]}
                   onPress={() => toggleUserSelection(u.id)}
                 >
-                  <View style={{ marginLeft: isRTL ? 0 : 10, marginRight: isRTL ? 10 : 0 }}>
+                  <View style={{ marginStart: isRTL ? 0 : 10, marginEnd: isRTL ? 10 : 0 }}>
                     <Text style={[styles.userName, { textAlign: isRTL ? "right" : "left" }]}>{u.first_name} {u.last_name}</Text>
                     <Text style={[styles.userEmail, { textAlign: isRTL ? "right" : "left" }]}>{u.email}</Text>
                   </View>
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   targetOptionActive: { borderColor: COLORS.primary, backgroundColor: "#eff6ff" },
-  targetText: { marginLeft: 10, fontSize: 15, color: COLORS.text, fontWeight: "500" },
+  targetText: { marginStart: 10, fontSize: 15, color: COLORS.text, fontWeight: "500" },
   targetTextActive: { color: COLORS.primary, fontWeight: "700" },
   modalContainer: { flex: 1, backgroundColor: "#fff", marginTop: 20 },
   modalHeader: {
@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
   userName: { fontSize: 16, fontWeight: "600", color: COLORS.text },
   userEmail: { fontSize: 12, color: COLORS.textLight },
   dateLabel: { fontSize: 12, color: COLORS.textLight },
-  pill: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: COLORS.background, marginRight: 10, borderWidth: 1, borderColor: COLORS.border },
+  pill: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: COLORS.background, marginEnd: 10, borderWidth: 1, borderColor: COLORS.border },
   pillActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   pillText: { color: COLORS.textLight, fontSize: 13 },
   pillTextActive: { color: "#fff", fontWeight: "600" },

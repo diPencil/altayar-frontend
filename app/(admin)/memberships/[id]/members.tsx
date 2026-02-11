@@ -10,7 +10,7 @@ import Toast from "../../../../src/components/Toast";
 import { TextInput } from "react-native";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f8fafc",
   cardBg: "#ffffff",
   text: "#1e293b",
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 8,
-    marginRight: 16,
+    marginEnd: 16,
   },
   headerContent: {
     flex: 1,
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   searchIcon: {
-    marginRight: 12,
+    marginEnd: 12,
   },
   searchInput: {
     flex: 1,
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
   },
   memberStatus: {
     alignItems: 'center',
-    marginRight: 16,
+    marginEnd: 16,
   },
   statusBadge: {
     paddingHorizontal: 8,

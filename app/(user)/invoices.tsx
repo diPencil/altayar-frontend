@@ -22,7 +22,7 @@ import { formatCurrency } from "../../src/utils/currency";
 import { initiateOrderPayment } from "../../src/services/paymentHelpers";
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   background: "#f0f9ff",
   white: "#ffffff",
   text: "#1e293b",
@@ -207,7 +207,7 @@ export default function InvoicesScreen() {
           ) : orderDetails ? (
             <ScrollView contentContainerStyle={{ padding: 20 }}>
               {/* Header with Order ID and Status */}
-              <View style={[styles.detailsSection, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
+              <View style={[styles.detailsSection, { flexDirection: 'row' }]}>
                 <Text style={styles.detailsLabel}>
                   {t("common.hashId", { id: orderDetails.id?.slice(0, 8).toUpperCase() })}
                 </Text>
@@ -309,7 +309,7 @@ export default function InvoicesScreen() {
                     ) : (
                       <>
                         <Text style={styles.payBtnText}>{t('invoices.payNow') || "Pay Now"}</Text>
-                        <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginLeft: 8 }} />
+                        <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={20} color="white" style={{ marginStart: 8 }} />
                       </>
                     )}
                   </TouchableOpacity>
@@ -335,8 +335,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 20,
     backgroundColor: COLORS.white,
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -432,11 +432,11 @@ const styles = StyleSheet.create({
   downloadBtnText: {
     color: COLORS.primary,
     fontWeight: "600",
-    marginLeft: 8,
+    marginStart: 8,
   },
   downloadBtnTextRTL: {
-    marginLeft: 0,
-    marginRight: 8,
+    marginStart: 0,
+    marginEnd: 8,
   },
   // Modal Styles
   modalContainer: {

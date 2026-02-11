@@ -14,7 +14,7 @@ type Props = {
 };
 
 const COLORS = {
-  primary: "#0891b2",
+  primary: "#1071b8",
   text: "#1e293b",
   textLight: "#64748b",
   border: "#e2e8f0",

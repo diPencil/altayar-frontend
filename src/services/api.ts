@@ -20,62 +20,11 @@ export const getBaseUrl = () => {
     return url;
   }
 
-  // Special handling for Android Emulator
-  // When running on Android Emulator, localhost is 10.0.2.2
-  // We check if it's not a physical device
-  if (Platform.OS === 'android' && !Constants.isDevice) {
-    console.log('[API] Detected Android Emulator, using 10.0.2.2');
-    return 'http://10.0.2.2:8082/api';
-  }
-
-  // Try to get IP from Expo connection info
-  // Expo provides the dev server IP in Constants.manifest or Constants.expoConfig
-  const manifest = Constants.expoConfig || Constants.manifest;
-
-  // Try multiple ways to get the IP
-  let ip: string | null = null;
-
-  // Method 1: From hostUri (most reliable)
-  if (manifest?.hostUri) {
-    ip = manifest.hostUri.split(':')[0];
-  }
-
-  // Method 2: From debuggerHost
-  if (!ip && Constants.debuggerHost) {
-    ip = Constants.debuggerHost.split(':')[0];
-  }
-
-  // Method 3: From extra config
-  if (!ip && manifest?.extra?.devServerUrl && typeof manifest.extra.devServerUrl === 'string') {
-    try {
-      const url = new URL(manifest.extra.devServerUrl);
-      ip = url.hostname;
-    } catch (e) {
-      // Ignore URL parse errors
-    }
-  }
-
-  // Validate IP and use it if valid
-  if (ip && ip !== 'localhost' && ip !== '127.0.0.1' && ip.includes('.')) {
-    console.log(`[API] Using detected IP: ${ip}`);
-    return `http://${ip}:8082/api`;
-  }
-
-  // Method 4: From app.json extra config
-  if (!ip && manifest?.extra?.devServerIp && typeof manifest.extra.devServerIp === 'string') {
-    ip = manifest.extra.devServerIp;
-  }
-
-  // Fallback: Use hardcoded IP (update this if your IP changes)
-  // You can find your IP by running: ipconfig (Windows) or ifconfig (Mac/Linux)
-  // Or update it in app.json -> extra -> devServerIp
-  if (!ip) {
-    ip = '192.168.1.17';
-  }
-
-  const finalUrl = `http://${ip}:8082/api`;
-  console.log(`[API] Calculated BASE_URL: ${finalUrl}`);
-  return finalUrl;
+  // FORCE PRODUCTION IP FOR MOBILE TESTING
+  // This ensures the app connects to the VPS backend
+  const prodUrl = 'http://69.62.117.50:8082/api';
+  console.log(`[API] Using Production URL: ${prodUrl}`);
+  return prodUrl;
 };
 
 const BASE_URL = getBaseUrl();
@@ -607,6 +556,9 @@ export const paymentsApi = {
   create: (data: CreatePaymentRequest): Promise<CreatePaymentResponse> =>
     api.post('/payments/create', data),
 
+  quickPay: (amount: number, currency: string = 'EGP'): Promise<CreatePaymentResponse> =>
+    api.post('/payments/quick-pay', { amount, currency }),
+
   getStatus: (paymentId: string): Promise<any> =>
     api.get(`/payments/status/${paymentId}`),
 };
@@ -823,6 +775,18 @@ export const chatApi = {
 
 // Admin API
 export const adminApi = {
+  // Users Management
+  getAllUsers: (params?: any): Promise<any> => api.get('/admin/users', params),
+
+  getUserWallet: (userId: string): Promise<any> =>
+    api.get(`/admin/users/${userId}/details`).then((res: any) => res.wallet),
+
+  getUserPoints: (userId: string): Promise<any> =>
+    api.get(`/admin/users/${userId}/details`).then((res: any) => res.points),
+
+  // Bookings
+  createManualBooking: (data: any): Promise<any> => api.post('/bookings/manual-create', data),
+
   getOverviewStats: (): Promise<any> => api.get('/admin/stats/overview'),
   getRevenueChart: (days?: number): Promise<any[]> => api.get(`/admin/stats/revenue-chart${days ? `?days=${days}` : ''}`),
   getRecentActivities: (limit?: number): Promise<any[]> => api.get(`/admin/stats/recent-activities${limit ? `?limit=${limit}` : ''}`),
@@ -862,9 +826,6 @@ export const adminApi = {
   getEmployees: (): Promise<any[]> => api.get('/admin/employees'),
   updateUserRole: (userId: string, newRole: string): Promise<void> =>
     api.put(`/admin/users/${userId}/role?new_role=${newRole}`),
-  getUserWallet: (userId: string): Promise<any> => api.get(`/wallet/${userId}`),
-  getUserPoints: (userId: string): Promise<any> => api.get(`/points/${userId}`),
-  getAllUsers: (params?: any): Promise<any> => api.get('/admin/users', params),
   getAllOrders: (params?: any): Promise<any> => api.get('/orders', params),
   getAllPayments: (params?: any): Promise<any> => api.get('/payments', params),
   getAllWallets: (params?: any): Promise<any> => api.get('/wallet', params),
@@ -919,10 +880,6 @@ export const adminApi = {
 
   getAssignedCustomers: (userId: string): Promise<any> =>
     api.get(`/admin/users/${userId}/assigned-customers`),
-
-  // Manual Booking Creation
-  createManualBooking: (data: any): Promise<any> =>
-    api.post('/bookings/manual-create', data),
 
   // Membership Benefits
   getMembershipBenefits: (planId: string): Promise<any> =>
