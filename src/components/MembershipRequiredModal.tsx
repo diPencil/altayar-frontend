@@ -37,7 +37,7 @@ export function MembershipRequiredModal({
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.backdrop}>
         <View style={[styles.card, isRTL && styles.cardRTL]}>
-          <View style={[styles.headerRow, isRTL && styles.headerRowRTL]}>
+          <View style={[styles.headerRow]}>
             <View style={styles.icon}>
               <Ionicons name="lock-closed" size={22} color={COLORS.primary} />
             </View>
@@ -50,7 +50,7 @@ export function MembershipRequiredModal({
             {t("membership.locked.body", "Subscribe to explore the app and access all features.")}
           </Text>
 
-          <View style={[styles.actions, isRTL && styles.actionsRTL]}>
+          <View style={[styles.actions]}>
             <TouchableOpacity style={[styles.btn, styles.btnSecondary]} onPress={onClose}>
               <Text style={styles.btnSecondaryText}>
                 {t("common.cancel", "Cancel")}
@@ -89,9 +89,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 10,
   },
-  headerRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   icon: {
     width: 36,
     height: 36,
@@ -118,9 +116,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginTop: 14,
   },
-  actionsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   btn: {
     paddingHorizontal: 14,
     paddingVertical: 10,

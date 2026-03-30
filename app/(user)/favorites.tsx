@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Dimensions, Alert, Platform } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Image, Dimensions, Alert } from 'react-native';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 import { reelsService, Reel } from '../../src/services/reels';
-import { offersApi, Offer } from '../../src/services/api';
+import { offersApi, Offer, resolveReelMediaUrl, rewriteBackendMediaUrl } from '../../src/services/api';
 import Video from 'expo-av/build/Video';
 import { ResizeMode } from 'expo-av/build/Video.types';
-import Constants from 'expo-constants';
 
 const { width } = Dimensions.get('window');
 const ITEM_WIDTH = (width - 48) / 2; // 2 columns with padding
@@ -151,53 +150,15 @@ export default function FavoritesScreen() {
         return undefined;
     };
 
-    // Get API base URL for video sources
-    const getApiBaseUrl = (): string => {
-        const apiUrl = Constants.expoConfig?.extra?.apiUrl;
-        if (apiUrl && typeof apiUrl === 'string') {
-            return apiUrl;
-        }
-        if (Platform.OS === 'web') {
-            return 'http://localhost:8082/api';
-        }
-        const manifest = Constants.expoConfig || Constants.manifest;
-        let ip: string | null = null;
-        if (manifest && 'hostUri' in manifest && manifest.hostUri) {
-            ip = manifest.hostUri.split(':')[0];
-        }
-        if (!ip && Constants.debuggerHost) {
-            ip = Constants.debuggerHost.split(':')[0];
-        }
-        if (!ip && manifest && 'extra' in manifest && manifest.extra && typeof manifest.extra === 'object' && 'devServerIp' in manifest.extra) {
-            ip = manifest.extra.devServerIp as string;
-        }
-        if (!ip) {
-            ip = '192.168.1.27';
-        }
-        return `http://${ip}:8082/api`;
-    };
-
     const renderItem = ({ item }: { item: Reel }) => {
         // Get thumbnail URL - use existing or generate for YouTube
         let thumbnailUrl = item.thumbnail_url;
-        let videoSource = null;
+        let videoSource: string | null = null;
 
         if (!thumbnailUrl && item.video_type === 'YOUTUBE' && item.video_url) {
             thumbnailUrl = getYouTubeThumbnail(item.video_url);
         } else if (item.video_type === 'UPLOAD' && item.video_url) {
-            // For uploaded videos, use video URL as source for Video component
-            const baseUrl = getApiBaseUrl();
-            if (item.video_url.startsWith('/')) {
-                videoSource = `${baseUrl}${item.video_url}`;
-            } else if (item.video_url.startsWith('http://') || item.video_url.startsWith('https://')) {
-                videoSource = item.video_url;
-            } else {
-                // Extract filename from URL
-                const filename = item.video_url.split('/').pop();
-                if (filename) {
-                    videoSource = `${baseUrl}/reels/video/${filename}`;
-                }
-            }
+            videoSource = resolveReelMediaUrl(item.video_url) ?? null;
         }
 
         return (
@@ -210,7 +171,7 @@ export default function FavoritesScreen() {
                 <View style={styles.thumbnailContainer}>
                     {thumbnailUrl ? (
                         <Image
-                            source={{ uri: thumbnailUrl }}
+                            source={{ uri: rewriteBackendMediaUrl(thumbnailUrl) ?? thumbnailUrl }}
                             style={styles.thumbnail}
                             resizeMode="cover"
                         />
@@ -262,17 +223,17 @@ export default function FavoritesScreen() {
 
                 {/* Info */}
                 <View style={styles.infoContainer}>
-                    <Text style={styles.reelTitle} numberOfLines={2}>
+                    <Text style={[styles.reelTitle, isRTL && styles.textRTL]} numberOfLines={2}>
                         {item.title || 'Untitled Reel'}
                     </Text>
                     <View style={styles.statsRow}>
                         <View style={styles.stat}>
                             <Ionicons name="heart" size={14} color="#FF3B30" />
-                            <Text style={styles.statText}>{formatCount(item.likes_count)}</Text>
+                            <Text style={[styles.statText, isRTL && styles.textRTL]}>{formatCount(item.likes_count)}</Text>
                         </View>
                         <View style={styles.stat}>
                             <Ionicons name="chatbubble" size={14} color="#007AFF" />
-                            <Text style={styles.statText}>{formatCount(item.comments_count)}</Text>
+                            <Text style={[styles.statText, isRTL && styles.textRTL]}>{formatCount(item.comments_count)}</Text>
                         </View>
                     </View>
                 </View>
@@ -310,14 +271,14 @@ export default function FavoritesScreen() {
                 </View>
 
                 <View style={styles.infoContainer}>
-                    <Text style={styles.reelTitle} numberOfLines={2}>
+                    <Text style={[styles.reelTitle, isRTL && styles.textRTL]} numberOfLines={2}>
                         {title}
                     </Text>
                     {!!subtitle && (
                         <View style={styles.statsRow}>
                             <View style={styles.stat}>
                                 <Ionicons name="location-outline" size={14} color="#64748b" />
-                                <Text style={styles.statText} numberOfLines={1}>{subtitle}</Text>
+                                <Text style={[styles.statText, isRTL && styles.textRTL]} numberOfLines={1}>{subtitle}</Text>
                             </View>
                         </View>
                     )}
@@ -346,7 +307,7 @@ export default function FavoritesScreen() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top }]}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
                 <TouchableOpacity
                     style={styles.backButton}
                     onPress={() => router.back()}
@@ -362,7 +323,7 @@ export default function FavoritesScreen() {
                 </TouchableOpacity>
             </View>
 
-            <View style={[styles.tabsRow, isRTL && { flexDirection: 'row-reverse' }]}>
+            <View style={[styles.tabsRow]}>
                 <TouchableOpacity
                     style={[styles.tabPill, activeTab === 'reels' && styles.tabPillActive]}
                     onPress={() => setActiveTab('reels')}
@@ -385,7 +346,7 @@ export default function FavoritesScreen() {
                 <View style={styles.emptyState}>
                     <Ionicons name="heart-outline" size={80} color="#ccc" />
                     <Text style={[styles.emptyTitle, isRTL && styles.textRTL]}>{t('favorites.noFavorites')}</Text>
-                    <Text style={[styles.emptySubtitle, isRTL && styles.textRTL]}>
+                    <Text style={styles.emptySubtitle}>
                         {activeTab === 'reels'
                             ? t('favorites.noFavoritesDesc')
                             : t('favorites.noOffersFavoritesDesc', 'Save offers to see them here.')}
@@ -437,9 +398,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         padding: 8,
     },
@@ -534,7 +493,7 @@ const styles = StyleSheet.create({
     removeButton: {
         position: 'absolute',
         top: 8,
-        right: 8,
+        end: 8,
         width: 32,
         height: 32,
         borderRadius: 16,
@@ -547,14 +506,11 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
-    removeButtonRTL: {
-        right: undefined,
-        left: 8,
-    },
+    removeButtonRTL: {},
     viewsCount: {
         position: 'absolute',
         bottom: 8,
-        left: 8,
+        start: 8,
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4,
@@ -563,10 +519,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 12,
     },
-    viewsCountRTL: {
-        left: undefined,
-        right: 8,
-    },
+    viewsCountRTL: {},
     viewsText: {
         color: 'white',
         fontSize: 12,

@@ -189,10 +189,10 @@ export default function AdminSettings() {
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("admin.manageSettings.appConfig")}</Text>
             <View style={styles.card}>
                 <TouchableOpacity
-                    style={[styles.settingRow, isRTL && styles.settingRowRTL, expandedSection === 'appConfig' && { borderBottomWidth: 0 }]}
+                    style={[styles.settingRow, expandedSection === 'appConfig' && { borderBottomWidth: 0 }]}
                     onPress={() => toggleSection('appConfig')}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="options-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.onboarding")}</Text>
                     </View>
@@ -274,12 +274,11 @@ export default function AdminSettings() {
                 <TouchableOpacity
                     style={[
                         styles.settingRow,
-                        isRTL && styles.settingRowRTL,
                         expandedSection === 'contactUs' && { borderBottomWidth: 0 }
                     ]}
                     onPress={() => toggleSection('contactUs')}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="call-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.contactUs")}</Text>
                     </View>
@@ -340,12 +339,11 @@ export default function AdminSettings() {
                 <TouchableOpacity
                     style={[
                         styles.settingRow,
-                        isRTL && styles.settingRowRTL,
                         expandedSection === 'aboutLinks' && { borderBottomWidth: 0 }
                     ]}
                     onPress={() => toggleSection('aboutLinks')}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="link-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.aboutLinks")}</Text>
                     </View>
@@ -506,8 +504,8 @@ export default function AdminSettings() {
             {/* Preferences Section */}
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("admin.manageSettings.preferences")}</Text>
             <View style={styles.card}>
-                <View style={[styles.settingRow, isRTL && styles.settingRowRTL]}>
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                <View style={[styles.settingRow]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="globe-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.language")}</Text>
                     </View>
@@ -515,8 +513,8 @@ export default function AdminSettings() {
                         <Text style={styles.langText}>{language === 'en' ? 'English' : 'العربية'}</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 0 }]}>
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="moon-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.darkMode")}</Text>
                     </View>
@@ -532,10 +530,10 @@ export default function AdminSettings() {
             <View style={styles.card}>
                 {/* Notification Settings */}
                 <TouchableOpacity
-                    style={[styles.settingRow, isRTL && styles.settingRowRTL]}
+                    style={[styles.settingRow]}
                     onPress={() => toggleSection('notifications')}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="notifications-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.notifications")}</Text>
                     </View>
@@ -544,11 +542,11 @@ export default function AdminSettings() {
 
                 {expandedSection === 'notifications' && (
                     <View style={styles.configForm}>
-                        <View style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 1, paddingHorizontal: 0 }]}>
+                        <View style={[styles.settingRow, { borderBottomWidth: 1, paddingHorizontal: 0 }]}>
                             <Text style={[styles.settingLabel, isRTL && styles.textRTL, { fontSize: 13 }]}>{t("admin.manageSettings.pushNotifications")}</Text>
                             <Switch value={true} onValueChange={() => { }} />
                         </View>
-                        <View style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 0, paddingHorizontal: 0 }]}>
+                        <View style={[styles.settingRow, { borderBottomWidth: 0, paddingHorizontal: 0 }]}>
                             <Text style={[styles.settingLabel, isRTL && styles.textRTL, { fontSize: 13 }]}>{t("admin.manageSettings.emailAlerts")}</Text>
                             <Switch value={true} onValueChange={() => { }} />
                         </View>
@@ -557,10 +555,10 @@ export default function AdminSettings() {
 
                 {/* Security Logs -> Activities */}
                 <TouchableOpacity
-                    style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 0 }]}
+                    style={[styles.settingRow, { borderBottomWidth: 0 }]}
                     onPress={() => router.push('/(admin)/security-logs')}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="shield-checkmark-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.security")}</Text>
                     </View>
@@ -739,10 +737,5 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         marginEnd: 20,
     },
-    settingRowRTL: {
-        flexDirection: 'row-reverse',
-    },
-    rowLeftRTL: {
-        flexDirection: 'row-reverse',
-    },
+
 });

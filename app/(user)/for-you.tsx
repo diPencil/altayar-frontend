@@ -17,6 +17,7 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { offersApi, Offer } from "../../src/services/api";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const { width } = Dimensions.get("window");
 
@@ -91,7 +92,7 @@ export default function ForYouScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity
                     style={styles.backBtn}
                     onPress={() => router.back()}
@@ -113,11 +114,11 @@ export default function ForYouScreen() {
                     data={offers}
                     keyExtractor={(item, index) => item.id || index.toString()}
                     numColumns={2}
-                    contentContainerStyle={[styles.listContent, isRTL && { transform: [{ scaleX: -1 }] }]}
+                    contentContainerStyle={styles.listContent}
                     showsVerticalScrollIndicator={false}
                     refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                     renderItem={({ item }) => (
-                        <View style={[{ width: '48%', marginBottom: 16, marginHorizontal: '1%' }, isRTL && { transform: [{ scaleX: -1 }] }]}>
+                        <View style={{ width: '48%', marginBottom: 16, marginHorizontal: '1%' }}>
                             <OfferCard
                                 offer={item}
                                 isRTL={isRTL}
@@ -130,7 +131,7 @@ export default function ForYouScreen() {
                         </View>
                     )}
                     ListEmptyComponent={
-                        <View style={[styles.emptyState, isRTL && { transform: [{ scaleX: -1 }] }]}>
+                        <View style={styles.emptyState}>
                             <Ionicons name="gift-outline" size={48} color={COLORS.textLight} />
                             <Text style={styles.emptyText}>{t("dashboard.noOffers")}</Text>
                         </View>
@@ -198,7 +199,7 @@ function OfferCard({ offer, isRTL, language, t, isTargeted, onToggleFavorite, to
 
                 {!isBroadcast && (
                     <Text style={[styles.price, isRTL && styles.textRTL]}>
-                        {t('common.from', 'From')} {offer.discounted_price || offer.original_price} {offer.currency}
+                        {t('common.from', 'From')} {offer.discounted_price || offer.original_price} {formatCurrencyLabel(offer.currency, t)}
                     </Text>
                 )}
 
@@ -233,9 +234,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     backBtn: {
         padding: 8,
     },
@@ -305,7 +304,7 @@ const styles = StyleSheet.create({
         padding: 12,
     },
     cardContentRTL: {
-        alignItems: "flex-end",
+        alignItems: "flex-start",
     },
     cardTitle: {
         fontSize: 14,

@@ -62,7 +62,7 @@ export default function QuickPayModal({ visible, onClose, onSuccess }: QuickPayM
                 onPress={onClose}
             >
                 <View style={styles.content} onStartShouldSetResponder={() => true}>
-                    <View style={[styles.header, isRTL && styles.headerRTL]}>
+                    <View style={[styles.header]}>
                         <Text style={styles.title}>{t('admin.managePayments.title')}</Text>
                         <TouchableOpacity onPress={onClose}>
                             <Ionicons name="close" size={24} color={COLORS.textLight} />
@@ -71,7 +71,7 @@ export default function QuickPayModal({ visible, onClose, onSuccess }: QuickPayM
 
                     <View style={styles.body}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('common.amount')}</Text>
-                        <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+                        <View style={[styles.inputContainer]}>
                             <TextInput
                                 style={[styles.input, isRTL && styles.textRTL]}
                                 placeholder="0.00"
@@ -139,9 +139,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     title: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -164,9 +162,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         height: 50,
     },
-    inputContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     input: {
         flex: 1,
         fontSize: 16,

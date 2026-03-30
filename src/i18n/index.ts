@@ -28,7 +28,7 @@ const getDeviceLanguage = () => {
   }
 };
 
-// Initialize i18n
+// Initialize i18n - start with device language, loadSavedLanguage will update it
 i18n
   .use(initReactI18next)
   .init({
@@ -52,30 +52,13 @@ console.log('Available translations:', Object.keys(i18n.services.resourceStore.d
 console.log('Sample AR translation:', i18n.t('memberCard.title'));
 console.log('Sample EN translation:', i18n.t('memberCard.title', { lng: 'en' }));
 
-// Initialize RTL based on saved language (synchronous check)
-// This runs ONCE at app startup to ensure RTL is set before any rendering
-(async () => {
-  try {
-    const savedLang = await AsyncStorage.getItem(LANGUAGE_KEY);
-    const shouldBeRTL = savedLang === 'ar';
+try {
+  I18nManager.allowRTL(true);
+} catch (e) {
+  console.log('Error enabling RTL support:', e);
+}
 
-    console.log('🔄 RTL Initialization:', { savedLang, shouldBeRTL, currentIsRTL: I18nManager.isRTL });
-
-    // Only force RTL change if it differs from current state
-    if (shouldBeRTL !== I18nManager.isRTL) {
-      console.log('⚠️ RTL mismatch detected! Setting RTL to:', shouldBeRTL);
-      I18nManager.allowRTL(shouldBeRTL);
-      I18nManager.forceRTL(shouldBeRTL);
-
-      // Note: App needs to restart for RTL changes to take effect
-      // This will be handled by LanguageContext when user changes language
-    } else {
-      console.log('✅ RTL already correctly set');
-    }
-  } catch (error) {
-    console.log('Error initializing RTL:', error);
-  }
-})();
+// Native RTL layout uses I18nManager.forceRTL + reload via syncNativeLayoutDirection (see applyLanguage.ts).
 
 
 // Load saved language preference
@@ -93,17 +76,20 @@ export const loadSavedLanguage = async () => {
   }
 };
 
-// Save and change language
+import { applyLanguage as applyLanguageImpl } from './applyLanguage';
+
+// Save and change language (delegates to applyLanguage for single source of truth)
 export const changeLanguage = async (lang: 'en' | 'ar') => {
   try {
-    await AsyncStorage.setItem(LANGUAGE_KEY, lang);
-    await i18n.changeLanguage(lang);
+    await applyLanguageImpl(i18n, lang);
     return true;
   } catch (error) {
     console.log('Error saving language:', error);
     return false;
   }
 };
+
+export { applyLanguage, setWebDirection } from './applyLanguage';
 
 // Check if RTL
 export const isRTL = () => i18n.language === 'ar';

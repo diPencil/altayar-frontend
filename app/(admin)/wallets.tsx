@@ -235,7 +235,7 @@ export default function AdminWallets() {
                             {searchResults.map(user => (
                                 <TouchableOpacity
                                     key={user.id}
-                                    style={[styles.searchResultItem, isRTL && styles.searchResultItemRTL]}
+                                    style={[styles.searchResultItem]}
                                     onPress={() => handleUserSelect(user)}
                                 >
                                     <View style={styles.userInfo}>
@@ -267,7 +267,7 @@ export default function AdminWallets() {
                     <View style={[styles.section, isRTL && styles.sectionRTL]}>
                         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageWallets.userSummary', 'User Wallet Summary')}</Text>
                         <View style={styles.userSummaryCard}>
-                            <View style={[styles.userSummaryHeader, isRTL && styles.userSummaryHeaderRTL]}>
+                            <View style={[styles.userSummaryHeader]}>
                                 {selectedUser.avatar ? (
                                     <Image source={{ uri: selectedUser.avatar }} style={[styles.userAvatar, isRTL && styles.userAvatarRTL]} />
                                 ) : (
@@ -303,7 +303,7 @@ export default function AdminWallets() {
 
                         {/* Action Type Selection */}
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageWallets.actionType', 'Action Type')}</Text>
-                        <View style={[styles.actionTypeContainer, isRTL && styles.actionTypeContainerRTL]}>
+                        <View style={[styles.actionTypeContainer]}>
                             <TouchableOpacity
                                 style={[styles.actionTypeButton, actionType === 'deposit' && styles.actionTypeButtonActive]}
                                 onPress={() => setActionType('deposit')}
@@ -349,7 +349,6 @@ export default function AdminWallets() {
                             style={[
                                 styles.btn,
                                 actionType === 'deposit' ? styles.btnSuccess : styles.btnError,
-                                isRTL && styles.btnRTL,
                                 (!selectedUser || !amount.trim() || loading) && styles.btnDisabled
                             ]}
                             onPress={handleConfirmAction}
@@ -391,7 +390,7 @@ export default function AdminWallets() {
                                 })
                             }
                         </Text>
-                        <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+                        <View style={[styles.modalButtons]}>
                             <TouchableOpacity
                                 style={[styles.modalBtn, styles.modalBtnCancel]}
                                 onPress={() => setShowConfirmModal(false)}
@@ -463,7 +462,7 @@ function WalletHistoryList({ userId, trigger, isRTL }: any) {
                 const formattedAmount = `${Math.abs(item.amount || 0).toFixed(2)} ${item.currency || 'USD'}`;
 
                 return (
-                    <View key={idx} style={[styles.historyRow, isRTL && styles.historyRowRTL]}>
+                    <View key={idx} style={[styles.historyRow]}>
                         <View style={[styles.historyLeft, isRTL && styles.historyLeftRTL]}>
                             <Text style={[styles.historyDate, isRTL && styles.textRTL]}>
                                 {new Date(item.created_at).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}
@@ -877,12 +876,7 @@ const styles = StyleSheet.create({
     searchResultsRTL: {
         // Search results RTL adjustments if needed
     },
-    searchResultItemRTL: {
-        flexDirection: 'row-reverse',
-    },
-    userSummaryHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userAvatarRTL: {
         marginEnd: 0,
         marginStart: 12,
@@ -891,21 +885,11 @@ const styles = StyleSheet.create({
         marginEnd: 0,
         marginStart: 12,
     },
-    actionTypeContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
-    btnRTL: {
-        flexDirection: "row-reverse",
-    },
+
     modalContentRTL: {
         // Modal RTL adjustments if needed
     },
-    modalButtonsRTL: {
-        flexDirection: 'row-reverse',
-    },
-    historyRowRTL: {
-        flexDirection: "row-reverse",
-    },
+
     historyLeftRTL: {
         alignItems: 'flex-end',
     },

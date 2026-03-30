@@ -77,7 +77,6 @@ const Toast: React.FC<ToastProps> = ({ message, type, visible, onHide, duration 
         <Animated.View
             style={[
                 styles.container,
-                isRTL && styles.containerRTL,
                 {
                     backgroundColor: getBackgroundColor(),
                     transform: [{ translateY }],
@@ -115,9 +114,7 @@ const styles = StyleSheet.create({
         marginEnd: 0,
         flex: 1,
     },
-    containerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     messageRTL: {
         marginStart: 0,
         marginEnd: 12,

@@ -90,9 +90,12 @@ export default function AdminChatScreen() {
   };
 
   // Define functions first before useEffect
-  const loadConversations = React.useCallback(async () => {
+  const loadConversations = React.useCallback(async (options?: { silent?: boolean }) => {
+    const silent = options?.silent ?? false;
     try {
-      setIsLoading(true);
+      if (!silent) {
+        setIsLoading(true);
+      }
       const params: any = {};
 
       if (statusFilter !== "all") {
@@ -104,7 +107,9 @@ export default function AdminChatScreen() {
     } catch (error) {
       console.error("Failed to load conversations:", error);
     } finally {
-      setIsLoading(false);
+      if (!silent) {
+        setIsLoading(false);
+      }
     }
   }, [statusFilter]);
 
@@ -186,7 +191,7 @@ export default function AdminChatScreen() {
   useEffect(() => {
     if (currentScreen === "list") {
       const interval = setInterval(() => {
-        loadConversations();
+        loadConversations({ silent: true });
       }, 5000); // Poll every 5 seconds
 
       return () => clearInterval(interval);
@@ -506,7 +511,7 @@ export default function AdminChatScreen() {
         // ===== CONVERSATIONS LIST SCREEN =====
         <>
           {/* Header */}
-          <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+          <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
             <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>
               {t('chat.messages')}
             </Text>
@@ -514,7 +519,7 @@ export default function AdminChatScreen() {
 
           {/* Filter Tabs */}
           <View style={styles.filterContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterScroll, isRTL && styles.filterScrollRTL]}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterScroll]}>
               {(['all', 'waiting', 'active', 'closed'] as const).map((filter) => (
                 <TouchableOpacity
                   key={filter}
@@ -539,7 +544,7 @@ export default function AdminChatScreen() {
           </View>
 
           {/* Search Bar */}
-          <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL]}>
+          <View style={[styles.searchContainer]}>
             <Ionicons name="search" size={18} color={COLORS.textLight} style={styles.searchIcon} />
             <TextInput
               style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -567,7 +572,7 @@ export default function AdminChatScreen() {
               {displayedConversations.map((conversation) => (
                 <TouchableOpacity
                   key={conversation.id}
-                  style={[styles.conversationItem, isRTL && styles.conversationItemRTL]}
+                  style={[styles.conversationItem]}
                   onPress={() => selectConversation(conversation)}
                   activeOpacity={0.7}
                 >
@@ -594,7 +599,7 @@ export default function AdminChatScreen() {
 
                   {/* Content */}
                   <View style={styles.conversationContent}>
-                    <View style={[styles.conversationTop, isRTL && styles.conversationTopRTL]}>
+                    <View style={[styles.conversationTop]}>
                       <Text style={[styles.conversationName, isRTL && styles.textRTL]} numberOfLines={1}>
                         {conversation.customer_name || t('chat.user')}
                       </Text>
@@ -603,7 +608,7 @@ export default function AdminChatScreen() {
                       </Text>
                     </View>
 
-                    <View style={[styles.conversationBottom, isRTL && styles.conversationBottomRTL]}>
+                    <View style={[styles.conversationBottom]}>
                       <Text
                         style={[
                           styles.conversationMessage,
@@ -624,7 +629,7 @@ export default function AdminChatScreen() {
                     </View>
 
                     {/* Status Indicator */}
-                    <View style={[styles.statusRow, isRTL && styles.statusRowRTL]}>
+                    <View style={[styles.statusRow]}>
                       <View style={[styles.statusDot, { backgroundColor: getStatusColor(conversation.status) }]} />
                       <Text style={[styles.statusLabel, isRTL && styles.textRTL]}>
                         {getStatusText(conversation.status)}
@@ -640,7 +645,7 @@ export default function AdminChatScreen() {
         // ===== INDIVIDUAL CHAT SCREEN =====
         <>
           {/* Chat Header */}
-          <View style={[styles.chatHeader, isRTL && styles.chatHeaderRTL, { paddingTop: insets.top + 10 }]}>
+          <View style={[styles.chatHeader, { paddingTop: insets.top + 10 }]}>
             <TouchableOpacity
               style={[styles.backBtn, isRTL && styles.backBtnRTL]}
               onPress={goBackToList}
@@ -649,7 +654,7 @@ export default function AdminChatScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.chatHeaderInfo, isRTL && styles.chatHeaderInfoRTL, { flex: 1 }]}
+              style={[styles.chatHeaderInfo, { flex: 1 }]}
               onPress={() => {
                 if (selectedConversation?.customer_id) {
                   router.push(`/(admin)/users?userId=${selectedConversation.customer_id}&returnPath=chat` as any);
@@ -675,7 +680,7 @@ export default function AdminChatScreen() {
                 <Text style={[styles.chatUserName, isRTL && styles.textRTL]}>
                   {selectedConversation?.customer_name || t('chat.user')}
                 </Text>
-                <View style={[styles.statusBadgeContainer, isRTL && styles.statusBadgeContainerRTL]}>
+                <View style={[styles.statusBadgeContainer]}>
                   <View style={[styles.statusDot, { backgroundColor: getStatusColor(selectedConversation?.status || 'WAITING') }]} />
                   <Text style={[styles.chatUserStatus, isRTL && styles.textRTL]}>
                     {getStatusText(selectedConversation?.status || 'WAITING')}
@@ -684,7 +689,7 @@ export default function AdminChatScreen() {
               </View>
             </TouchableOpacity>
 
-            <View style={[styles.chatHeaderActions, isRTL && styles.chatHeaderActionsRTL]}>
+            <View style={[styles.chatHeaderActions]}>
               <TouchableOpacity
                 style={styles.actionBtn}
                 onPress={() => {
@@ -726,8 +731,6 @@ export default function AdminChatScreen() {
                 <View key={msg.id} style={[
                   styles.messageRow,
                   msg.sender === "admin" && styles.messageRowAdmin,
-                  isRTL && msg.sender === "user" && styles.messageRowUserRTL,
-                  isRTL && msg.sender === "admin" && styles.messageRowAdminRTL,
                 ]}>
                   {/* Avatar for user messages */}
                   {msg.sender === "user" && (
@@ -801,7 +804,7 @@ export default function AdminChatScreen() {
           </ScrollView>
 
           {/* Message Input Area */}
-          <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
+          <View style={[styles.inputArea]}>
             <TouchableOpacity
               style={styles.attachBtn}
               onPress={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -910,7 +913,7 @@ export default function AdminChatScreen() {
                   {t('chat.closeConfirmMessage')}
                 </Text>
 
-                <View style={[styles.confirmButtons, isRTL && styles.confirmButtonsRTL]}>
+                <View style={[styles.confirmButtons]}>
                   <TouchableOpacity
                     style={[styles.confirmBtn, styles.confirmBtnCancel]}
                     onPress={() => setShowCloseConfirm(false)}
@@ -967,9 +970,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   headerTitle: {
     fontSize: 24,
     fontWeight: '700',
@@ -987,9 +988,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     gap: 8,
   },
-  filterScrollRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   filterTab: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -1020,9 +1019,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 20,
   },
-  searchContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   searchIcon: {
     marginEnd: 8,
   },
@@ -1067,9 +1064,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  conversationItemRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   avatarContainer: {
     position: 'relative',
     marginEnd: 12,
@@ -1100,9 +1095,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  conversationTopRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   conversationName: {
     fontSize: 16,
     fontWeight: '600',
@@ -1120,9 +1113,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 4,
   },
-  conversationBottomRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   conversationMessage: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -1151,9 +1142,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  statusRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   statusDot: {
     width: 6,
     height: 6,
@@ -1181,9 +1170,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  chatHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   backBtn: {
     padding: 4,
     marginEnd: 12,
@@ -1197,9 +1184,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  chatHeaderInfoRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   chatAvatar: {
     width: 40,
     height: 40,
@@ -1227,9 +1212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  statusBadgeContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   chatUserStatus: {
     fontSize: 13,
     color: COLORS.textLight,
@@ -1238,9 +1221,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  chatHeaderActionsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   actionBtn: {
     padding: 8,
     marginStart: 4,
@@ -1265,12 +1246,7 @@ const styles = StyleSheet.create({
   messageRowAdmin: {
     justifyContent: 'flex-end',
   },
-  messageRowUserRTL: {
-    flexDirection: 'row-reverse',
-  },
-  messageRowAdminRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   messageAvatarContainer: {
     width: 32,
     marginEnd: 8,
@@ -1360,9 +1336,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },
-  inputAreaRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   attachBtn: {
     padding: 4,
     marginEnd: 8,
@@ -1499,9 +1473,7 @@ const styles = StyleSheet.create({
     gap: 12,
     width: '100%',
   },
-  confirmButtonsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   confirmBtn: {
     flex: 1,
     paddingVertical: 12,

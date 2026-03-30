@@ -158,8 +158,8 @@
     "retry": "Retry",
     "done": "Done",
     "placeholderDash": "â€” â€” â€”",
-    "bulletDot": "â€¢",
-    "bulletWithValue": "â€¢ {{value}}",
+    "bulletDot": "\u2022",
+    "bulletWithValue": "\u2022 {{value}}",
     "requiredStar": "*",
     "percentSymbol": "%",
     "videoCameraEmoji": "ðŸ“¹",
@@ -217,10 +217,10 @@
     "closeSymbol": "âœ•",
     "maxValue": "(Max: {{value}})",
     "loading": "Loading...",
-    "restartRequiredTitle": "Restart required",
-    "restartRequiredBody": "To apply correct RTL/LTR layout, please restart the app.",
-    "restartNow": "Restart now",
-    "restartLater": "Restart later",
+    "restartRequiredTitle": "Layout Direction Changed",
+    "restartRequiredBody": "To apply the new text direction, please close the app from your recent apps list and reopen it.",
+    "restartNow": "Restart Now",
+    "restartLater": "Got it, I'll close the app",
     "notificationsLabel": "Notifications",
     "notifications": {
       "title": "Notifications",
@@ -564,6 +564,9 @@
         "sendVoucher": "Send Voucher",
         "broadcast": "Broadcast"
       }
+    },
+    "orders": {
+      "searchPlaceholder": "Search by order #, name, or phone..."
     },
     "chat": {
       "myChats": "My Chats",
@@ -948,6 +951,8 @@
     "usernameImmutable": "Username cannot be changed",
     "emailImmutable": "Email cannot be changed",
     "updateSuccess": "Profile updated successfully",
+    "avatarUploadError": "Could not upload photo. Your profile was saved without changing the picture.",
+    "photoLibraryPermission": "Please allow photo library access to choose a profile picture.",
     "updateError": "Failed to update profile",
     "saveChanges": "Save Changes",
     "selectAppLanguage": "Select App Language",
@@ -1583,9 +1588,45 @@
         "unpaid": "Unpaid",
         "failed": "Failed",
         "expired": "Expired"
+      },
+      "paymentType": {
+        "order": "Order",
+        "booking": "Booking",
+        "subscription": "Subscription",
+        "membership": "Membership",
+        "invoice": "Invoice",
+        "refund": "Refund",
+        "wallet": "Wallet",
+        "adjustment": "Adjustment",
+        "package": "Package",
+        "discount": "Discount",
+        "other": "Other"
+      },
+      "paymentSource": {
+        "payment": "Payment",
+        "wallet": "Wallet",
+        "admin": "Admin",
+        "system": "System",
+        "order": "Order",
+        "booking": "Booking",
+        "refund": "Refund",
+        "other": "Other"
+      },
+      "methodLabels": {
+        "cash": "Cash",
+        "card": "Card",
+        "stripe": "Card (Stripe)",
+        "paypal": "PayPal",
+        "bank_transfer": "Bank transfer",
+        "free": "Free",
+        "n/a": "N/A",
+        "na": "N/A"
       }
     },
     "dashboard": {
+      "hello": "Hello",
+      "brandAccountName": "AltayarVIP",
+      "fallbackName": "Admin",
       "dashboard": "Dashboard",
       "recentActivity": "Recent Activity",
       "allMemberships": "All Memberships",
@@ -2473,7 +2514,8 @@
       "broadcast": "Broadcast",
       "sendDiscount": "Send Discount",
       "sendOffer": "Send Offer",
-      "sendVoucher": "Send Voucher"
+      "sendVoucher": "Send Voucher",
+      "voucherHintShort": "Premium voucher"
     },
     "recentActivity": "Recent Activity",
     "subtitle": "Create and manage your campaigns"
@@ -2573,7 +2615,8 @@
     "onlinePayment": "Online Payment",
     "payExternalLink": "Pay via External Link",
     "enterCustomAmount": "Enter Custom Amount",
-    "enterAmount": "Enter Amount"
+    "enterAmount": "Enter Amount",
+    "secureCheckout": "Secure Checkout"
   },
   "membership": {
     "active": "Active",

@@ -9,6 +9,7 @@ import { useLanguage } from '../../src/contexts/LanguageContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { cardsApi, paymentsApi, UserCard } from '../../src/services/api';
 import * as WebBrowser from 'expo-web-browser';
+import { formatCurrencyLabel } from '../../src/utils/currencyLabel';
 
 const COLORS = {
     primary: '#1071b8',
@@ -141,7 +142,7 @@ export default function PaymentMethodsScreen() {
     if (loading && cards.length === 0) {
         return (
             <SafeAreaView style={styles.container}>
-                <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+                <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.white} />
                     </TouchableOpacity>
@@ -160,7 +161,7 @@ export default function PaymentMethodsScreen() {
     return (
         <SafeAreaView style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.white} />
                 </TouchableOpacity>
@@ -194,7 +195,7 @@ export default function PaymentMethodsScreen() {
                         <View style={styles.quickPayIcon}>
                             <Ionicons name="globe-outline" size={24} color="#fff" />
                         </View>
-                        <View style={{ flex: 1, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
+                        <View style={{ flex: 1, alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
                             <Text style={styles.quickPayTitle}>{t('payment.ePaymentCheckout', 'E-Payment Checkout')}</Text>
                             <Text style={styles.quickPaySubtitle}>{t('payment.payExternalLink', 'Pay via Fawaterk page')}</Text>
                         </View>
@@ -217,7 +218,7 @@ export default function PaymentMethodsScreen() {
                         <View style={styles.quickPayIcon}>
                             <Ionicons name="card" size={24} color="#fff" />
                         </View>
-                        <View style={{ flex: 1, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
+                        <View style={{ flex: 1, alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
                             <Text style={styles.quickPayTitle}>{t('payment.onlinePayment', 'Online Payment')}</Text>
                             <Text style={styles.quickPaySubtitle}>{t('payment.enterCustomAmount', 'Pay any amount directly')}</Text>
                         </View>
@@ -288,7 +289,7 @@ export default function PaymentMethodsScreen() {
                         <Text style={styles.modalLabel}>{t('payment.enterAmount', 'Enter Amount (EGP)')}</Text>
 
                         <View style={styles.inputContainer}>
-                            <Text style={styles.currencySymbol}>EGP</Text>
+                            <Text style={styles.currencySymbol}>{formatCurrencyLabel('EGP', t)}</Text>
                             <TextInput
                                 style={styles.amountInput}
                                 value={amount}
@@ -332,9 +333,7 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingTop: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -351,9 +350,7 @@ const styles = StyleSheet.create({
     textRTL: {
         textAlign: 'right',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     content: {
         padding: 16,
         paddingBottom: 40,

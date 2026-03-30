@@ -21,6 +21,7 @@ import OfferRatingModal from "../../src/components/OfferRatingModal";
 import OfferActionsMenu from "../../src/components/OfferActionsMenu";
 import ConfirmModal from "../../src/components/ConfirmModal";
 import Toast from "../../src/components/Toast";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const { width } = Dimensions.get("window");
 
@@ -222,7 +223,7 @@ export default function OffersScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity
           style={styles.backBtn}
           onPress={() => router.back()}
@@ -244,28 +245,24 @@ export default function OffersScreen() {
           data={globalOffers}
           keyExtractor={(item, index) => item.id || `global-${index}`}
           numColumns={2}
-          contentContainerStyle={[styles.listContent, isRTL && { transform: [{ scaleX: -1 }] }]}
+          contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           ListHeaderComponent={
-            <View style={[isRTL && { transform: [{ scaleX: -1 }] }]}>
-              {/* Categories Filter - ScrollView needs to be RTL too, so flip it (-1) and unflip pills (-1) */}
-              {/* Context: Header is Normal (1). Puts ScrollView (-1). Pills (-1). Net Pills (1). */}
+            <View>
               <ScrollView
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.categories}
-                style={[{ marginBottom: 20 }, isRTL && { transform: [{ scaleX: -1 }] }]}
+                style={{ marginBottom: 20 }}
               >
-                <View style={[isRTL && { transform: [{ scaleX: -1 }] }]}>
-                  <CategoryPill
-                    label={t("common.all")}
-                    isActive={activeCategory === "all"}
-                    onPress={() => setActiveCategory("all")}
-                  />
-                </View>
+                <CategoryPill
+                  label={t("common.all")}
+                  isActive={activeCategory === "all"}
+                  onPress={() => setActiveCategory("all")}
+                />
                 {categories.map((cat, index) => (
-                  <View key={cat.id || index} style={[isRTL && { transform: [{ scaleX: -1 }] }]}>
+                  <View key={cat.id || index}>
                     <CategoryPill
                       label={language === 'ar' ? cat.name_ar : cat.name_en}
                       isActive={activeCategory === cat.id}
@@ -277,7 +274,7 @@ export default function OffersScreen() {
             </View>
           }
           renderItem={({ item }) => (
-            <View style={[{ width: '48%', marginHorizontal: '1%', marginBottom: 16 }, isRTL && { transform: [{ scaleX: -1 }] }]}>
+            <View style={{ width: '48%', marginHorizontal: '1%', marginBottom: 16 }}>
               <OfferCard
                 offer={item}
                 isRTL={isRTL}
@@ -290,7 +287,7 @@ export default function OffersScreen() {
           )}
           ListEmptyComponent={
             globalOffers.length === 0 ? (
-              <View style={[styles.emptyState, isRTL && { transform: [{ scaleX: -1 }] }]}>
+              <View style={styles.emptyState}>
                 <Ionicons name="pricetags-outline" size={48} color={COLORS.textLight} />
                 <Text style={styles.emptyText}>{t("dashboard.noOffers")}</Text>
               </View>
@@ -413,7 +410,7 @@ function OfferCard({ offer, isRTL, language, t, isTargeted, togglingFav, onOpenA
 
         {!isBroadcast && (
           <Text style={[styles.price, isRTL && styles.textRTL]}>
-            {t('common.from')} {offer.discounted_price || offer.original_price} {offer.currency}
+            {t('common.from')} {offer.discounted_price || offer.original_price} {formatCurrencyLabel(offer.currency, t)}
           </Text>
         )}
 
@@ -423,8 +420,8 @@ function OfferCard({ offer, isRTL, language, t, isTargeted, togglingFav, onOpenA
           </Text>
         )}
 
-        <View style={[styles.metaRow, isRTL && styles.metaRowRTL]}>
-          <View style={[styles.metaItem, isRTL && styles.metaItemRTL]}>
+        <View style={[styles.metaRow]}>
+          <View style={[styles.metaItem]}>
             <Ionicons name="star" size={14} color={COLORS.warning} />
             <Text style={styles.metaText}>
               {typeof offer?.rating_count === "number" ? offer.rating_count : 0}
@@ -432,7 +429,7 @@ function OfferCard({ offer, isRTL, language, t, isTargeted, togglingFav, onOpenA
           </View>
 
           {!!offer?.duration_days && (
-            <View style={[styles.metaItem, isRTL && styles.metaItemRTL]}>
+            <View style={[styles.metaItem]}>
               <Ionicons name="time-outline" size={14} color={COLORS.textLight} />
               <Text style={styles.metaText}>
                 {t('common.duration_day', { count: offer.duration_days })}
@@ -480,9 +477,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   backBtn: {
     padding: 8,
   },
@@ -501,9 +496,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     gap: 8
   },
-  sectionHeaderRTL: {
-    flexDirection: 'row-reverse'
-  },
+
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -513,9 +506,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     gap: 8,
   },
-  categoriesRTL: {
-    flexDirection: "row-reverse",
-  },
+
   pill: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -605,17 +596,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  metaRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
   },
-  metaItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   metaText: {
     fontSize: 12,
     color: COLORS.textLight,
@@ -630,7 +617,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   cardContentRTL: {
-    alignItems: "flex-end",
+    alignItems: "flex-start",
   },
   cardTitle: {
     fontSize: 14,

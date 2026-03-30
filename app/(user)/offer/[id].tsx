@@ -9,6 +9,7 @@ import { offersApi, Offer } from '../../../src/services/api';
 import { useAuth } from '../../../src/contexts/AuthContext';
 import { isMembershipActive } from '../../../src/utils/membership';
 import { MembershipRequiredModal } from '../../../src/components/MembershipRequiredModal';
+import { formatCurrencyLabel } from '../../../src/utils/currencyLabel';
 import OfferRatingModal from '../../../src/components/OfferRatingModal';
 import OfferActionsMenu from '../../../src/components/OfferActionsMenu';
 import ConfirmModal from '../../../src/components/ConfirmModal';
@@ -228,7 +229,7 @@ export default function OfferDetailsScreen() {
                 </View>
 
                 <View style={styles.content}>
-                    <View style={[styles.headerRow, isRTL && styles.rowRTL]}>
+                    <View style={[styles.headerRow]}>
                         <View style={{ flex: 1 }}>
                             {offer.offer_type && (
                                 <Text style={[styles.typeLabel, isRTL && styles.textRTL]}>
@@ -238,19 +239,19 @@ export default function OfferDetailsScreen() {
                             <Text style={[styles.title, isRTL && styles.textRTL]}>
                                 {language === 'ar' ? offer.title_ar : offer.title_en}
                             </Text>
-                            <View style={[styles.badgesRow, isRTL && styles.rowRTL]}>
+                            <View style={[styles.badgesRow]}>
                                 <View style={styles.categoryBadge}>
                                     <Text style={styles.categoryText}>{t(`offers.types.${offer.category}`, offer.category || t('offers.general', 'General'))}</Text>
                                 </View>
                                 {offer.duration_days && (
-                                    <View style={[styles.durationBadge, isRTL && styles.rowRTL]}>
+                                    <View style={[styles.durationBadge]}>
                                         <Ionicons name="time-outline" size={14} color={COLORS.textLight} />
                                         <Text style={[styles.durationText, isRTL && styles.durationTextRTL]}>
                                             {t('common.duration_day', { count: offer.duration_days })}
                                         </Text>
                                     </View>
                                 )}
-                                <View style={[styles.durationBadge, isRTL && styles.rowRTL]}>
+                                <View style={[styles.durationBadge]}>
                                     <Ionicons name="star" size={14} color={COLORS.warning} />
                                     <Text style={[styles.durationText, isRTL && styles.durationTextRTL]}>
                                         {typeof (offer as any)?.rating_count === "number" ? (offer as any).rating_count : 0}
@@ -279,13 +280,13 @@ export default function OfferDetailsScreen() {
                             {(offer.includes || offer.excludes) && (
                                 <>
                                     <View style={styles.divider} />
-                                    <View style={[styles.rowContainer, isRTL && styles.rowContainerRTL]}>
+                                    <View style={[styles.rowContainer]}>
                                         {offer.includes && (
                                             <View style={[styles.halfSection, { marginEnd: isRTL ? 0 : 10, marginStart: isRTL ? 10 : 0 }]}>
                                                 <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { color: COLORS.success }]}>{t('offers.includes', 'Included')}</Text>
                                                 <View>
                                                     {(Array.isArray(offer.includes) ? offer.includes : [offer.includes]).map((item, idx) => (
-                                                        <View key={idx} style={[styles.listItem, isRTL && styles.rowRTL]}>
+                                                        <View key={idx} style={[styles.listItem]}>
                                                             <Ionicons name="checkmark-circle" size={16} color={COLORS.success} />
                                                             <Text style={[styles.listText, isRTL && styles.textRTL]}>{item}</Text>
                                                         </View>
@@ -298,7 +299,7 @@ export default function OfferDetailsScreen() {
                                                 <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { color: COLORS.error }]}>{t('offers.excludes', 'Excluded')}</Text>
                                                 <View>
                                                     {(Array.isArray(offer.excludes) ? offer.excludes : [offer.excludes]).map((item, idx) => (
-                                                        <View key={idx} style={[styles.listItem, isRTL && styles.rowRTL]}>
+                                                        <View key={idx} style={[styles.listItem]}>
                                                             <Ionicons name="close-circle" size={16} color={COLORS.error} />
                                                             <Text style={[styles.listText, isRTL && styles.textRTL]}>{item}</Text>
                                                         </View>
@@ -324,7 +325,7 @@ export default function OfferDetailsScreen() {
                         </>
                     ) : (
                         <View style={styles.lockedCard}>
-                            <View style={[styles.lockedRow, isRTL && styles.rowRTL]}>
+                            <View style={[styles.lockedRow]}>
                                 <Ionicons name="lock-closed" size={18} color={COLORS.primary} />
                                 <Text style={[styles.lockedTitle, isRTL && styles.textRTL]}>
                                     {t('membership.locked.title', 'Subscribe to unlock')}
@@ -344,15 +345,15 @@ export default function OfferDetailsScreen() {
                     {/* Price section - Hide for Broadcast */}
                     {offer.offer_type !== 'BROADCAST' && (
                         <View style={styles.priceSection}>
-                            <View style={[styles.priceRow, isRTL && styles.rowRTL]}>
+                            <View style={[styles.priceRow]}>
                                 <Text style={styles.priceLabel}>{t('common.price')}</Text>
-                                <View style={{ alignItems: isRTL ? 'flex-start' : 'flex-end' }}>
+                                <View style={{ alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
                                     <Text style={styles.finalPrice}>
-                                        {offer.discounted_price || offer.original_price} {offer.currency}
+                                        {offer.discounted_price || offer.original_price} {formatCurrencyLabel(offer.currency, t)}
                                     </Text>
                                     {offer.discounted_price && (
                                         <Text style={styles.originalPrice}>
-                                            {offer.original_price} {offer.currency}
+                                            {offer.original_price} {formatCurrencyLabel(offer.currency, t)}
                                         </Text>
                                     )}
                                 </View>
@@ -360,9 +361,9 @@ export default function OfferDetailsScreen() {
 
                             {/* Validity Dates */}
                             {(offer.valid_from || offer.valid_until) && (
-                                <View style={[styles.priceRow, { marginTop: 15, borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: 15 }, isRTL && styles.rowRTL]}>
+                                <View style={[styles.priceRow, { marginTop: 15, borderTopWidth: 1, borderTopColor: COLORS.border, paddingTop: 15 }]}>
                                     <Text style={styles.priceLabel}>{t('offers.validity', 'Valid Period')}</Text>
-                                    <View style={{ alignItems: isRTL ? 'flex-start' : 'flex-end' }}>
+                                    <View style={{ alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
                                         <Text style={{ color: COLORS.text, fontWeight: '600' }}>
                                             {offer.valid_from ? new Date(offer.valid_from).toLocaleDateString() : ''}
                                             {offer.valid_until ? ` - ${new Date(offer.valid_until).toLocaleDateString()}` : ''}
@@ -535,9 +536,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 16,
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     textRTL: {
         textAlign: 'right',
     },
@@ -656,7 +655,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     durationTextRTL: {
-        marginStart: 0,
+//         marginStart: 0,  /* removed double-flip for Native RTL */
         marginEnd: 4,
     },
     sectionTitle: {
@@ -669,9 +668,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    rowContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     halfSection: {
         flex: 1,
     },

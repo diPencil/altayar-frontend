@@ -100,7 +100,7 @@ export default function AddCardScreen() {
 
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
                     <Ionicons name="close" size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -150,9 +150,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#e2e8f0',
         backgroundColor: COLORS.white,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     headerTitle: {
         fontSize: 18,
         fontWeight: 'bold',

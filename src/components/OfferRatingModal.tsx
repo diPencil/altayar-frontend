@@ -57,7 +57,7 @@ export default function OfferRatingModal({
             {t("offers.rateSubtitle", "Tap a star from 1 to 5.")}
           </Text>
 
-          <View style={[styles.starsRow, isRTL && styles.starsRowRTL]}>
+          <View style={[styles.starsRow]}>
             {stars.map((n) => {
               const active = rating >= n;
               return (
@@ -78,7 +78,7 @@ export default function OfferRatingModal({
             })}
           </View>
 
-          <View style={[styles.actionsRow, isRTL && styles.actionsRowRTL]}>
+          <View style={[styles.actionsRow]}>
             <TouchableOpacity
               style={[styles.actionBtn, styles.cancelBtn]}
               onPress={onClose}
@@ -152,9 +152,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
   },
-  starsRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   starBtn: {
     padding: 4,
     borderRadius: 10,
@@ -164,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
   },
-  actionsRowRTL: { flexDirection: "row-reverse" },
+
   actionBtn: {
     flex: 1,
     paddingVertical: 12,

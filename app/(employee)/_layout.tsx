@@ -82,7 +82,7 @@ export default function EmployeeLayout() {
         styles.main
       ]}>
         {/* Top Bar */}
-        <SafeAreaView edges={["top"]} style={[styles.topBar, isRTL && styles.topBarRTL]}>
+        <SafeAreaView edges={["top"]} style={styles.topBar}>
           <TouchableOpacity
             style={styles.menuBtn}
             onPress={() => toggleSidebar(!sidebarOpen)}
@@ -90,9 +90,9 @@ export default function EmployeeLayout() {
             <Ionicons name="menu" size={26} color={COLORS.sidebarBg} />
           </TouchableOpacity>
           <Text style={styles.pageTitle}>
-            {t("employee.layout.salesPanel", "Sales Panel")}
+            {t("employee.layout.salesPanel")}
           </Text>
-          <View style={[styles.topBarActions, isRTL && styles.topBarActionsRTL]}>
+          <View style={styles.topBarActions}>
             <TouchableOpacity
               style={styles.notifBtn}
               onPress={() => router.push('/(employee)/notifications')}
@@ -170,7 +170,7 @@ export default function EmployeeLayout() {
                 <Ionicons name="person" size={24} color={COLORS.gold} />
               )}
             </View>
-            <View style={[styles.profileInfo, isRTL && styles.profileInfoRTL]}>
+            <View style={styles.profileInfo}>
               <Text style={[styles.profileName, isRTL && styles.textRTL]}>
                 {user ? `${user.first_name} ${user.last_name}` : t("employee.layout.employee", "Employee")}
               </Text>
@@ -192,7 +192,7 @@ export default function EmployeeLayout() {
                   style={[
                     styles.menuItem,
                     isActive && styles.menuItemActive,
-                    isRTL && styles.menuItemRTL,
+                    isActive && styles.menuItemActive,
                   ]}
                   onPress={() => {
                     toggleSidebar(false);
@@ -221,7 +221,7 @@ export default function EmployeeLayout() {
             {/* Back to Admin Dashboard - Only show if user is ADMIN or SUPER_ADMIN */}
             {(user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
               <TouchableOpacity
-                style={[styles.navBtn, isRTL && styles.navBtnRTL]}
+                style={styles.navBtn}
                 onPress={() => router.replace("/(admin)")}
               >
                 <Ionicons name="home" size={20} color={COLORS.gold} />
@@ -233,7 +233,7 @@ export default function EmployeeLayout() {
 
             {/* Switch to User View */}
             <TouchableOpacity
-              style={[styles.navBtn, isRTL && styles.navBtnRTL]}
+              style={styles.navBtn}
               onPress={() => router.replace("/(user)")}
             >
               <Ionicons name="person" size={20} color={COLORS.primary} />
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   containerRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   overlay: {
     position: "absolute",
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(255,255,255,0.1)",
   },
   sidebarHeaderRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   sidebarLogo: {
     width: 100,
@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
     borderBottomColor: "rgba(255,255,255,0.1)",
   },
   profileSectionRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   avatar: {
     width: 44,
@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   menuItemRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   menuItemActive: {
     backgroundColor: COLORS.sidebarHover,
@@ -412,7 +412,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   navBtnRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   navBtnText: {
     fontSize: 14,
@@ -443,24 +443,24 @@ const styles = StyleSheet.create({
     borderBottomColor: "#e2e8f0",
   },
   topBarRTL: {
-    flexDirection: "row-reverse",
+    // Removed row-reverse
   },
   menuBtn: {
     padding: 4,
   },
   pageTitle: {
+    flex: 1,
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.sidebarBg,
+    textAlign: "center",
   },
   topBarActions: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
   },
-  topBarActionsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   langBtn: {
     backgroundColor: COLORS.gold,
     paddingHorizontal: 10,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
   notifBadge: {
     position: 'absolute',
     top: 0,
-    right: 0,
+    end: 0,
     minWidth: 18,
     height: 18,
     borderRadius: 9,

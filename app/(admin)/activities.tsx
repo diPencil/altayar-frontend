@@ -64,34 +64,38 @@ export default function AllActivities() {
             style={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()} style={[styles.backBtn, isRTL && styles.backBtnRTL]}>
-                    <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
+                    <Ionicons name="arrow-back" size={24} color={COLORS.text} />
                 </TouchableOpacity>
-                <Text style={styles.title}>{t('admin.manageActivities.title')}</Text>
+                <Text style={[styles.title, isRTL && styles.titleRTL]}>{t('admin.manageActivities.title')}</Text>
             </View>
 
             {loading && !refreshing ? (
                 <ActivityIndicator size="large" color={COLORS.primary} style={{ marginTop: 20 }} />
             ) : (
-                <View style={[styles.list, isRTL && styles.listRTL]}>
+                <View style={styles.list}>
                     {activities.length === 0 ? (
                         <Text style={[styles.emptyText, isRTL && styles.textRTL]}>{t('admin.manageActivities.empty')}</Text>
                     ) : (
                         activities.map((activity, index) => (
-                            <View key={index} style={[styles.activityItem, isRTL && styles.activityItemRTL]}>
-                                <View style={[styles.activityIcon, { backgroundColor: `${getActivityColor(activity.type)}15` }, isRTL && { marginStart: 0, marginEnd: 0 }]}>
+                            <View key={index} style={styles.activityItem}>
+                                <View style={[styles.activityIcon, { backgroundColor: `${getActivityColor(activity.type)}15` }]}>
                                     <Ionicons name={activity.icon || "information-circle"} size={20} color={getActivityColor(activity.type)} />
                                 </View>
                                 <View style={[styles.activityContent, isRTL && styles.activityContentRTL]}>
-                                    <Text style={[styles.activityTitle, isRTL && styles.textRTL]}>{t(`manageActivities.types.${(activity.type || '').toLowerCase()}`) || activity.title || "Activity"}</Text>
-                                    <Text style={[styles.activityDesc, isRTL && styles.textRTL]}>{t(activity.description || '')}</Text>
+                                    <Text style={[styles.activityTitle, isRTL && styles.textRTL]} numberOfLines={1}>
+                                        {t(`manageActivities.types.${(activity.type || '').toLowerCase()}`) || activity.title || 'Activity'}
+                                    </Text>
+                                    <Text style={[styles.activityDesc, isRTL && styles.activityDescRTL]} numberOfLines={2}>
+                                        {activity.description || ''}
+                                    </Text>
                                 </View>
                                 <View style={[styles.timeContainer, isRTL && styles.timeContainerRTL]}>
-                                    <Text style={[styles.activityTime]}>
+                                    <Text style={[styles.activityTime, isRTL && styles.activityTimeRTL]}>
                                         {new Date(activity.time).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}
                                     </Text>
-                                    <Text style={[styles.activityTime]}>
+                                    <Text style={[styles.activityTime, isRTL && styles.activityTimeRTL]}>
                                         {new Date(activity.time).toLocaleTimeString(isRTL ? 'ar-EG' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                                     </Text>
                                 </View>
@@ -123,6 +127,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: "bold",
         color: COLORS.text,
+        flex: 1,
+    },
+    titleRTL: {
+        textAlign: "right",
     },
     list: {
         backgroundColor: COLORS.cardBg,
@@ -151,47 +159,53 @@ const styles = StyleSheet.create({
     activityContent: {
         flex: 1,
         marginStart: 12,
+        minWidth: 0,
     },
     activityTitle: {
         fontSize: 14,
         fontWeight: "500",
         color: COLORS.text,
+        alignSelf: "stretch",
     },
     activityDesc: {
         fontSize: 12,
         color: COLORS.textLight,
         marginTop: 2,
+        alignSelf: "stretch",
     },
     timeContainer: {
-        alignItems: 'flex-end',
+        flexShrink: 0,
+        maxWidth: 104,
+        alignItems: "flex-end",
+        marginStart: 8,
     },
     activityTime: {
         fontSize: 11,
         color: COLORS.textLight,
     },
-    // RTL Styles
-    headerRTL: {
-        flexDirection: 'row-reverse',
+    activityTimeRTL: {
+        textAlign: "left",
     },
+    // RTL Styles
+
     backBtnRTL: {
         marginEnd: 0,
         marginStart: 16,
     },
-    listRTL: {
-        // alignItems: 'flex-end', // Removed to fix layout shrink-wrap issue
-    },
     textRTL: {
-        textAlign: 'right',
+        textAlign: "right",
     },
-    activityItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     activityContentRTL: {
         marginStart: 0,
         marginEnd: 12,
-        alignItems: 'flex-end',
+    },
+    activityDescRTL: {
+        textAlign: "right",
     },
     timeContainerRTL: {
-        alignItems: 'flex-start',
+        alignItems: "flex-start",
+        marginStart: 0,
+        marginEnd: 8,
     },
 });

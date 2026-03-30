@@ -209,7 +209,7 @@ export default function EditMembershipPlan() {
 
     return (
         <ScrollView style={styles.container}>
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -271,7 +271,7 @@ export default function EditMembershipPlan() {
             <View style={styles.card}>
                 <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.typePrice')}</Text>
 
-                <View style={[styles.radioGroup, isRTL && styles.rowRTL]}>
+                <View style={[styles.radioGroup]}>
                     <TouchableOpacity
                         style={[styles.radioBtn, planType === 'FREE' && styles.radioActive]}
                         onPress={() => setPlanType('FREE')}
@@ -343,7 +343,7 @@ export default function EditMembershipPlan() {
                     onChangeText={setPoints}
                 />
 
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t('manageMemberships.planForm.activeStatus')}</Text>
                     <Switch
                         value={isActive}
@@ -390,9 +390,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginTop: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backBtn: {
         marginEnd: 12,
     },
@@ -474,9 +472,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 8,
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     submitBtn: {
         backgroundColor: COLORS.primary,
         paddingVertical: 16,

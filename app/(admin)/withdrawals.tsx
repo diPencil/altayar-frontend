@@ -88,7 +88,7 @@ export default function AdminWithdrawalsScreen() {
 
     const renderItem = ({ item }: { item: any }) => (
         <View style={styles.card}>
-            <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+            <View style={[styles.cardHeader]}>
                 <View>
                     <Text style={[styles.userName, isRTL && styles.textRTL]}>{item.user_name}</Text>
                     <Text style={[styles.date, isRTL && styles.textRTL]}>
@@ -98,7 +98,7 @@ export default function AdminWithdrawalsScreen() {
                 <Text style={styles.amount}>{item.amount} {t('common.currency.usd')}</Text>
             </View>
 
-            <View style={[styles.actions, isRTL && styles.actionsRTL]}>
+            <View style={[styles.actions]}>
                 <TouchableOpacity
                     style={[styles.actionBtn, styles.rejectBtn]}
                     onPress={() => confirmAction('reject', item.id, item.amount)}
@@ -123,7 +123,7 @@ export default function AdminWithdrawalsScreen() {
 
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -169,7 +169,7 @@ export default function AdminWithdrawalsScreen() {
                             {historyRequests.length > 0 ? (
                                 historyRequests.map(item => (
                                     <View key={item.id} style={styles.historyCard}>
-                                        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL, { marginBottom: 8 }]}>
+                                        <View style={[styles.cardHeader, { marginBottom: 8 }]}>
                                             <View>
                                                 <Text style={[styles.userName, styles.processedUser, isRTL && styles.textRTL]}>{item.user_name}</Text>
                                                 <Text style={[styles.date, isRTL && styles.textRTL]}>
@@ -216,7 +216,7 @@ export default function AdminWithdrawalsScreen() {
                                     : t('admin.withdrawals.rejectConfirmMessage')
                                 }
                             </Text>
-                            <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+                            <View style={[styles.modalButtons]}>
                                 <TouchableOpacity
                                     style={[styles.modalBtn, styles.modalBtnCancel]}
                                     onPress={() => setShowConfirmModal(false)}
@@ -266,9 +266,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         padding: 8,
     },
@@ -297,9 +295,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 16,
     },
-    cardHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userName: {
         fontSize: 16,
         fontWeight: '600',
@@ -324,9 +320,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 12,
     },
-    actionsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     actionBtn: {
         flex: 1,
         paddingVertical: 10,
@@ -412,9 +406,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 12,
     },
-    modalButtonsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalBtn: {
         flex: 1,
         paddingVertical: 12,

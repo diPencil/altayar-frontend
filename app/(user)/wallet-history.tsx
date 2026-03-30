@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { walletApi } from "../../src/services/api";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
     primary: "#1071b8",
@@ -87,13 +88,13 @@ export default function WalletHistory() {
 
         // Get description from various possible fields
         const description = item.description_en || item.description_ar || item.description || transactionType || t('wallet.transaction', 'Transaction');
-        const currency = item.currency || 'USD';
+        const currencyCode = item.currency || "USD";
         
         // Amount is always positive in backend, determine display based on transaction type
         const displayAmount = isDebit ? -Math.abs(item.amount) : Math.abs(item.amount);
 
         return (
-            <View style={[styles.card, isRTL && styles.cardRTL]}>
+            <View style={[styles.card]}>
                 <View style={[styles.iconContainer, { backgroundColor: `${iconColor}15` }]}>
                     <Ionicons name={iconName} size={24} color={iconColor} />
                 </View>
@@ -107,7 +108,7 @@ export default function WalletHistory() {
                     <Text style={[styles.amount, { color: iconColor }]}>
                         {displayAmount > 0 ? "+" : ""}{displayAmount.toFixed(2)}
                     </Text>
-                    <Text style={styles.currency}>{currency}</Text>
+                    <Text style={styles.currency}>{formatCurrencyLabel(currencyCode, t)}</Text>
                 </View>
             </View>
         );
@@ -116,7 +117,7 @@ export default function WalletHistory() {
     return (
         <View style={styles.container}>
             {/* Custom Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -168,9 +169,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -212,9 +211,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
     },
-    cardRTL: {
-        flexDirection: "row-reverse",
-    },
+
     iconContainer: {
         width: 40,
         height: 40,
@@ -228,8 +225,8 @@ const styles = StyleSheet.create({
         marginEnd: 12,
     },
     contentRTL: {
-        marginEnd: 0,
-        marginStart: 12,
+//         marginEnd: 0,  /* removed double-flip for Native RTL */
+//         marginStart: 12,  /* removed double-flip for Native RTL */
     },
     title: {
         fontSize: 16,

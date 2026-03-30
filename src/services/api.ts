@@ -27,6 +27,58 @@ export const getBaseUrl = () => {
   return prodUrl;
 };
 
+/** Dev / old VPS hosts often stored in reel video_url while the app uses extra.apiUrl */
+const REWRITE_MEDIA_HOSTS = new Set([
+  'localhost',
+  '127.0.0.1',
+  '0.0.0.0',
+  '69.62.117.50',
+]);
+
+/**
+ * Point reel thumbnails / videos at the same public host the app uses (fixes real devices
+ * when the DB still has http://localhost:8082/... or the legacy VPS IP).
+ */
+export function rewriteBackendMediaUrl(url: string | undefined | null): string | undefined {
+  if (url == null || typeof url !== 'string') return undefined;
+  const trimmed = url.trim();
+  if (!trimmed) return undefined;
+  try {
+    const base = getBaseUrl().replace(/\/$/, '');
+    const apiRoot = new URL(base.includes('://') ? base : `https://${base}`);
+    const publicOrigin = `${apiRoot.protocol}//${apiRoot.host}`;
+    let parsed: URL;
+    try {
+      parsed = new URL(trimmed);
+    } catch {
+      return trimmed;
+    }
+    if (REWRITE_MEDIA_HOSTS.has(parsed.hostname)) {
+      return `${publicOrigin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return trimmed;
+  } catch {
+    return trimmed;
+  }
+}
+
+/** Absolute URLs: rewrite dev host; relative paths: prefix getBaseUrl() without duplicating /api */
+export function resolveReelMediaUrl(videoUrl: string | undefined | null): string | undefined {
+  if (videoUrl == null || typeof videoUrl !== 'string') return undefined;
+  const trimmed = videoUrl.trim();
+  if (!trimmed) return undefined;
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return rewriteBackendMediaUrl(trimmed);
+  }
+  const base = getBaseUrl().replace(/\/$/, '');
+  const path = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  const joined =
+    path.startsWith('/api/') && /\/api$/.test(base)
+      ? `${base}${path.slice('/api'.length)}`
+      : `${base}${path}`;
+  return joined;
+}
+
 const BASE_URL = getBaseUrl();
 
 class ApiService {
@@ -556,8 +608,8 @@ export const paymentsApi = {
   create: (data: CreatePaymentRequest): Promise<CreatePaymentResponse> =>
     api.post('/payments/create', data),
 
-  quickPay: (amount: number, currency: string = 'EGP'): Promise<CreatePaymentResponse> =>
-    api.post('/payments/quick-pay', { amount, currency }),
+  quickPay: (amount: number, currency: string = 'EGP', payment_method_id: number = 2): Promise<CreatePaymentResponse> =>
+    api.post('/payments/quick-pay', { amount, currency, payment_method_id }),
 
   getStatus: (paymentId: string): Promise<any> =>
     api.get(`/payments/status/${paymentId}`),

@@ -9,8 +9,8 @@
 
 ### 2. الإعدادات في `app.json`:
 - [x] ✅ اسم التطبيق: `AltayarVIP`
-- [x] ✅ Bundle ID (iOS): `com.altayarvip.app`
-- [x] ✅ Package Name (Android): `com.altayarvip.app`
+- [x] ✅ Bundle ID (iOS): `altayarvip.app`
+- [x] ✅ Package Name (Android): `altayarvip.app`
 - [x] ✅ رقم الإصدار: `1.0.0`
 - [x] ✅ الأيقونات موجودة
 - [ ] ⚠️ **مطلوب:** إضافة `projectId` في `app.json` بعد تسجيل الدخول لـ Expo
@@ -57,7 +57,7 @@ eas build --platform android --profile preview
 ```
 
 **الخطوات:**
-1. هيسألك عن Package Name: `com.altayarvip.app`
+1. هيسألك عن Package Name: `altayarvip.app`
 2. هيسألك عن Keystore: اختار `Yes` (EAS هينشئه تلقائياً)
 3. انتظر 5-15 دقيقة
 4. حمّل APK واختبره على موبايل
@@ -127,7 +127,7 @@ eas build --platform ios --profile production
 1. **إنشاء App:**
    - روح [appstoreconnect.apple.com](https://appstoreconnect.apple.com/)
    - My Apps → + → New App
-   - Bundle ID: `com.altayarvip.app`
+   - Bundle ID: `altayarvip.app`
    - Name: `AltayarVIP`
 
 2. **ملء البيانات:**

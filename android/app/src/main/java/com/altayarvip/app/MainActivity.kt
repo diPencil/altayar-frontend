@@ -1,4 +1,4 @@
-package com.altayarvip.app
+package altayarvip.app
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

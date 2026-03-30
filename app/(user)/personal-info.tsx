@@ -125,7 +125,7 @@ export default function PersonalInfoScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -211,7 +211,7 @@ export default function PersonalInfoScreen() {
             <Text style={[styles.label, isRTL && styles.textRTL]}>
               {t('admin.manageUsers.gender') || 'Gender'}
             </Text>
-            <View style={[styles.radioGroup, isRTL && styles.rowRTL]}>
+            <View style={[styles.radioGroup]}>
               {['MALE', 'FEMALE'].map(g => (
                 <TouchableOpacity
                   key={g}
@@ -296,9 +296,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -376,9 +374,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.text,
   },
-  rowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   pickerContainer: {
     backgroundColor: COLORS.background,
     borderRadius: 12,

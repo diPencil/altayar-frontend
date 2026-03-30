@@ -87,7 +87,7 @@ export default function BookingsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity
           style={styles.backBtn}
           onPress={() => router.back()}
@@ -103,7 +103,7 @@ export default function BookingsScreen() {
       </View>
 
       {/* Tabs */}
-      <View style={[styles.tabs, isRTL && styles.tabsRTL]}>
+      <View style={[styles.tabs]}>
         <TabButton
           label={t("bookings.upcoming")}
           isActive={activeTab === "upcoming"}
@@ -193,7 +193,7 @@ function BookingCard({ booking, isRTL, t, user, saveCard, setSaveCard }: any) {
 
   return (
     <View style={styles.card}>
-      <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+      <View style={[styles.cardHeader]}>
         <View style={{ flex: 1 }}>
           <Text style={[styles.bookingTitle, isRTL && styles.textRTL]}>
             {isRTL ? booking.title_ar : booking.title_en}
@@ -208,13 +208,13 @@ function BookingCard({ booking, isRTL, t, user, saveCard, setSaveCard }: any) {
       </View>
 
       <View style={[styles.cardBody, isRTL && styles.cardBodyRTL]}>
-        <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+        <View style={[styles.infoRow]}>
           <Ionicons name="calendar-outline" size={16} color={COLORS.textLight} />
           <Text style={styles.infoText}>
             {formatDate(booking.start_date)} {booking.end_date ? `- ${formatDate(booking.end_date)}` : ''}
           </Text>
         </View>
-        <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+        <View style={[styles.infoRow]}>
           <Ionicons name="pricetag-outline" size={16} color={COLORS.textLight} />
           <Text style={[styles.infoText, { fontWeight: '600', color: COLORS.primary }]}>
             {formatPrice(booking.total_amount, booking.currency)}
@@ -278,9 +278,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   backBtn: {
     padding: 8,
   },
@@ -296,9 +294,7 @@ const styles = StyleSheet.create({
     margin: 16,
     borderRadius: 12,
   },
-  tabsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   tabBtn: {
     flex: 1,
     paddingVertical: 8,
@@ -338,9 +334,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     marginBottom: 12,
   },
-  cardHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   bookingTitle: {
     fontSize: 16,
     fontWeight: "bold",
@@ -377,9 +371,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     gap: 8,
   },
-  infoRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   infoText: {
     color: COLORS.text,
     fontSize: 14,

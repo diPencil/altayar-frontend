@@ -26,6 +26,7 @@ import { TROPHY_LEVELS } from "../../src/constants/competition";
 import { useAuth } from "../../src/contexts/AuthContext";
 
 import { chatApi } from "../../src/services/api";
+import { rtlMirroredIconStyle } from "../../src/utils/rtlIcons";
 import { useState, useEffect, useCallback } from "react";
 
 export default function EmployeeDashboard() {
@@ -116,23 +117,28 @@ export default function EmployeeDashboard() {
         colors={["#1e3a5f", "#2d4a6f"]}
         style={styles.welcomeCard}
       >
-        <View style={[styles.welcomeContent, isRTL && styles.welcomeContentRTL]}>
+        <View style={[styles.welcomeContent]}>
           <View style={isRTL ? { alignItems: "flex-end" } : undefined}>
             <Text style={[styles.welcomeText, isRTL && styles.textRTL]}>
-              {t('employee.dashboard.hello', 'Hello')}, {userName} !
+              {t('employee.dashboard.hello')}, {userName}!
             </Text>
             <Text style={[styles.welcomeSubtext, isRTL && styles.textRTL]}>
               {t('employee.dashboard.performanceSummary')}
             </Text>
           </View>
           <View style={[styles.welcomeIcon, { backgroundColor: `${currentLevel.color}20` }]}>
-            <Ionicons name={currentLevel.icon as any} size={32} color={currentLevel.color} />
+            <Ionicons
+              name={currentLevel.icon as any}
+              size={32}
+              color={currentLevel.color}
+              style={rtlMirroredIconStyle(String(currentLevel.icon), isRTL)}
+            />
           </View>
         </View>
       </LinearGradient>
 
       {/* Stats Grid */}
-      <View style={[styles.statsGrid, isRTL && styles.statsGridRTL]}>
+      <View style={[styles.statsGrid]}>
         <StatCard
           icon="chatbubbles"
           label={t('employee.dashboard.stats.replies')}
@@ -165,8 +171,8 @@ export default function EmployeeDashboard() {
 
       {/* Admin Messages */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-          <View style={[styles.cardTitleRow, isRTL && styles.cardTitleRowRTL]}>
+        <View style={[styles.cardHeader]}>
+          <View style={[styles.cardTitleRow]}>
             <Ionicons name="mail" size={22} color={COLORS.error} />
             <Text style={[styles.cardTitle, isRTL && styles.cardTitleRTL]}>
               {t('employee.dashboard.adminMessages.title')}
@@ -196,7 +202,7 @@ export default function EmployeeDashboard() {
             />
           ))
         ) : (
-          <Text style={{ textAlign: 'center', padding: 20, color: COLORS.textLight }}>
+          <Text style={[styles.emptyHint, { textAlign: isRTL ? 'right' : 'center' }]}>
             {t('employee.dashboard.adminMessages.empty')}
           </Text>
         )}
@@ -204,15 +210,15 @@ export default function EmployeeDashboard() {
 
       {/* Pending Chats */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-          <View style={[styles.cardTitleRow, isRTL && styles.cardTitleRowRTL]}>
+        <View style={[styles.cardHeader]}>
+          <View style={[styles.cardTitleRow]}>
             <Ionicons name="chatbubbles" size={22} color={COLORS.primary} />
             <Text style={[styles.cardTitle, isRTL && styles.cardTitleRTL]}>
               {t('employee.dashboard.pendingChats.title')}
             </Text>
           </View>
           <TouchableOpacity onPress={() => router.push('/(employee)/chats')}>
-            <Text style={styles.viewAll}>{t('employee.dashboard.pendingChats.viewAll')}</Text>
+            <Text style={[styles.viewAll, isRTL && styles.textRTL]}>{t('employee.dashboard.pendingChats.viewAll')}</Text>
           </TouchableOpacity>
         </View>
 
@@ -229,7 +235,7 @@ export default function EmployeeDashboard() {
             />
           ))
         ) : (
-          <Text style={{ textAlign: 'center', padding: 20, color: COLORS.textLight }}>
+          <Text style={[styles.emptyHint, { textAlign: isRTL ? 'right' : 'center' }]}>
             {t('employee.dashboard.pendingChats.empty')}
           </Text>
         )}
@@ -240,7 +246,7 @@ export default function EmployeeDashboard() {
         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
           {t('employee.dashboard.quickActions.title')}
         </Text>
-        <View style={[styles.quickActions, isRTL && styles.quickActionsRTL]}>
+        <View style={[styles.quickActions]}>
           <QuickAction
             icon="pricetag"
             label={t('employee.dashboard.quickActions.sendOffer')}
@@ -281,9 +287,14 @@ function StatCard({ icon, label, value, gradient, isRTL }: any) {
   return (
     <LinearGradient colors={gradient} style={styles.statCard}>
       <View style={styles.statIcon}>
-        <Ionicons name={icon} size={22} color="rgba(255,255,255,0.9)" />
+        <Ionicons
+          name={icon}
+          size={22}
+          color="rgba(255,255,255,0.9)"
+          style={rtlMirroredIconStyle(icon, isRTL)}
+        />
       </View>
-      <Text style={styles.statValue}>{value}</Text>
+      <Text style={[styles.statValue, isRTL && styles.statValueRTL]}>{value}</Text>
       <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{label}</Text>
     </LinearGradient>
   );
@@ -292,12 +303,12 @@ function StatCard({ icon, label, value, gradient, isRTL }: any) {
 function AdminMessage({ title, message, time, urgent, isRTL, onPress }: any) {
   const { t } = useTranslation();
   return (
-    <TouchableOpacity style={[styles.messageItem, isRTL && styles.messageItemRTL]} onPress={onPress}>
+    <TouchableOpacity style={[styles.messageItem]} onPress={onPress}>
       <View style={[styles.messageIcon, urgent && styles.urgentIcon]}>
         <Ionicons name="mail" size={20} color={urgent ? COLORS.error : COLORS.primary} />
       </View>
       <View style={[styles.messageContent, isRTL && styles.messageContentRTL]}>
-        <View style={[styles.messageHeader, isRTL && styles.messageHeaderRTL]}>
+        <View style={[styles.messageHeader]}>
           <Text style={[styles.messageTitle, isRTL && styles.textRTL]}>{title}</Text>
           {urgent && <View style={styles.urgentBadge}><Text style={styles.urgentText}>{t('employee.dashboard.adminMessages.urgent', 'Urgent')}</Text></View>}
         </View>
@@ -310,16 +321,16 @@ function AdminMessage({ title, message, time, urgent, isRTL, onPress }: any) {
 
 function ChatItem({ name, message, time, unread, isRTL, onPress }: any) {
   return (
-    <TouchableOpacity style={[styles.chatItem, isRTL && styles.chatItemRTL]} onPress={onPress}>
+    <TouchableOpacity style={[styles.chatItem]} onPress={onPress}>
       <View style={styles.chatAvatar}>
         <Text style={styles.avatarText}>{name.charAt(0)}</Text>
       </View>
       <View style={[styles.chatContent, isRTL && styles.chatContentRTL]}>
-        <View style={[styles.chatHeader, isRTL && styles.chatHeaderRTL]}>
+        <View style={[styles.chatHeader]}>
           <Text style={[styles.chatName, isRTL && styles.textRTL]}>{name}</Text>
-          <Text style={styles.chatTime}>{time}</Text>
+          <Text style={[styles.chatTime, isRTL && styles.textRTL]}>{time}</Text>
         </View>
-        <View style={[styles.chatFooter, isRTL && styles.chatFooterRTL]}>
+        <View style={[styles.chatFooter]}>
           <Text style={[styles.chatMessage, isRTL && styles.textRTL]} numberOfLines={1}>{message}</Text>
           {unread && (
             <View style={styles.unreadBadge}>
@@ -336,7 +347,7 @@ function QuickAction({ icon, label, color, isRTL, onPress }: any) {
   return (
     <TouchableOpacity style={styles.quickAction} onPress={onPress}>
       <View style={[styles.quickActionIcon, { backgroundColor: `${color} 15` }]}>
-        <Ionicons name={icon} size={24} color={color} />
+        <Ionicons name={icon} size={24} color={color} style={rtlMirroredIconStyle(icon, isRTL)} />
       </View>
       <Text style={[styles.quickActionLabel, isRTL && styles.textRTL]}>{label}</Text>
     </TouchableOpacity>
@@ -359,9 +370,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  welcomeContentRTL: {
-    flexDirection: "row-reverse",
-  },
+
   welcomeText: {
     fontSize: 22,
     fontWeight: "bold",
@@ -389,14 +398,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginBottom: 16,
   },
-  statsGridRTL: {
-    flexDirection: "row-reverse",
-  },
+
   statCard: {
     width: (width - 48) / 2,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
+    alignItems: "flex-start",
   },
   statIcon: {
     width: 40,
@@ -406,16 +414,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
+    alignSelf: "flex-start",
   },
   statValue: {
     fontSize: 26,
     fontWeight: "bold",
     color: "#ffffff",
+    alignSelf: "stretch",
   },
   statLabel: {
     fontSize: 12,
     color: "rgba(255,255,255,0.8)",
     marginTop: 2,
+    alignSelf: "stretch",
+  },
+  statValueRTL: {
+    writingDirection: "ltr",
+    textAlign: "right",
+  },
+  emptyHint: {
+    padding: 20,
+    color: COLORS.textLight,
   },
   card: {
     backgroundColor: COLORS.cardBg,
@@ -429,16 +448,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  cardHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardTitleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  cardTitleRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardTitle: {
     fontSize: 17,
     fontWeight: "600",
@@ -472,9 +487,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  messageItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   messageIcon: {
     width: 40,
     height: 40,
@@ -498,9 +511,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  messageHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   messageTitle: {
     fontSize: 15,
     fontWeight: "600",
@@ -535,9 +546,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  chatItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   chatAvatar: {
     width: 44,
     height: 44,
@@ -563,9 +572,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  chatHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   chatName: {
     fontSize: 15,
     fontWeight: "600",
@@ -581,9 +588,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 4,
   },
-  chatFooterRTL: {
-    flexDirection: "row-reverse",
-  },
+
   chatMessage: {
     fontSize: 13,
     color: COLORS.textLight,
@@ -611,9 +616,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  quickActionsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   quickAction: {
     alignItems: "center",
     width: (width - 64) / 4,

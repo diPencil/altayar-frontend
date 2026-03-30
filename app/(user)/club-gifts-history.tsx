@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { cashbackApi } from "../../src/services/api";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
     primary: "#1071b8",
@@ -106,7 +107,7 @@ export default function ClubGiftsHistory() {
         const statusText = item.status ? t(`common.statuses.${item.status}`, item.status) as string : '';
 
         return (
-            <View style={[styles.card, isRTL && styles.cardRTL]}>
+            <View style={[styles.card]}>
                 <View style={[styles.iconContainer, { backgroundColor: `${iconColor}15` }]}>
                     <Ionicons name={iconName} size={24} color={iconColor} />
                 </View>
@@ -120,7 +121,7 @@ export default function ClubGiftsHistory() {
                     <Text style={[styles.amount, { color: iconColor }]}>
                         {isPositive ? "+" : "-"}{item.amount}
                     </Text>
-                    <Text style={styles.currency}>{t("common.currency.usd")}</Text>
+                    <Text style={styles.currency}>{formatCurrencyLabel(item.currency, t)}</Text>
                 </View>
             </View>
         );
@@ -129,7 +130,7 @@ export default function ClubGiftsHistory() {
     return (
         <View style={styles.container}>
             {/* Custom Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -181,9 +182,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -225,9 +224,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
     },
-    cardRTL: {
-        flexDirection: "row-reverse",
-    },
+
     iconContainer: {
         width: 40,
         height: 40,
@@ -241,8 +238,8 @@ const styles = StyleSheet.create({
         marginEnd: 12,
     },
     contentRTL: {
-        marginEnd: 0,
-        marginStart: 12,
+//         marginEnd: 0,  /* removed double-flip for Native RTL */
+//         marginStart: 12,  /* removed double-flip for Native RTL */
     },
     title: {
         fontSize: 16,

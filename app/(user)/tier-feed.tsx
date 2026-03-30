@@ -14,6 +14,7 @@ import {
     Alert,
     RefreshControl,
     Share,
+    Platform,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -86,6 +87,7 @@ export default function TierFeedScreen() {
     const insets = useSafeAreaInsets();
     const { user } = useAuth();
     const { isRTL, language } = useLanguage();
+    const rtl = language === 'ar' || isRTL;
 
     const tierKey = (params.tier as string)?.toLowerCase() || 'silver';
 
@@ -337,15 +339,26 @@ export default function TierFeedScreen() {
         <View style={styles.container}>
             <StatusBar barStyle="dark-content" />
 
-            {/* Header */}
-            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-                <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={24} color="#1e293b" />
-                </TouchableOpacity>
-                <Text style={styles.headerTitle}>{t(`community.title_${tierKey}`, `community.title`)}</Text>
-                <TouchableOpacity style={styles.menuButton} onPress={() => setShowMenu(true)}>
-                    <Ionicons name="ellipsis-horizontal" size={24} color="#1e293b" />
-                </TouchableOpacity>
+            {/* Header: physical leading = back (Arabic uses forward chevron), trailing = menu */}
+            <View
+                style={[styles.header, { paddingTop: insets.top + 10 }, rtl && styles.headerPhysicalLTR]}
+                {...(Platform.OS === 'web' && rtl ? ({ dir: 'ltr' } as object) : {})}
+            >
+                <View style={styles.headerSlot}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.headerIconBtn}>
+                        <Ionicons name={rtl ? 'arrow-forward' : 'arrow-back'} size={24} color="#1e293b" />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.headerTitleWrap}>
+                    <Text style={[styles.headerTitle, rtl && styles.headerTitleArabic]} numberOfLines={1}>
+                        {t(`community.title_${tierKey}`, `community.title`)}
+                    </Text>
+                </View>
+                <View style={styles.headerSlot}>
+                    <TouchableOpacity style={styles.headerIconBtn} onPress={() => setShowMenu(true)}>
+                        <Ionicons name="ellipsis-horizontal" size={24} color="#1e293b" />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             <ScrollView
@@ -358,44 +371,74 @@ export default function TierFeedScreen() {
                 {/* Hero Section */}
                 <LinearGradient
                     colors={theme.colors}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
+                    start={{ x: rtl ? 1 : 0, y: 0 }}
+                    end={{ x: rtl ? 0 : 1, y: 1 }}
                     style={styles.heroSection}
                 >
-                    <View style={styles.heroContent}>
-                        <View style={[styles.badgeContainer, { backgroundColor: theme.primary }, isRTL && { alignSelf: 'flex-end', flexDirection: 'row-reverse' }]}>
+                    <View style={[styles.heroContent, rtl && styles.heroContentRTL]}>
+                        <View style={[styles.badgeContainer, { backgroundColor: theme.primary }, rtl && styles.badgeRTL]}>
                             <Ionicons name="star" size={12} color="#fff" />
-                            <Text style={styles.badgeText}>{t('community.officialHub', 'OFFICIAL MEMBER HUB')}</Text>
+                            <Text style={[styles.badgeText, rtl && styles.badgeTextRTL]}>
+                                {t("community.officialHub", "OFFICIAL MEMBER HUB")}
+                            </Text>
                         </View>
-                        <Text style={[styles.heroTitle, { color: theme.primary }, isRTL && { textAlign: 'right' }]}>
+                        <Text style={[styles.heroTitle, { color: theme.primary }, rtl && styles.heroTextRTL]}>
                             {t('community.lounge', { tier: theme.name })}
                         </Text>
-                        <Text style={[styles.heroDesc, { color: theme.accent }, isRTL && { textAlign: 'right' }]}>
+                        <Text style={[styles.heroDesc, { color: theme.accent }, rtl && styles.heroTextRTL]}>
                             {theme.description}
                         </Text>
                     </View>
-                    <Image source={theme.headerImg} style={[styles.heroImage, isRTL ? { left: -20, right: undefined, transform: [{ rotate: '10deg' }] } : { right: -20, left: undefined }]} resizeMode="contain" />
+                    <Image
+                        source={theme.headerImg}
+                        style={[styles.heroImage, rtl ? styles.heroImageRTL : styles.heroImageLTR]}
+                        resizeMode="contain"
+                    />
                 </LinearGradient>
 
-                {/* Create Post Input */}
+                {/* Create Post Input — explicit LTR/RTL order so web matches mobile */}
                 <View style={styles.createPostContainer}>
-                    <Image
-                        source={{ uri: user?.avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
-                        style={styles.userAvatarSmall}
-                    />
-                    <TouchableOpacity style={styles.createPostInput} onPress={() => setShowCreateModal(true)}>
-                        <Text style={[styles.createPostPlaceholder, isRTL && { textAlign: 'right' }]}>{t('community.shareExperience', 'Share your experience...')}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={[styles.iconButton, { backgroundColor: theme.colors[0] }]}
-                        onPress={() => setShowCreateModal(true)}
-                    >
-                        <Ionicons name="images" size={20} color={theme.primary} />
-                    </TouchableOpacity>
+                    {rtl ? (
+                        <>
+                            <TouchableOpacity
+                                style={[styles.iconButton, { backgroundColor: theme.colors[0] }]}
+                                onPress={() => setShowCreateModal(true)}
+                            >
+                                <Ionicons name="images" size={20} color={theme.primary} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.createPostInput} onPress={() => setShowCreateModal(true)}>
+                                <Text style={[styles.createPostPlaceholder, styles.placeholderRTL]}>
+                                    {t('community.shareExperience', 'Share your experience...')}
+                                </Text>
+                            </TouchableOpacity>
+                            <Image
+                                source={{ uri: user?.avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
+                                style={styles.userAvatarSmall}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <Image
+                                source={{ uri: user?.avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
+                                style={styles.userAvatarSmall}
+                            />
+                            <TouchableOpacity style={styles.createPostInput} onPress={() => setShowCreateModal(true)}>
+                                <Text style={styles.createPostPlaceholder}>
+                                    {t('community.shareExperience', 'Share your experience...')}
+                                </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.iconButton, { backgroundColor: theme.colors[0] }]}
+                                onPress={() => setShowCreateModal(true)}
+                            >
+                                <Ionicons name="images" size={20} color={theme.primary} />
+                            </TouchableOpacity>
+                        </>
+                    )}
                 </View>
 
                 {/* Feed Posts */}
-                <Text style={[styles.feedLabel, isRTL && { textAlign: 'right' }]}>{t('community.latestDiscussions', 'Latest Discussions')}</Text>
+                <Text style={[styles.feedLabel, rtl && { textAlign: 'right' }]}>{t('community.latestDiscussions', 'Latest Discussions')}</Text>
 
                 {loading ? (
                     <ActivityIndicator size="large" color={theme.primary} style={{ marginTop: 40 }} />
@@ -413,16 +456,16 @@ export default function TierFeedScreen() {
                     }).map((post) => (
                         <View key={post.id} style={styles.postCard}>
                             {/* Post Header */}
-                            <View style={[styles.postHeader, isRTL && { flexDirection: 'row-reverse' }]}>
+                            <View style={styles.postHeader}>
                                 <Image
                                     source={{ uri: post.user_avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
                                     style={styles.postAvatar}
                                 />
-                                <View style={[styles.postMeta, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>
-                                    <Text style={[styles.postAuthor, isRTL && { textAlign: 'right' }]}>
+                                <View style={[styles.postMeta, rtl ? styles.postMetaRTL : styles.postMetaLTR]}>
+                                    <Text style={[styles.postAuthor, rtl && { textAlign: 'right' }]}>
                                         {post.user_first_name || ''} {post.user_last_name || ''}
                                     </Text>
-                                    <Text style={[styles.postTime, isRTL && { textAlign: 'right' }]}>{formatTime(post.created_at)}</Text>
+                                    <Text style={[styles.postTime, rtl && { textAlign: 'right' }]}>{formatTime(post.created_at)}</Text>
                                 </View>
                                 {post.status === 'PENDING' ? (
                                     <View style={styles.pendingBadge}>
@@ -432,7 +475,7 @@ export default function TierFeedScreen() {
                             </View>
 
                             {/* Post Content */}
-                            <Text style={[styles.postBody, isRTL && { textAlign: 'right' }]}>{post.content || ''}</Text>
+                            <Text style={[styles.postBody, rtl && { textAlign: 'right' }]}>{post.content || ''}</Text>
 
                             {/* Post Image */}
                             {post.image_url ? (
@@ -440,9 +483,9 @@ export default function TierFeedScreen() {
                             ) : null}
 
                             {/* Post Actions */}
-                            <View style={[styles.postActions, isRTL && { flexDirection: 'row-reverse' }]}>
+                            <View style={styles.postActions}>
                                 <TouchableOpacity
-                                    style={[styles.actionButton, isRTL && { flexDirection: 'row-reverse' }]}
+                                    style={[styles.actionButton]}
                                     onPress={() => handleToggleLike(post.id)}
                                 >
                                     <Ionicons
@@ -461,7 +504,7 @@ export default function TierFeedScreen() {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    style={[styles.actionButton, isRTL && { flexDirection: 'row-reverse' }]}
+                                    style={[styles.actionButton]}
                                     onPress={() => {
                                         setSelectedPostId(post.id);
                                         fetchComments(post.id);
@@ -475,7 +518,7 @@ export default function TierFeedScreen() {
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
-                                    style={[styles.actionButton, isRTL && { flexDirection: 'row-reverse' }]}
+                                    style={[styles.actionButton]}
                                     onPress={() => handleShare(post)}
                                 >
                                     <Ionicons name="share-social-outline" size={20} color="#64748b" />
@@ -501,34 +544,48 @@ export default function TierFeedScreen() {
                     activeOpacity={1}
                     onPress={() => setShowMenu(false)}
                 >
-                    <View style={[styles.menuContainer, isRTL ? { left: 20, right: 'auto' } : { right: 20, left: 'auto' }, { top: insets.top + 60 }]}>
-                        <Text style={[styles.menuHeader, isRTL && { textAlign: 'right' }]}>{t('community.sortBy', 'Sort By')}</Text>
+                    <View
+                        style={[
+                            styles.menuContainer,
+                            styles.menuContainerPosition,
+                            { top: insets.top + 60 },
+                            rtl && styles.menuContainerRTL,
+                        ]}
+                        {...(Platform.OS === 'web' && rtl ? ({ dir: 'rtl' } as object) : {})}
+                    >
+                        <Text style={[styles.menuHeader, rtl && { textAlign: 'right' }]}>{t('community.sortBy', 'Sort By')}</Text>
                         <TouchableOpacity
-                            style={[styles.menuItem, sortBy === 'recent' && styles.menuItemActive, isRTL && { flexDirection: 'row-reverse' }]}
+                            style={[styles.menuItem, sortBy === 'recent' && styles.menuItemActive]}
                             onPress={() => { setSortBy('recent'); setShowMenu(false); }}
                         >
-                            <Ionicons name="time-outline" size={20} color={sortBy === 'recent' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'recent' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostRecent', 'Most Recent')}</Text>
+                            <View style={styles.menuItemIconWrap}>
+                                <Ionicons name="time-outline" size={20} color={sortBy === 'recent' ? theme.primary : '#475569'} />
+                            </View>
+                            <Text style={[styles.menuText, sortBy === 'recent' && { color: theme.primary, fontWeight: '600' }]}>{t('community.mostRecent', 'Most Recent')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.menuItem, sortBy === 'liked' && styles.menuItemActive, isRTL && { flexDirection: 'row-reverse' }]}
+                            style={[styles.menuItem, sortBy === 'liked' && styles.menuItemActive]}
                             onPress={() => { setSortBy('liked'); setShowMenu(false); }}
                         >
-                            <Ionicons name="heart-outline" size={20} color={sortBy === 'liked' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'liked' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostLiked', 'Most Liked')}</Text>
+                            <View style={styles.menuItemIconWrap}>
+                                <Ionicons name="heart-outline" size={20} color={sortBy === 'liked' ? theme.primary : '#475569'} />
+                            </View>
+                            <Text style={[styles.menuText, sortBy === 'liked' && { color: theme.primary, fontWeight: '600' }]}>{t('community.mostLiked', 'Most Liked')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.menuItem, sortBy === 'discussed' && styles.menuItemActive, isRTL && { flexDirection: 'row-reverse' }]}
+                            style={[styles.menuItem, sortBy === 'discussed' && styles.menuItemActive]}
                             onPress={() => { setSortBy('discussed'); setShowMenu(false); }}
                         >
-                            <Ionicons name="chatbubbles-outline" size={20} color={sortBy === 'discussed' ? theme.primary : '#475569'} />
-                            <Text style={[styles.menuText, sortBy === 'discussed' && { color: theme.primary, fontWeight: '600' }, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.mostDiscussed', 'Most Discussed')}</Text>
+                            <View style={styles.menuItemIconWrap}>
+                                <Ionicons name="chatbubbles-outline" size={20} color={sortBy === 'discussed' ? theme.primary : '#475569'} />
+                            </View>
+                            <Text style={[styles.menuText, sortBy === 'discussed' && { color: theme.primary, fontWeight: '600' }]}>{t('community.mostDiscussed', 'Most Discussed')}</Text>
                         </TouchableOpacity>
 
                         <View style={styles.menuDivider} />
 
                         <TouchableOpacity
-                            style={[styles.menuItem, isRTL && { flexDirection: 'row-reverse' }]}
+                            style={[styles.menuItem]}
                             onPress={() => {
                                 setShowMenu(false);
                                 Alert.alert(
@@ -538,8 +595,10 @@ export default function TierFeedScreen() {
                                 );
                             }}
                         >
-                            <Ionicons name="information-circle-outline" size={20} color="#475569" />
-                            <Text style={[styles.menuText, isRTL ? { marginEnd: 12, marginStart: 0 } : { marginStart: 12 }]}>{t('community.guidelines', 'Guidelines')}</Text>
+                            <View style={styles.menuItemIconWrap}>
+                                <Ionicons name="information-circle-outline" size={20} color="#475569" />
+                            </View>
+                            <Text style={styles.menuText}>{t('community.guidelines', 'Guidelines')}</Text>
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -554,15 +613,15 @@ export default function TierFeedScreen() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <View style={[styles.modalHeader, isRTL && { flexDirection: 'row-reverse' }]}>
-                            <Text style={styles.modalTitle}>{t('community.createPost', 'Create Post')}</Text>
+                        <View style={[styles.modalHeader, rtl && styles.modalHeaderRTL]}>
+                            <Text style={[styles.modalTitle, rtl && styles.textRTL]}>{t('community.createPost', 'Create Post')}</Text>
                             <TouchableOpacity onPress={() => setShowCreateModal(false)}>
                                 <Ionicons name="close" size={24} color="#64748b" />
                             </TouchableOpacity>
                         </View>
 
                         <TextInput
-                            style={[styles.modalInput, isRTL && { textAlign: 'right' }]}
+                            style={[styles.modalInput, rtl && { textAlign: 'right' }]}
                             placeholder={t('community.shareThoughts', "Share your thoughts...")}
                             placeholderTextColor="#94a3b8"
                             multiline
@@ -574,9 +633,9 @@ export default function TierFeedScreen() {
 
 
                         {/* Image Source Selector */}
-                        <View style={styles.imageSourceSelector}>
+                        <View style={[styles.imageSourceSelector, rtl && styles.rowReverse]}>
                             <TouchableOpacity
-                                style={[styles.sourceButton, imageSource === 'url' && styles.sourceButtonActive, isRTL && { flexDirection: 'row-reverse' }]}
+                                style={[styles.sourceButton, imageSource === 'url' && styles.sourceButtonActive]}
                                 onPress={() => {
                                     setImageSource('url');
                                     setNewPostImageUrl('');
@@ -589,7 +648,7 @@ export default function TierFeedScreen() {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                style={[styles.sourceButton, imageSource === 'upload' && styles.sourceButtonActive, isRTL && { flexDirection: 'row-reverse' }]}
+                                style={[styles.sourceButton, imageSource === 'upload' && styles.sourceButtonActive]}
                                 onPress={() => {
                                     setImageSource('upload');
                                     setNewPostImageUrl('');
@@ -605,7 +664,7 @@ export default function TierFeedScreen() {
                         {/* Conditional Input */}
                         {imageSource === 'url' ? (
                             <TextInput
-                                style={[styles.modalImageInput, isRTL && { textAlign: 'right' }]}
+                                style={[styles.modalImageInput, rtl && { textAlign: 'right' }]}
                                 placeholder={t('community.urlPlaceholder', "Image URL (optional)")}
                                 placeholderTextColor="#94a3b8"
                                 value={newPostImageUrl}
@@ -615,7 +674,7 @@ export default function TierFeedScreen() {
                             />
                         ) : (
                             <TouchableOpacity
-                                style={[styles.uploadButton, { borderColor: theme.colors[0] }, isRTL && { flexDirection: 'row-reverse' }]}
+                                style={[styles.uploadButton, { borderColor: theme.colors[0] }]}
                                 onPress={pickImage}
                             >
                                 <Ionicons name="images" size={28} color={theme.primary} />
@@ -666,8 +725,8 @@ export default function TierFeedScreen() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <View style={[styles.modalHeader, isRTL && { flexDirection: 'row-reverse' }]}>
-                            <Text style={styles.modalTitle}>{t('community.comments', 'Comments')}</Text>
+                        <View style={[styles.modalHeader, rtl && styles.modalHeaderRTL]}>
+                            <Text style={[styles.modalTitle, rtl && styles.textRTL]}>{t('community.comments', 'Comments')}</Text>
                             <TouchableOpacity onPress={() => setShowCommentModal(false)}>
                                 <Ionicons name="close" size={24} color="#64748b" />
                             </TouchableOpacity>
@@ -684,21 +743,21 @@ export default function TierFeedScreen() {
                                     </View>
                                 ) : (
                                     postComments.map((comment, index) => (
-                                        <View key={comment.id || index} style={[styles.commentItem, isRTL && { flexDirection: 'row-reverse' }]}>
+                                        <View key={comment.id || index} style={[styles.commentItem, rtl && styles.commentItemRTL]}>
                                             <Image
                                                 source={{ uri: comment.user_avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
                                                 style={styles.commentAvatar}
                                             />
                                             <View style={styles.commentContent}>
-                                                <View style={[styles.commentHeader, isRTL && { flexDirection: 'row-reverse' }]}>
+                                                <View style={[styles.commentHeader, rtl && styles.commentHeaderRTL]}>
                                                     <Text style={styles.commentAuthor}>
                                                         {comment.user_first_name} {comment.user_last_name}
                                                     </Text>
                                                     <Text style={styles.commentTime}>{formatTime(comment.created_at)}</Text>
                                                 </View>
-                                                <Text style={[styles.commentText, isRTL && { textAlign: 'right' }]}>{comment.content}</Text>
+                                                <Text style={[styles.commentText, rtl && { textAlign: 'right' }]}>{comment.content}</Text>
                                                 {comment.status === 'PENDING' && (
-                                                    <View style={{ backgroundColor: '#fef3c7', alignSelf: isRTL ? 'flex-end' : 'flex-start', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginTop: 4 }}>
+                                                    <View style={{ backgroundColor: '#fef3c7', alignSelf: rtl ? 'flex-end' : 'flex-start', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, marginTop: 4 }}>
                                                         <Text style={{ fontSize: 10, color: '#d97706', fontWeight: 'bold' }}>{t('community.pendingReview', 'Pending Review')}</Text>
                                                     </View>
                                                 )}
@@ -709,9 +768,9 @@ export default function TierFeedScreen() {
                             </ScrollView>
                         )}
 
-                        <View style={[styles.commentInputContainer, isRTL && { flexDirection: 'row-reverse' }]}>
+                        <View style={[styles.commentInputContainer, rtl && styles.commentInputContainerRTL]}>
                             <TextInput
-                                style={[styles.commentInput, isRTL && { textAlign: 'right' }]}
+                                style={[styles.commentInput, rtl && { textAlign: 'right' }]}
                                 placeholder={t('community.writeComment', "Write a comment...")}
                                 placeholderTextColor="#94a3b8"
                                 multiline
@@ -726,7 +785,7 @@ export default function TierFeedScreen() {
                                 {creating ? (
                                     <ActivityIndicator size="small" color="#fff" />
                                 ) : (
-                                    <Ionicons name={isRTL ? "send-outline" : "send"} size={20} color="#fff" style={isRTL && { transform: [{ rotate: '180deg' }] }} />
+                                    <Ionicons name={rtl ? "send-outline" : "send"} size={20} color="#fff" style={rtl && { transform: [{ rotate: '180deg' }] }} />
                                 )}
                             </TouchableOpacity>
                         </View>
@@ -745,27 +804,49 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
         paddingHorizontal: 16,
         paddingBottom: 16,
         backgroundColor: '#fff',
         borderBottomWidth: 1,
         borderBottomColor: '#f1f5f9',
     },
-    backButton: {
-        width: 40,
-        height: 40,
+    /** Back on physical leading edge, menu on trailing edge (works on web + native RTL). */
+    headerPhysicalLTR: {
+        direction: 'ltr',
+    },
+    headerSlot: {
+        width: 44,
+        height: 44,
         justifyContent: 'center',
-        alignItems: 'flex-start',
+        alignItems: 'center',
+    },
+    headerIconBtn: {
+        width: 44,
+        height: 44,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTitleWrap: {
+        flex: 1,
+        paddingHorizontal: 8,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     headerTitle: {
         fontSize: 18,
         fontWeight: '700',
         color: '#1e293b',
+        textAlign: 'center',
     },
-    menuButton: {
-        width: 40,
-        alignItems: 'flex-end',
+    headerTitleArabic: {
+        writingDirection: 'rtl',
+    },
+    textRTL: {
+        textAlign: 'right',
+        writingDirection: 'rtl',
+    },
+    writingRTL: {
+        writingDirection: 'rtl',
     },
     scrollContent: {
         paddingBottom: 40,
@@ -784,14 +865,33 @@ const styles = StyleSheet.create({
         paddingEnd: 10,
         zIndex: 2,
     },
+    heroContentRTL: {
+        paddingEnd: 0,
+        paddingStart: 10,
+        alignItems: 'flex-start',
+        paddingLeft: 108,
+    },
     heroImage: {
         width: 120,
         height: 120,
         position: 'absolute',
-        right: -20,
         bottom: -20,
         opacity: 0.9,
-        transform: [{ rotate: '-10deg' }]
+    },
+    /** English: graphic on physical right (clear of LTR text on the left). */
+    heroImageLTR: {
+        right: -20,
+        transform: [{ rotate: '-10deg' }],
+    },
+    /** Arabic: same asset on physical left so RTL text on the right doesn’t sit under it (logical `end` was unreliable on web). */
+    heroImageRTL: {
+        left: -20,
+        transform: [{ rotate: '10deg' }],
+    },
+    heroTextRTL: {
+        textAlign: 'right',
+        alignSelf: 'stretch',
+        writingDirection: 'rtl',
     },
     badgeContainer: {
         flexDirection: 'row',
@@ -801,7 +901,11 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 12,
         marginBottom: 8,
-        gap: 4,
+        gap: 6,
+    },
+    /** `alignItems: flex-start` on hero + `direction: rtl` → badge sits top-right; star leads the phrase. */
+    badgeRTL: {
+        direction: 'rtl',
     },
     badgeText: {
         color: '#fff',
@@ -809,15 +913,22 @@ const styles = StyleSheet.create({
         fontWeight: '700',
         letterSpacing: 0.5,
     },
+    badgeTextRTL: {
+        textAlign: 'right',
+        writingDirection: 'rtl',
+        letterSpacing: 0,
+    },
     heroTitle: {
         fontSize: 24,
         fontWeight: '800',
         marginBottom: 4,
+        textAlign: 'left',
     },
     heroDesc: {
         fontSize: 14,
         fontWeight: '500',
         lineHeight: 20,
+        textAlign: 'left',
     },
     createPostContainer: {
         backgroundColor: '#fff',
@@ -851,6 +962,11 @@ const styles = StyleSheet.create({
     createPostPlaceholder: {
         color: '#94a3b8',
         fontSize: 14,
+        textAlign: 'left',
+    },
+    placeholderRTL: {
+        textAlign: 'right',
+        writingDirection: 'rtl',
     },
     iconButton: {
         width: 40,
@@ -907,7 +1023,12 @@ const styles = StyleSheet.create({
     },
     postMeta: {
         flex: 1,
+    },
+    postMetaLTR: {
         marginStart: 12,
+    },
+    postMetaRTL: {
+        marginEnd: 12,
     },
     postAuthor: {
         fontSize: 16,
@@ -978,6 +1099,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
+    modalHeaderRTL: {
+        flexDirection: 'row-reverse',
+    },
+    rowReverse: {
+        flexDirection: 'row-reverse',
+    },
     modalTitle: {
         fontSize: 20,
         fontWeight: '700',
@@ -1036,16 +1163,24 @@ const styles = StyleSheet.create({
 
     menuContainer: {
         position: 'absolute',
-        right: 20,
         backgroundColor: '#fff',
         borderRadius: 12,
         padding: 16,
-        width: 200,
+        width: 230,
+        maxWidth: '92%' as const,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 10,
         elevation: 5,
+    },
+    /** ⋮ lives on physical right (header is `dir="ltr"`); always anchor menu there — do not use `left` in Arabic. */
+    menuContainerPosition: {
+        right: 20,
+        left: 'auto' as const,
+    },
+    menuContainerRTL: {
+        direction: 'rtl',
     },
     menuHeader: {
         fontSize: 12,
@@ -1058,6 +1193,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 12,
+        gap: 14,
+    },
+    menuItemIconWrap: {
+        width: 26,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     menuItemActive: {
         backgroundColor: '#f1f5f9',
@@ -1066,9 +1207,10 @@ const styles = StyleSheet.create({
         marginHorizontal: -8,
     },
     menuText: {
+        flex: 1,
+        flexShrink: 1,
         fontSize: 15,
         color: '#475569',
-        marginStart: 12,
         fontWeight: '500',
     },
     menuDivider: {
@@ -1130,6 +1272,9 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         gap: 12,
     },
+    commentItemRTL: {
+        flexDirection: 'row-reverse',
+    },
     commentAvatar: {
         width: 36,
         height: 36,
@@ -1148,6 +1293,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 4,
+    },
+    commentHeaderRTL: {
+        flexDirection: 'row-reverse',
     },
     commentAuthor: {
         fontSize: 14,
@@ -1170,6 +1318,9 @@ const styles = StyleSheet.create({
         paddingTop: 16,
         borderTopWidth: 1,
         borderTopColor: '#f1f5f9',
+    },
+    commentInputContainerRTL: {
+        flexDirection: 'row-reverse',
     },
     commentInput: {
         flex: 1,

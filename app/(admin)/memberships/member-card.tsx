@@ -5,7 +5,6 @@ import { adminApi } from "../../../src/services/api";
 import { useTranslation } from "react-i18next";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useLanguage } from "../../../src/contexts/LanguageContext";
-import { useRTLStyles } from "../../../src/hooks/useRTLStyles";
 
 const COLORS = {
   primary: "#1071b8",
@@ -26,7 +25,6 @@ export default function MemberCard() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isRTL, isReady } = useLanguage();
-  const rtlStyles = useRTLStyles(styles);
   const params = useLocalSearchParams();
 
   // Parse member and plan data from params
@@ -99,7 +97,7 @@ export default function MemberCard() {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
@@ -145,12 +143,12 @@ export default function MemberCard() {
 
               {/* Membership Info */}
               <View style={styles.membershipInfo}>
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.membershipId', 'Membership ID')}:</Text>
                   <Text style={[styles.value, isRTL && styles.textRTL]}>{memberData.membership_id_display || (memberData.id ? `ALT-${memberData.id.substring(0, 8).toUpperCase()}` : 'N/A')}</Text>
                 </View>
 
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.status', 'Status')}:</Text>
                   <View style={[
                     styles.statusBadge,
@@ -170,14 +168,14 @@ export default function MemberCard() {
                   </View>
                 </View>
 
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.startDate', 'Start Date')}:</Text>
                   <Text style={[styles.value, isRTL && styles.textRTL]}>
                     {formatDate(memberData.membership?.start_date)}
                   </Text>
                 </View>
 
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.expiryDate', 'Expiry Date')}:</Text>
                   <Text style={[styles.value, isRTL && styles.textRTL]}>
                     {formatDate(memberData.membership?.end_date)}
@@ -186,14 +184,14 @@ export default function MemberCard() {
 
                 {/* Points & Cashback - placeholder for now */}
                 {/* Points & Cashback */}
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.loyaltyPoints', 'Loyalty Points')}:</Text>
                   <Text style={[styles.value, isRTL && styles.textRTL]}>
                     {fullMemberData?.points?.current_balance || memberData.points?.current_balance || 0} {t('common.currency.pts', 'PTS')}
                   </Text>
                 </View>
 
-                <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                <View style={[styles.infoRow]}>
                   <Text style={[styles.label, isRTL && styles.textRTL]}>{t('memberCard.clubGiftsBalance', 'Club Gifts Balance')}:</Text>
                   <Text style={[styles.value, isRTL && styles.textRTL]}>
                     {t('common.currency.usd', 'USD')} {(fullMemberData?.cashback_balance || 0).toFixed(2)}
@@ -213,14 +211,14 @@ export default function MemberCard() {
       </View>
 
       {/* Action Buttons */}
-      <View style={[styles.actionsContainer, isRTL && styles.actionsContainerRTL]}>
-        <TouchableOpacity style={[styles.actionButton, isRTL && styles.actionButtonRTL]} onPress={() => router.back()}>
+      <View style={[styles.actionsContainer]}>
+        <TouchableOpacity style={[styles.actionButton]} onPress={() => router.back()}>
           <Ionicons name="close" size={20} color={COLORS.cardBg} />
           <Text style={styles.actionButtonText}>{t('memberCard.close', 'Close')}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.actionButton, styles.printButton, isRTL && styles.actionButtonRTL]}
+          style={[styles.actionButton, styles.printButton]}
           onPress={async () => {
             try {
               const message = `${t('memberCard.shareMessage', 'Check out my membership card!')}\n\n` +
@@ -284,9 +282,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -380,9 +376,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  infoRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   label: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -431,9 +425,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingBottom: 20,
   },
-  actionsContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   actionButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -445,9 +437,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 8,
   },
-  actionButtonRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   actionButtonText: {
     color: COLORS.cardBg,
     fontSize: 16,

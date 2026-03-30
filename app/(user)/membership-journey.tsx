@@ -466,14 +466,14 @@ export default function MembershipJourneyScreen() {
                 colors={gradientColors}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[styles.loungeCard, isMain && styles.loungeCardMain, isRTL && { flexDirection: 'row-reverse' }]}
+                style={[styles.loungeCard, isMain && styles.loungeCardMain]}
             >
                 <View style={[
                     styles.loungeContent,
-                    isRTL ? { paddingStart: 10, paddingEnd: 0, alignItems: 'flex-end' } : { paddingEnd: 10, alignItems: 'flex-start' }
+                    { paddingEnd: 110, alignItems: 'flex-start' }
                 ]}>
                     {isCurrent && (
-                        <View style={[styles.badgeContainer, { backgroundColor: primaryColor, alignSelf: isRTL ? 'flex-end' : 'flex-start' }]}>
+                        <View style={[styles.badgeContainer, { backgroundColor: primaryColor, alignSelf: 'flex-start' }]}>
                             <Ionicons name="star" size={10} color="#fff" />
                             <Text style={styles.badgeText}>
                                 {t('profile.current', 'CURRENT')}
@@ -521,8 +521,6 @@ export default function MembershipJourneyScreen() {
                         style={[
                             styles.loungeImage,
                             isRTL && {
-                                right: undefined,
-                                left: -15,
                                 transform: [{ rotate: '10deg' }]
                             }
                         ]}
@@ -536,7 +534,7 @@ export default function MembershipJourneyScreen() {
     return (
         <View style={[styles.container, { paddingTop: insets.top }]}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.white} />
                 </TouchableOpacity>
@@ -563,7 +561,7 @@ export default function MembershipJourneyScreen() {
 
                                 {/* 2. Progress Section */}
                                 <View style={styles.progressSection}>
-                                    <View style={[styles.progressHeader, isRTL && styles.progressHeaderRTL]}>
+                                    <View style={[styles.progressHeader]}>
                                         <Text style={[styles.progressTitle, isRTL && styles.textRTL]}>
                                             {t('profile.progressToNextTier', 'Progress to Next Tier')}
                                         </Text>
@@ -572,7 +570,7 @@ export default function MembershipJourneyScreen() {
                                     {nextTier ? (
                                         <>
                                             {/* Points Display */}
-                                            <View style={[styles.pointsDisplay, isRTL && { flexDirection: 'row-reverse' }]}>
+                                            <View style={[styles.pointsDisplay]}>
                                                 <View style={styles.pointsBox}>
                                                     <Text style={styles.pointsValue}>{currentPoints.toLocaleString()}</Text>
                                                     <Text style={styles.pointsLabel}>
@@ -604,7 +602,7 @@ export default function MembershipJourneyScreen() {
                                             </View>
 
                                             {/* Points Needed */}
-                                            <View style={[styles.pointsNeededCard, { flexDirection: isRTL ? 'row' : 'row-reverse' }]}>
+                                            <View style={[styles.pointsNeededCard, { flexDirection: 'row' }]}>
                                                 <Ionicons
                                                     name="trending-up"
                                                     size={32}
@@ -613,7 +611,7 @@ export default function MembershipJourneyScreen() {
                                                 />
                                                 <View style={[
                                                     styles.pointsNeededContent,
-                                                    isRTL ? { marginStart: 16, marginEnd: 0, alignItems: 'flex-end' } : { marginEnd: 16, marginStart: 0, alignItems: 'flex-start' }
+                                                    { alignItems: 'flex-start' }
                                                 ]}>
                                                     <Text style={[styles.pointsNeededTitle, isRTL && styles.textRTL]}>
                                                         {t('profile.pointsNeeded', 'Points Needed')}
@@ -632,10 +630,10 @@ export default function MembershipJourneyScreen() {
                                     ) : (
                                         <View style={styles.maxLevelCard}>
                                             <Ionicons name="trophy" size={60} color={COLORS.gold} />
-                                            <Text style={styles.maxLevelTitle}>
+                                            <Text style={[styles.maxLevelTitle, isRTL && styles.textRTL]}>
                                                 🎉 {t('profile.congratulations', 'Congratulations')}!
                                             </Text>
-                                            <Text style={styles.maxLevelSubtitle}>
+                                            <Text style={[styles.maxLevelSubtitle, isRTL && styles.textRTL]}>
                                                 {t('profile.congratulationsMaxLevel', 'You have reached the maximum tier level')}
                                             </Text>
                                         </View>
@@ -644,7 +642,7 @@ export default function MembershipJourneyScreen() {
                             </>
                         ) : (
                             <View style={styles.lockedNotice}>
-                                <View style={[styles.lockedNoticeRow, isRTL && { flexDirection: 'row-reverse' }]}>
+                                <View style={[styles.lockedNoticeRow]}>
                                     <Ionicons name="lock-closed" size={18} color={COLORS.primary} />
                                     <Text style={[styles.lockedNoticeTitle, isRTL && styles.textRTL]}>
                                         {t('membership.locked.title', 'Subscribe to unlock')}
@@ -691,8 +689,8 @@ export default function MembershipJourneyScreen() {
                             >
                                 <View style={styles.modalOverlay}>
                                     <View style={styles.modalContent}>
-                                        <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
-                                            <Text style={styles.modalTitle}>
+                                        <View style={[styles.modalHeader]}>
+                                            <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>
                                                 {t('membership.checkout', 'Checkout')}
                                             </Text>
                                             <TouchableOpacity onPress={() => setShowCheckout(false)}>
@@ -705,18 +703,18 @@ export default function MembershipJourneyScreen() {
                                                 <Text style={[styles.planSummaryLabel, isRTL && styles.textRTL]}>
                                                     {t('membership.selectedPlan', 'Selected Plan')}
                                                 </Text>
-                                                <View style={[styles.planSummaryCard, { borderColor: selectedPlan.color }, isRTL && { flexDirection: 'row-reverse' }]}>
-                                                    <Text style={[styles.planSummaryName, { color: selectedPlan.primaryColor }]}>
+                                                <View style={[styles.planSummaryCard, { borderColor: selectedPlan.color }]}>
+                                                    <Text style={[styles.planSummaryName, { color: selectedPlan.primaryColor }, isRTL && styles.textRTL]}>
                                                         {language === 'ar' && selectedPlan.code && ARABIC_TIER_TITLES[selectedPlan.code.toLowerCase()]
                                                             ? ARABIC_TIER_TITLES[selectedPlan.code.toLowerCase()]
                                                             : (language === 'ar' ? selectedPlan.nameAr : selectedPlan.nameEn)}
                                                     </Text>
-                                                    <Text style={styles.planSummaryPrice}>
+                                                    <Text style={[styles.planSummaryPrice, isRTL && styles.textRTL]}>
                                                         ${selectedPlan.price?.toLocaleString()}
                                                     </Text>
                                                 </View>
 
-                                                <View style={[styles.saveCardContainer, isRTL && { flexDirection: 'row-reverse' }]}>
+                                                <View style={[styles.saveCardContainer]}>
                                                     <TouchableOpacity
                                                         style={[styles.checkbox, saveCard && styles.checkboxChecked]}
                                                         onPress={() => setSaveCard(!saveCard)}
@@ -742,7 +740,7 @@ export default function MembershipJourneyScreen() {
                                                     )}
                                                 </TouchableOpacity>
 
-                                                <Text style={styles.securePaymentText}>
+                                                <Text style={[styles.securePaymentText, isRTL && styles.textRTL]}>
                                                     <Ionicons name="lock-closed" size={12} color={COLORS.textLight} />
                                                     {' '}{t('membership.securePayment', 'Payments are secure and encrypted')}
                                                 </Text>
@@ -773,9 +771,7 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         paddingTop: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -872,7 +868,7 @@ const styles = StyleSheet.create({
         width: 110,
         height: 110,
         position: 'absolute',
-        right: -15,
+        end: -15,
         bottom: -15,
         opacity: 0.9,
         transform: [{ rotate: '-10deg' }]
@@ -928,9 +924,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    progressHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     progressTitle: {
         fontSize: 18,
         fontWeight: '700',
@@ -1055,9 +1049,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 24,
     },
-    modalHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalTitle: {
         fontSize: 20,
         fontWeight: '800',

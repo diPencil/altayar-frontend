@@ -34,7 +34,7 @@ export default function AboutSectionDetail({ title, intro, sections }: AboutSect
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -62,7 +62,7 @@ export default function AboutSectionDetail({ title, intro, sections }: AboutSect
                 {/* Sub Sections */}
                 {sections.map((section, index) => (
                     <View key={index} style={styles.sectionCard}>
-                        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+                        <View style={[styles.sectionHeader]}>
                             <View style={styles.iconContainer}>
                                 <Ionicons name={section.icon as any} size={22} color={COLORS.primary} />
                             </View>
@@ -100,9 +100,7 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 4,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -168,9 +166,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 16,
     },
-    sectionHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     iconContainer: {
         width: 40,
         height: 40,

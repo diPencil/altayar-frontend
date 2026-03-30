@@ -16,7 +16,7 @@ const COLORS = {
 };
 
 export default function LanguageScreen() {
-  const { isRTL, language, setLanguage } = useLanguage();
+  const { isRTL, language, changeLanguage } = useLanguage();
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
@@ -29,7 +29,7 @@ export default function LanguageScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
         </TouchableOpacity>
@@ -43,10 +43,9 @@ export default function LanguageScreen() {
             key={item.code}
             style={[
               styles.langCard,
-              language === item.code && styles.langCardActive,
-              isRTL && styles.rowRTL
+              language === item.code && styles.langCardActive
             ]}
-            onPress={() => setLanguage(item.code as 'ar' | 'en')}
+            onPress={() => changeLanguage(item.code as 'ar' | 'en')}
           >
             <View style={[styles.flagContainer, isRTL && { marginStart: 0, marginEnd: 0 }]}>
               <Text style={styles.flagText}>{item.flag}</Text>
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   headerRTL: {
-    flexDirection: 'row-reverse',
+    // Removed row-reverse
   },
   backButton: {
     width: 40,
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f9ff',
   },
   rowRTL: {
-    flexDirection: 'row-reverse',
+    // Removed row-reverse
   },
   flagContainer: {
     width: 45,

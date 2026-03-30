@@ -4,6 +4,7 @@ import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { ordersApi } from '../../../src/services/api';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../../src/contexts/LanguageContext';
+import { formatCurrencyLabel } from '../../../src/utils/currencyLabel';
 import { Ionicons } from '@expo/vector-icons';
 import ConfirmModal from '../../../src/components/ConfirmModal';
 import Toast from '../../../src/components/Toast';
@@ -117,7 +118,7 @@ export default function OrderDetails() {
     }
 
     const { items, user, currency } = order;
-    const currencyLabel = t(`common.currency.${currency?.toLowerCase()}`) || currency;
+    const currencyLabel = formatCurrencyLabel(currency, t);
 
     return (
         <View style={styles.container}>
@@ -126,11 +127,11 @@ export default function OrderDetails() {
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Header Card - Payment Status Only */}
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.orderDate")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>{new Date(order.created_at).toLocaleDateString()}</Text>
                     </View>
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                    <View style={[styles.row, { marginTop: 8 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.paymentStatus")}</Text>
                         {order.is_free ? (
                             <View style={[styles.badge, { backgroundColor: COLORS.success + '20' }]}>
@@ -151,13 +152,13 @@ export default function OrderDetails() {
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("admin.customerInfo")}</Text>
                 </View>
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.name")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>
                             {user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || t("common.unknown") : t("common.unknown")}
                         </Text>
                     </View>
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                    <View style={[styles.row, { marginTop: 8 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.email")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>{user?.email || "-"}</Text>
                     </View>
@@ -169,7 +170,7 @@ export default function OrderDetails() {
                 </View>
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
                     {items && items.map((item: any, index: number) => (
-                        <View key={index} style={[styles.itemRow, isRTL && styles.itemRowRTL, index !== items.length - 1 && styles.borderBottom]}>
+                        <View key={index} style={[styles.itemRow, index !== items.length - 1 && styles.borderBottom]}>
                             <View style={{ flex: 1 }}>
                                 <Text style={[styles.itemTitle, isRTL && styles.textRTL]}>{isRTL && item.description_ar ? item.description_ar : item.description_en || item.description}</Text>
                                 {item.description ? <Text style={[styles.itemDesc, isRTL && styles.textRTL]}>{item.description}</Text> : null}
@@ -185,13 +186,13 @@ export default function OrderDetails() {
                 {/* Totals */}
                 {/* Totals */}
                 <View style={[styles.card, isRTL && styles.cardRTL, { marginTop: 20 }]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.subtotal")}</Text>
-                        <Text style={[styles.value, isRTL && styles.textRTL]}>{order.subtotal || order.total_amount} {t(`common.currency.${currency?.toLowerCase()}`) || currency}</Text>
+                        <Text style={[styles.value, isRTL && styles.textRTL]}>{order.subtotal || order.total_amount} {currencyLabel}</Text>
                     </View>
 
                     {order.tax_amount > 0 && (
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.tax")}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>
                                 {t("common.amountPositive", { amount: `${order.tax_amount} ${currencyLabel}` })}
@@ -200,7 +201,7 @@ export default function OrderDetails() {
                     )}
 
                     {order.discount_amount > 0 && (
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, { color: COLORS.success }, isRTL && styles.textRTL]}>{t("admin.discount") || "Discount"}</Text>
                             <Text style={[styles.value, { color: COLORS.success }, isRTL && styles.textRTL]}>
                                 {t("common.amountNegative", { amount: `${order.discount_amount} ${currencyLabel}` })}
@@ -212,16 +213,16 @@ export default function OrderDetails() {
 
                     <View style={[styles.divider, { marginVertical: 12 }]} />
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.totalLabel, isRTL && styles.textRTL]}>{t("admin.total") || "Total"}</Text>
-                        <Text style={[styles.totalValue, isRTL && styles.textRTL]}>{order.total_amount} {t(`common.currency.${currency?.toLowerCase()}`) || currency}</Text>
+                        <Text style={[styles.totalValue, isRTL && styles.textRTL]}>{order.total_amount} {currencyLabel}</Text>
                     </View>
                 </View>
 
                 {/* Action Buttons */}
-                <View style={[styles.actionButtonsContainer, isRTL && styles.actionButtonsRTL]}>
+                <View style={[styles.actionButtonsContainer]}>
                     <TouchableOpacity
-                        style={[styles.backButton, isRTL && { flexDirection: 'row-reverse' }]}
+                        style={[styles.backButton]}
                         onPress={handleGoBack}
                     >
                         <Ionicons
@@ -345,9 +346,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     label: {
         fontSize: 14,
         color: COLORS.textLight,
@@ -383,9 +382,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 12,
     },
-    itemRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     itemTitle: {
         fontSize: 14,
         fontWeight: '600',
@@ -433,9 +430,7 @@ const styles = StyleSheet.create({
         gap: 12,
         paddingHorizontal: 0,
     },
-    actionButtonsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         flex: 1,
         flexDirection: 'row',

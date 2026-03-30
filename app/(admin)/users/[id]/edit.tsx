@@ -235,7 +235,7 @@ export default function EditUserPage() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -268,7 +268,7 @@ export default function EditUserPage() {
                     {/* Avatar Picker */}
                     <View style={styles.avatarSection}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageUsers.profilePicture') || 'Profile Picture'}</Text>
-                        <View style={[styles.avatarContainer, isRTL && styles.avatarContainerRTL]}>
+                        <View style={[styles.avatarContainer]}>
                             {avatar ? (
                                 <Image source={{ uri: avatar }} style={styles.avatarPreview} />
                             ) : (
@@ -285,7 +285,7 @@ export default function EditUserPage() {
                         </View>
                     </View>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <InputField
                             label={t('admin.manageUsers.firstName') + " *"}
                             value={form.first_name}
@@ -325,7 +325,7 @@ export default function EditUserPage() {
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.personalDetails')}</Text>
 
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageUsers.gender')}</Text>
-                    <View style={[styles.chipsContainer, isRTL && styles.rowRTL]}>
+                    <View style={[styles.chipsContainer]}>
                         {['MALE', 'FEMALE'].map(g => (
                             <TouchableOpacity
                                 key={g}
@@ -391,7 +391,7 @@ export default function EditUserPage() {
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.roleStatus')}</Text>
 
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageUsers.role')}</Text>
-                    <View style={[styles.chipsContainer, isRTL && styles.rowRTL]}>
+                    <View style={[styles.chipsContainer]}>
                         {['CUSTOMER', 'EMPLOYEE', 'ADMIN'].map(r => (
                             <TouchableOpacity
                                 key={r}
@@ -403,7 +403,7 @@ export default function EditUserPage() {
                         ))}
                     </View>
 
-                    <View style={[styles.switchRow, isRTL && styles.rowRTL]}>
+                    <View style={[styles.switchRow]}>
                         <Text style={styles.switchLabel}>{t('admin.manageUsers.memberStatus')} ({form.status === 'ACTIVE' ? t('admin.manageUsers.active') : t('admin.manageUsers.suspended')})</Text>
                         <Switch
                             value={form.status === 'ACTIVE'}
@@ -470,9 +470,7 @@ const styles = StyleSheet.create({
         borderBottomColor: COLORS.border,
         justifyContent: 'space-between'
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backBtn: {
         width: 40,
     },
@@ -609,9 +607,7 @@ const styles = StyleSheet.create({
     textRTL: {
         textAlign: 'right',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatarSection: {
         marginBottom: 16,
     },
@@ -620,9 +616,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 16,
     },
-    avatarContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatarPreview: {
         width: 80,
         height: 80,

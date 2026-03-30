@@ -176,7 +176,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ visible, 
       onPress={() => handleNotificationPress(item)}
       activeOpacity={0.7}
     >
-      <View style={[styles.notificationIcon, isRTL && styles.notificationIconRTL]}>
+      <View style={styles.notificationIcon}>
         <Ionicons
           name={getNotificationIcon(item.type)}
           size={20}
@@ -185,7 +185,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ visible, 
       </View>
 
       <View style={styles.notificationContent}>
-        <View style={[styles.notificationHeader, isRTL && styles.notificationHeaderRTL]}>
+        <View style={styles.notificationHeader}>
           <Text style={[styles.notificationTitle, isRTL && styles.textRTL]} numberOfLines={1}>
             {t(`notifications.types.${item.type}`, item.title)}
           </Text>
@@ -198,7 +198,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ visible, 
           {item.message}
         </Text>
 
-        <View style={[styles.notificationActions, isRTL && styles.notificationActionsRTL]}>
+        <View style={styles.notificationActions}>
           {!item.is_read && (
             <TouchableOpacity
               style={styles.actionButton}
@@ -218,7 +218,7 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ visible, 
         </View>
       </View>
 
-      {!item.is_read && <View style={[styles.unreadIndicator, isRTL && styles.unreadIndicatorRTL]} />}
+      {!item.is_read && <View style={styles.unreadIndicator} />}
     </TouchableOpacity>
   );
 
@@ -246,10 +246,10 @@ const NotificationsDropdown: React.FC<NotificationsDropdownProps> = ({ visible, 
       <View style={styles.overlay}>
         <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
 
-        <Animated.View style={[styles.dropdown, isRTL && styles.dropdownRTL, { transform: [{ translateY: slideAnim }] }]}>
-          <View style={[styles.header, isRTL && styles.headerRTL]}>
+        <Animated.View style={[styles.dropdown, { transform: [{ translateY: slideAnim }] }]}>
+          <View style={styles.header}>
             <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>{t('notifications.title')}</Text>
-            <TouchableOpacity onPress={onClose} style={[styles.closeButton, isRTL && styles.closeButtonRTL]}>
+            <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color="#374151" />
             </TouchableOpacity>
           </View>
@@ -433,31 +433,16 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
 
-  // RTL Support Styles
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
-  closeButtonRTL: {
-    marginEnd: 0,
-    marginStart: 16,
-  },
-  notificationIconRTL: {
-    marginEnd: 0,
-    marginStart: 12,
-  },
-  notificationHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
-  notificationActionsRTL: {
-    flexDirection: 'row-reverse',
-  },
-  unreadIndicatorRTL: {
-    marginStart: 0,
-    marginEnd: 8,
-  },
+  // RTL Support Styles - Removed manual overrides to rely on native RTL
+  headerRTL: {},
+  closeButtonRTL: {},
+  notificationIconRTL: {},
+  notificationHeaderRTL: {},
+  notificationActionsRTL: {},
+  unreadIndicatorRTL: {},
   textRTL: {
     textAlign: 'right',
-    fontFamily: 'Cairo-Regular', // Use Arabic font for better RTL support
+    fontFamily: 'Cairo-Regular',
   },
 });
 

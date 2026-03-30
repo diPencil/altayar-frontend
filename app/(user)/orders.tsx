@@ -143,7 +143,7 @@ export default function HistoryScreen() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -184,7 +184,7 @@ export default function HistoryScreen() {
                                 style={styles.card}
                                 onPress={() => openDetails(item)}
                             >
-                                <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+                                <View style={[styles.cardHeader]}>
                                     <View style={styles.iconContainer}>
                                         <Ionicons
                                             name={isBooking ? "ticket-outline" : "document-text-outline"}
@@ -213,7 +213,7 @@ export default function HistoryScreen() {
 
                                 <View style={styles.divider} />
 
-                                <View style={[styles.cardFooter, isRTL && styles.cardFooterRTL]}>
+                                <View style={[styles.cardFooter]}>
                                     <View>
                                         <Text style={[styles.footerLabel, isRTL && styles.textRTL]}>{t('orders.total')}</Text>
                                         {isBooking && item.hotel_name && (
@@ -240,7 +240,7 @@ export default function HistoryScreen() {
             {/* Details Modal */}
             <Modal visible={detailsVisible} animationType="slide" presentationStyle="pageSheet">
                 <View style={styles.modalContainer}>
-                    <View style={[styles.modalHeader, isRTL && styles.headerRTL]}>
+                    <View style={[styles.modalHeader]}>
                         <Text style={styles.modalTitle}>{t('common.details') || "Details"}</Text>
                         <TouchableOpacity onPress={() => setDetailsVisible(false)} style={styles.closeBtn}>
                             <Ionicons name="close" size={24} color={COLORS.text} />
@@ -277,7 +277,7 @@ export default function HistoryScreen() {
                                         const description = lines.length > 1 ? lines.slice(1).join('\n') : '';
 
                                         return (
-                                            <View key={idx} style={[styles.itemRow, isRTL && styles.itemRowRTL]}>
+                                            <View key={idx} style={[styles.itemRow]}>
                                                 <View style={{ flex: 1 }}>
                                                     <Text style={[styles.itemTitle, isRTL && styles.textRTL]}>{title}</Text>
                                                     {description ? (
@@ -298,7 +298,7 @@ export default function HistoryScreen() {
                             )}
 
                             {/* Financial Summary */}
-                            <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+                            <View style={[styles.summaryRow]}>
                                 <Text style={styles.summaryLabel}>{t('admin.manageInvoices.subtotal') || "Subtotal"}</Text>
                                 <Text style={styles.summaryValue}>
                                     {formatCurrency(selectedItem.subtotal || selectedItem.total_amount, selectedItem.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -306,7 +306,7 @@ export default function HistoryScreen() {
                             </View>
 
                             {selectedItem.tax_amount > 0 && (
-                                <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+                                <View style={[styles.summaryRow]}>
                                     <Text style={styles.summaryLabel}>{t('admin.manageInvoices.tax') || "Tax"}</Text>
                                     <Text style={styles.summaryValue}>
                                         {formatCurrency(selectedItem.tax_amount, selectedItem.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -315,7 +315,7 @@ export default function HistoryScreen() {
                             )}
 
                             {selectedItem.discount_amount > 0 && (
-                                <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+                                <View style={[styles.summaryRow]}>
                                     <Text style={[styles.summaryLabel, { color: COLORS.warning }]}>{t('common.discount') || "Discount"}</Text>
                                     <Text style={[styles.summaryValue, { color: COLORS.warning }]}>
                                         - {formatCurrency(selectedItem.discount_amount, selectedItem.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -325,7 +325,7 @@ export default function HistoryScreen() {
 
                             <View style={styles.divider} />
 
-                            <View style={[styles.totalRow, isRTL && styles.headerRTL]}>
+                            <View style={[styles.totalRow]}>
                                 <Text style={styles.totalLabelLarge}>{t('orders.total')}</Text>
                                 <Text style={styles.amountLarge}>
                                     {formatCurrency(selectedItem.total_amount, selectedItem.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -400,9 +400,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     headerTitle: {
         fontSize: 18,
         fontWeight: "600",
@@ -440,9 +438,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "flex-start",
     },
-    cardHeaderRTL: {
-        flexDirection: "row-reverse",
-    },
+
     iconContainer: {
         width: 48,
         height: 48,
@@ -456,7 +452,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 12,
     },
     cardInfoRTL: {
-        alignItems: "flex-end",
+        alignItems: "flex-start",
     },
     cardTitle: {
         fontSize: 15, // Slightly smaller than header
@@ -489,9 +485,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-end',
     },
-    cardFooterRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     footerLabel: {
         fontSize: 12,
         color: COLORS.textLight,
@@ -576,9 +570,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.lightGray,
     },
-    itemRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     itemTitle: {
         fontSize: 14,
         fontWeight: '600',

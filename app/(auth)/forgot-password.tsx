@@ -82,7 +82,7 @@ export default function ForgotPasswordScreen() {
                 style={{ flex: 1 }}
             >
                 {/* Header */}
-                <View style={[styles.header, isRTL && styles.headerRTL]}>
+                <View style={[styles.header]}>
                     <TouchableOpacity onPress={() => router.back()}>
                         <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                     </TouchableOpacity>
@@ -155,9 +155,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.lightGray,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     headerTitle: {
         fontSize: 18,
         fontWeight: "600",

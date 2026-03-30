@@ -152,7 +152,7 @@ export default function RegisterScreen() {
             colors={[COLORS.primary, COLORS.primaryDark]}
             style={styles.header}
           >
-            <View style={[styles.headerTop, isRTL && styles.headerTopRTL]}>
+            <View style={[styles.headerTop]}>
               <TouchableOpacity
                 style={styles.backBtn}
                 onPress={() => router.back()}
@@ -180,21 +180,20 @@ export default function RegisterScreen() {
           {/* Form */}
           <View style={styles.formContainer}>
             {error ? (
-              <View style={[styles.errorBox, isRTL && styles.errorBoxRTL]}>
+              <View style={[styles.errorBox]}>
                 <Ionicons name="alert-circle" size={20} color={COLORS.error} />
                 <Text style={[styles.errorText, isRTL && styles.errorTextRTL]}>{error}</Text>
               </View>
             ) : null}
 
             {/* Name Row */}
-            <View style={[styles.nameRow, isRTL && styles.nameRowRTL]}>
+            <View style={[styles.nameRow]}>
               <View style={[styles.inputGroup, styles.halfWidth]}>
                 <Text style={[styles.label, isRTL && styles.textRTL]}>
                   {t('auth.firstName')} *
                 </Text>
                 <View style={[
                   styles.inputContainer,
-                  isRTL && styles.inputContainerRTL,
                   focusedField === 'firstName' && styles.inputContainerFocused
                 ]}>
                   <TextInput
@@ -218,7 +217,6 @@ export default function RegisterScreen() {
                 </Text>
                 <View style={[
                   styles.inputContainer,
-                  isRTL && styles.inputContainerRTL,
                   focusedField === 'lastName' && styles.inputContainerFocused
                 ]}>
                   <TextInput
@@ -241,7 +239,6 @@ export default function RegisterScreen() {
               </Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'username' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="person-outline" size={20} color={COLORS.textLight} />
@@ -263,7 +260,6 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.email")} *</Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'email' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="mail-outline" size={20} color={COLORS.textLight} />
@@ -286,7 +282,6 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>{t("auth.phone")}</Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'phone' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="call-outline" size={20} color={COLORS.textLight} />
@@ -308,7 +303,7 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>
                 {t('auth.gender')}
               </Text>
-              <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+              <View style={[styles.inputContainer]}>
                 <Ionicons name="person-outline" size={20} color={COLORS.textLight} />
                 <Picker
                   selectedValue={gender}
@@ -325,7 +320,7 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>
                 {t('auth.country')}
               </Text>
-              <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+              <View style={[styles.inputContainer]}>
                 <Ionicons name="location-outline" size={20} color={COLORS.textLight} />
                 <Picker
                   selectedValue={country}
@@ -344,7 +339,6 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>{isRTL ? 'كود الإحالة (اختياري)' : 'Referral Code (Optional)'}</Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'referralCode' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="gift-outline" size={20} color={COLORS.textLight} />
@@ -366,7 +360,6 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.password")} *</Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'password' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="lock-closed-outline" size={20} color={COLORS.textLight} />
@@ -395,7 +388,6 @@ export default function RegisterScreen() {
               <Text style={[styles.label, isRTL && styles.textRTL]}>{t("auth.confirmPassword")} *</Text>
               <View style={[
                 styles.inputContainer,
-                isRTL && styles.inputContainerRTL,
                 focusedField === 'confirmPassword' && styles.inputContainerFocused
               ]}>
                 <Ionicons name="lock-closed-outline" size={20} color={COLORS.textLight} />
@@ -449,7 +441,7 @@ export default function RegisterScreen() {
               )}
             </TouchableOpacity>
 
-            <View style={[styles.loginRow, isRTL && styles.loginRowRTL]}>
+            <View style={[styles.loginRow]}>
               <Text style={styles.loginText}>{t("auth.haveAccount")} </Text>
               <TouchableOpacity onPress={() => router.push("/(auth)/login")}>
                 <Text style={styles.loginLink}>{t("common.login")}</Text>
@@ -477,7 +469,7 @@ export default function RegisterScreen() {
 
 function RequirementItem({ met, text, isRTL }: { met: boolean; text: string; isRTL: boolean }) {
   return (
-    <View style={[styles.requirementRow, isRTL && styles.requirementRowRTL]}>
+    <View style={[styles.requirementRow]}>
       <Ionicons
         name={met ? "checkmark-circle" : "ellipse-outline"}
         size={16}
@@ -515,9 +507,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 0,
   },
-  headerTopRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   backBtn: {
     padding: 4,
   },
@@ -553,9 +543,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 16,
   },
-  errorBoxRTL: {
-    flexDirection: "row-reverse",
-  },
+
   errorText: {
     color: COLORS.error,
     marginStart: 8,
@@ -569,9 +557,7 @@ const styles = StyleSheet.create({
   nameRow: {
     flexDirection: "row",
   },
-  nameRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   halfWidth: {
     flex: 1,
   },
@@ -599,9 +585,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.primary,
     backgroundColor: COLORS.white,
   },
-  inputContainerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   input: {
     flex: 1,
     marginStart: 12,
@@ -622,9 +606,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 6,
   },
-  requirementRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   requirementText: {
     fontSize: 13,
     color: COLORS.textLight,
@@ -657,9 +639,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 30,
   },
-  loginRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   loginText: {
     color: COLORS.textLight,
   },

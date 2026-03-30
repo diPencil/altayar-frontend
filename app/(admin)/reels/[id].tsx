@@ -237,7 +237,7 @@ export default function ReelDetailsPage() {
     const renderComment = (comment: Comment, isReply = false) => (
         <View key={comment.id} style={[styles.commentCard, isReply && (isRTL ? styles.replyCardRTL : styles.replyCard), isRTL && styles.commentCardRTL]}>
             <View style={[styles.commentHeader, isRTL && styles.commentHeaderRTL]}>
-                <View style={[styles.commentUserRow, isRTL && styles.commentUserRowRTL]}>
+                <View style={[styles.commentUserRow]}>
                     {comment.user_avatar ? (
                         <Image source={{ uri: comment.user_avatar }} style={styles.commentAvatar} />
                     ) : (
@@ -254,9 +254,9 @@ export default function ReelDetailsPage() {
 
             <Text style={[styles.commentContent, isRTL && styles.textRTL]}>{comment.content}</Text>
 
-            <View style={[styles.commentActions, isRTL && styles.commentActionsRTL]}>
+            <View style={[styles.commentActions]}>
                 <TouchableOpacity 
-                    style={[styles.commentAction, isRTL && styles.commentActionRTL]}
+                    style={[styles.commentAction]}
                     onPress={() => handleLikeComment(comment.id)}
                 >
                     <Ionicons name="heart-outline" size={18} color="#666" />
@@ -267,7 +267,7 @@ export default function ReelDetailsPage() {
 
                 {!isReply && (
                     <TouchableOpacity 
-                        style={[styles.commentAction, isRTL && styles.commentActionRTL]}
+                        style={[styles.commentAction]}
                         onPress={() => handleReplyToComment(comment)}
                     >
                         <Ionicons name="chatbubble-outline" size={16} color="#666" />
@@ -276,7 +276,7 @@ export default function ReelDetailsPage() {
                 )}
 
                 <TouchableOpacity 
-                    style={[styles.commentAction, isRTL && styles.commentActionRTL]}
+                    style={[styles.commentAction]}
                     onPress={() => handleDeleteComment(comment.id)}
                 >
                     <Ionicons name="trash-outline" size={18} color="#FF3B30" />
@@ -356,9 +356,9 @@ export default function ReelDetailsPage() {
                 {/* Reel Info */}
                 <View style={styles.infoSection}>
                     {/* Action Buttons */}
-                    <View style={[styles.actionButtonsRow, isRTL && styles.actionButtonsRowRTL]}>
+                    <View style={[styles.actionButtonsRow]}>
                         <TouchableOpacity 
-                            style={[styles.actionButton, styles.editButton, isRTL && styles.actionButtonRTL]}
+                            style={[styles.actionButton, styles.editButton]}
                             onPress={handleEditReel}
                         >
                             <Ionicons name="create-outline" size={20} color="white" />
@@ -366,7 +366,7 @@ export default function ReelDetailsPage() {
                         </TouchableOpacity>
                         
                         <TouchableOpacity 
-                            style={[styles.actionButton, styles.statusButton, isRTL && styles.actionButtonRTL]}
+                            style={[styles.actionButton, styles.statusButton]}
                             onPress={() => setStatusModalVisible(true)}
                         >
                             <Ionicons name="toggle-outline" size={20} color="white" />
@@ -374,7 +374,7 @@ export default function ReelDetailsPage() {
                         </TouchableOpacity>
                         
                         <TouchableOpacity 
-                            style={[styles.actionButton, styles.deleteButton, isRTL && styles.actionButtonRTL]}
+                            style={[styles.actionButton, styles.deleteButton]}
                             onPress={handleDeleteReel}
                         >
                             <Ionicons name="trash-outline" size={20} color="white" />
@@ -388,44 +388,44 @@ export default function ReelDetailsPage() {
                     )}
 
                     {/* Stats */}
-                    <View style={[styles.statsRow, isRTL && styles.statsRowRTL]}>
-                        <View style={[styles.statItem, isRTL && styles.statItemRTL]}>
+                    <View style={[styles.statsRow]}>
+                        <View style={[styles.statItem]}>
                             <Ionicons name="eye" size={20} color="#666" />
                             <Text style={[styles.statText, isRTL && styles.textRTL]}>{reel.views_count} {t("admin.manageReels.views", "views")}</Text>
                         </View>
-                        <View style={[styles.statItem, isRTL && styles.statItemRTL]}>
+                        <View style={[styles.statItem]}>
                             <Ionicons name="heart" size={20} color="#FF3B30" />
                             <Text style={[styles.statText, isRTL && styles.textRTL]}>{reel.likes_count} {t("admin.manageReels.likes", "likes")}</Text>
                         </View>
-                        <View style={[styles.statItem, isRTL && styles.statItemRTL]}>
+                        <View style={[styles.statItem]}>
                             <Ionicons name="chatbubble" size={20} color="#007AFF" />
                             <Text style={[styles.statText, isRTL && styles.textRTL]}>{reel.comments_count} {t("admin.manageReels.comments", "comments")}</Text>
                         </View>
-                        <View style={[styles.statItem, isRTL && styles.statItemRTL]}>
+                        <View style={[styles.statItem]}>
                             <Ionicons name="share-social" size={20} color="#34C759" />
                             <Text style={[styles.statText, isRTL && styles.textRTL]}>{reel.shares_count} {t("admin.manageReels.shares", "shares")}</Text>
                         </View>
                     </View>
 
                     {/* Reel Metadata */}
-                    <View style={[styles.metadataRow, isRTL && styles.metadataRowRTL]}>
+                    <View style={[styles.metadataRow]}>
                         <Text style={[styles.metadataLabel, isRTL && styles.textRTL]}>{t("admin.manageReels.statusLabel", "Status:")}</Text>
                         <Text style={[styles.metadataValue, isRTL && styles.textRTL, { color: reel.status === 'ACTIVE' ? '#34C759' : '#666' }]}>
                             {reel.status}
                         </Text>
                     </View>
-                    <View style={[styles.metadataRow, isRTL && styles.metadataRowRTL]}>
+                    <View style={[styles.metadataRow]}>
                         <Text style={[styles.metadataLabel, isRTL && styles.textRTL]}>{t("admin.manageReels.typeLabel", "Type:")}</Text>
                         <Text style={[styles.metadataValue, isRTL && styles.textRTL]}>{reel.video_type}</Text>
                     </View>
-                    <View style={[styles.metadataRow, isRTL && styles.metadataRowRTL]}>
+                    <View style={[styles.metadataRow]}>
                         <Text style={[styles.metadataLabel, isRTL && styles.textRTL]}>{t("admin.manageReels.createdLabel", "Created:")}</Text>
                         <Text style={[styles.metadataValue, isRTL && styles.textRTL]}>
                             {new Date(reel.created_at).toLocaleString()}
                         </Text>
                     </View>
                     {reel.user && (
-                        <View style={[styles.metadataRow, isRTL && styles.metadataRowRTL]}>
+                        <View style={[styles.metadataRow]}>
                             <Text style={[styles.metadataLabel, isRTL && styles.textRTL]}>{t("admin.manageReels.creatorLabel", "Creator:")}</Text>
                             <Text style={[styles.metadataValue, isRTL && styles.textRTL]}>{reel.user.name}</Text>
                         </View>
@@ -434,7 +434,7 @@ export default function ReelDetailsPage() {
 
                 {/* Comments Section */}
                 <View style={styles.commentsSection}>
-                    <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+                    <View style={[styles.sectionHeader]}>
                         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
                             {t("admin.manageReels.commentsTitle", "Comments")} ({comments.length})
                         </Text>
@@ -517,7 +517,7 @@ export default function ReelDetailsPage() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+                        <View style={[styles.modalHeader]}>
                             <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t("admin.manageReels.changeStatus", "Change Status")}</Text>
                             <TouchableOpacity onPress={() => setStatusModalVisible(false)}>
                                 <Ionicons name="close" size={28} color="#333" />
@@ -583,7 +583,7 @@ export default function ReelDetailsPage() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
-                        <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+                        <View style={[styles.modalHeader]}>
                             <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>
                                 {t("admin.manageReels.reply", "Reply")} {replyingTo?.user_name || t("admin.manageReels.user", "User")}
                             </Text>
@@ -609,7 +609,7 @@ export default function ReelDetailsPage() {
                             textAlign={isRTL ? 'right' : 'left'}
                         />
 
-                        <View style={[styles.modalActions, isRTL && styles.modalActionsRTL]}>
+                        <View style={[styles.modalActions]}>
                             <TouchableOpacity 
                                 style={[styles.modalButton, styles.cancelButton]}
                                 onPress={() => setReplyModalVisible(false)}
@@ -688,9 +688,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
-    actionButtonsRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     actionButton: {
         flex: 1,
         flexDirection: 'row',
@@ -705,9 +703,7 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
-    actionButtonRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     editButton: {
         backgroundColor: '#007AFF',
     },
@@ -781,17 +777,13 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
-    statsRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     statItem: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
     },
-    statItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     statText: {
         fontSize: 14,
         color: '#666',
@@ -802,9 +794,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 8,
     },
-    metadataRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     metadataLabel: {
         fontSize: 14,
         color: '#999',
@@ -827,9 +817,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 16,
     },
-    sectionHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     sectionTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -871,9 +859,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
-    commentUserRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentAvatar: {
         width: 40,
         height: 40,
@@ -902,17 +888,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 16,
     },
-    commentActionsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentAction: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4,
     },
-    commentActionRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentActionText: {
         fontSize: 13,
         color: '#666',
@@ -967,9 +949,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    modalHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -1012,9 +992,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 12,
     },
-    modalActionsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalButton: {
         flex: 1,
         padding: 14,

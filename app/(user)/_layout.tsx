@@ -106,7 +106,9 @@ function CustomTabBar({ state, descriptors, navigation }: any) {
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, visibleRoutes.length - 1],
-    outputRange: [0, tabWidth * (visibleRoutes.length - 1)],
+    outputRange: isRTL 
+      ? [0, -tabWidth * (visibleRoutes.length - 1)] 
+      : [0, tabWidth * (visibleRoutes.length - 1)],
   });
 
   return (
@@ -235,7 +237,7 @@ export default function UserLayout() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.background }}>
+    <View style={{ flex: 1, backgroundColor: COLORS.background, direction: isRTL ? 'rtl' : 'ltr' }}>
       <MembershipRequiredModal
         visible={membershipModalVisible}
         source={membershipModalSource}
@@ -503,7 +505,7 @@ export default function UserLayout() {
         />
 
       </Tabs>
-    </View >
+    </View>
   );
 }
 
@@ -543,7 +545,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   tabsRowRTL: {
-    flexDirection: 'row-reverse',
+    // Removed row-reverse
   },
   tabItem: {
     height: '100%',

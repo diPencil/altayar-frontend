@@ -138,10 +138,10 @@ export default function UsersManagement() {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <Text style={styles.pageTitle}>{t('admin.users', 'Users')}</Text>
         <TouchableOpacity
-          style={[styles.addBtn, isRTL && styles.addBtnRTL]}
+          style={[styles.addBtn]}
           onPress={() => router.push('/(admin)/users/create')}
         >
           <Ionicons name="add" size={20} color="white" />
@@ -150,7 +150,7 @@ export default function UsersManagement() {
       </View>
 
       {/* Statistics Cards */}
-      <View style={[styles.statsGrid, isRTL && styles.statsGridRTL]}>
+      <View style={[styles.statsGrid]}>
         <StatsCard
           title={t('admin.manageUsers.totalUsers', 'Total Users')}
           value={stats.totalUsers.toString()}
@@ -186,8 +186,8 @@ export default function UsersManagement() {
       </View>
 
       {/* Simple Mobile Filter Bar */}
-      <View style={[styles.filterBar, isRTL && styles.filterBarRTL]}>
-        <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL]}>
+      <View style={[styles.filterBar]}>
+        <View style={[styles.searchContainer]}>
           <Ionicons name="search" size={20} color={COLORS.textLight} />
           <TextInput
             style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -212,7 +212,7 @@ export default function UsersManagement() {
         <View style={styles.listContainer}>
           {users.map((u) => (
             <View key={u.id} style={styles.userCard}>
-              <View style={[styles.userMeta, isRTL && styles.userMetaRTL]}>
+              <View style={[styles.userMeta]}>
                 <View style={styles.avatar}>
                   {u.avatar ? (
                     <Image source={{ uri: u.avatar }} style={{ width: 48, height: 48, borderRadius: 24 }} />
@@ -238,7 +238,7 @@ export default function UsersManagement() {
                 </View>
               </View>
 
-              <TouchableOpacity style={[styles.detailsBtn, isRTL && styles.detailsBtnRTL]} onPress={() => openDetails(u.id)}>
+              <TouchableOpacity style={[styles.detailsBtn]} onPress={() => openDetails(u.id)}>
                 <Text style={styles.detailsBtnText}>{t('admin.manageUsers.details', 'Details')}</Text>
                 <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={16} color={COLORS.primary} />
               </TouchableOpacity>
@@ -253,7 +253,7 @@ export default function UsersManagement() {
           <View style={[styles.filterModalContent, isRTL && styles.filterModalContentRTL]}>
             <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t('filterUsers.title', 'Filter Users')}</Text>
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('filterUsers.byRole', 'By Role')}</Text>
-            <View style={[styles.chipsContainer, isRTL && styles.chipsContainerRTL]}>
+            <View style={[styles.chipsContainer]}>
               {[
                 { key: '', label: t('filterUsers.all', 'All') },
                 { key: 'CUSTOMER', label: t('filterUsers.customer', 'Customer') },
@@ -311,12 +311,12 @@ export default function UsersManagement() {
 
 function StatsCard({ title, value, icon, color, width, isRTL }: any) {
   return (
-    <View style={[styles.statCard, { width: width || '100%' }, isRTL && styles.statCardRTL]}>
+    <View style={[styles.statCard, { width: width || '100%' }]}>
       <View style={[styles.iconBox, { backgroundColor: `${color} 15` }]}>
         <Ionicons name={icon} size={24} color={color} />
       </View>
-      <View style={{ flex: 1, ...(isRTL && { alignItems: 'flex-end' }) }}>
-        <Text style={[styles.statValue, isRTL && styles.textRTL]}>{value}</Text>
+      <View style={styles.statTextCol}>
+        <Text style={[styles.statValue, isRTL && styles.statValueArabic]}>{value}</Text>
         <Text style={[styles.statTitle, isRTL && styles.textRTL]}>{title}</Text>
       </View>
     </View>
@@ -634,13 +634,13 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               </View>
 
               <View style={styles.divider} />
-              <View style={[styles.rowBetween, isRTL && styles.rowBetweenRTL]}>
+              <View style={[styles.rowBetween]}>
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.memberId', 'Member ID')}</Text>
                 <Text style={[styles.value, isRTL && styles.textRTL]}>
                   {data.user.membership_id_display || (data.user.id ? `ALT-${data.user.id.substring(0, 8).toUpperCase()}` : t('common.unknown', 'N/A'))}
                 </Text>
               </View>
-              <View style={[styles.rowBetween, isRTL && styles.rowBetweenRTL]}>
+              <View style={[styles.rowBetween]}>
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.joined', 'Joined')}</Text>
                 <Text style={[styles.value, isRTL && styles.textRTL]}>{formatDateSafe(data.user.joined_at)}</Text>
               </View>
@@ -649,8 +649,8 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
             {/* Employee Assignment (Only for Customers) */}
             {data.user && data.user.role === 'CUSTOMER' && (
               <View style={styles.card}>
-                <View style={[styles.rowBetween, isRTL && styles.rowBetweenRTL]}>
-                  <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }, isRTL && { flexDirection: 'row-reverse' }]}>
+                <View style={[styles.rowBetween]}>
+                  <View style={[{ flexDirection: 'row', alignItems: 'center', gap: 8 }]}>
                     <Ionicons name="people-circle-outline" size={24} color={COLORS.primary} />
                     <Text style={[styles.cardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.assignedEmployee', 'Assigned Employee')}</Text>
                   </View>
@@ -678,7 +678,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                         </View>
                       </View>
 
-                      <View style={[styles.actionButtons, isRTL && styles.actionButtonsRTL, { flexDirection: 'row', gap: 8, marginTop: 12, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }]}>
+                      <View style={[styles.actionButtons, { flexDirection: 'row', gap: 8, marginTop: 12, borderTopWidth: 1, borderTopColor: '#e2e8f0', paddingTop: 12 }]}>
                         <TouchableOpacity
                           style={[styles.changeButton, { flex: 1, backgroundColor: 'white', borderWidth: 1, borderColor: COLORS.border, paddingVertical: 8, borderRadius: 6, alignItems: 'center' }]}
                           onPress={() => setShowAssignModal(true)}
@@ -747,7 +747,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
             {/* Status Grid: Membership, Wallet, Cashback, Points */}
             <View style={{ gap: 12 }}>
               {/* Row 1: Membership & Wallet */}
-              <View style={[styles.grid, isRTL && styles.gridRTL]}>
+              <View style={[styles.grid]}>
                 {/* Membership */}
                 <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginStart: 8 } : { marginEnd: 8 }]}>
                   <Ionicons name="card-outline" size={24} color={COLORS.purple} />
@@ -808,7 +808,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               </View>
 
               {/* Row 2: Cashback & Points */}
-              <View style={[styles.grid, isRTL && styles.gridRTL]}>
+              <View style={[styles.grid]}>
                 {/* Cashback */}
                 <View style={[styles.miniCard, { flex: 1 }, isRTL ? { marginStart: 8 } : { marginEnd: 8 }]}>
                   <Ionicons name="gift-outline" size={24} color="#0ea5e9" />
@@ -831,7 +831,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
               </View>
 
               {/* Row 3: Referrals */}
-              <View style={[styles.grid, isRTL && styles.gridRTL]}>
+              <View style={[styles.grid]}>
                 <View style={[styles.miniCard, { flex: 1 }]}>
                   <Ionicons name="people-outline" size={24} color="#64748b" />
                   <Text style={[styles.miniCardTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.userProfile.referralStats', 'Referral Stats')}</Text>
@@ -855,7 +855,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
 
               {/* Row 4: Competition (cards sold per tier) – for employees */}
               {competitionStats !== null && data?.user && (data.user.role === 'EMPLOYEE' || data.user.role === 'ADMIN' || data.user.role === 'SUPER_ADMIN') && (
-                <View style={[styles.grid, isRTL && styles.gridRTL, { marginTop: 12 }]}>
+                <View style={[styles.grid, { marginTop: 12 }]}>
                   <View style={[styles.miniCard, { flex: 1, flexDirection: 'column', alignItems: 'flex-start' }]}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                       <Ionicons name="trophy-outline" size={24} color={COLORS.warning} />
@@ -938,7 +938,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
                 : t('admin.manageUsers.unblockConfirmMsg', { name: data?.user?.name }) || `Are you sure you want to unblock ${data?.user?.name || 'this user'}?`
               }
             </Text>
-            <View style={[styles.confirmButtons, isRTL && styles.confirmButtonsRTL]}>
+            <View style={[styles.confirmButtons]}>
               <TouchableOpacity
                 style={[styles.confirmBtn, styles.cancelBtn]}
                 onPress={() => setShowBlockConfirm(false)}
@@ -979,7 +979,7 @@ function UserDetailsModal({ userId, visible, onClose, onUserUpdated, setToast }:
             <Text style={[styles.confirmMessage, isRTL && styles.textRTL]}>
               {t('admin.manageUsers.deleteConfirmMsg')}
             </Text>
-            <View style={[styles.confirmButtons, isRTL && styles.confirmButtonsRTL]}>
+            <View style={[styles.confirmButtons]}>
               <TouchableOpacity
                 style={[styles.confirmBtn, styles.cancelBtn]}
                 onPress={() => setShowDeleteConfirm(false)}
@@ -1076,7 +1076,7 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <View style={styles.modalContainer}>
-        <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+        <View style={[styles.modalHeader]}>
           <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t('admin.manageUsers.assignEmployee', 'Assign Employee')}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
             <Ionicons name="close" size={24} color={COLORS.text} />
@@ -1084,7 +1084,7 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
         </View>
 
         <View style={styles.modalBody}>
-          <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL, { marginBottom: 16, flexDirection: 'row' }]}>
+          <View style={[styles.searchContainer, { marginBottom: 16, flexDirection: 'row' }]}>
             <Ionicons name="search" size={20} color={COLORS.textLight} style={isRTL ? { marginStart: 8 } : { marginEnd: 8 }} />
             <TextInput
               style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -1102,7 +1102,7 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
               {currentEmployeeId && (
                 <TouchableOpacity
-                  style={[styles.employeeItem, isRTL && styles.employeeItemRTL, { borderColor: COLORS.error, borderStyle: 'dashed', flexDirection: 'row' }]}
+                  style={[styles.employeeItem, { borderColor: COLORS.error, borderStyle: 'dashed', flexDirection: 'row' }]}
                   onPress={() => handleSelect(null)}
                   disabled={assigning}
                 >
@@ -1123,7 +1123,6 @@ function AssignEmployeeModal({ visible, onClose, onAssign, currentEmployeeId }: 
                   key={emp.id}
                   style={[
                     styles.employeeItem,
-                    isRTL && styles.employeeItemRTL,
                     currentEmployeeId === emp.id && styles.employeeItemActive
                   ]}
                   onPress={() => handleSelect(emp.id)}
@@ -1263,6 +1262,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.text,
   },
+  statTextCol: {
+    flex: 1,
+    minWidth: 0,
+  },
+  /** RTL: pin Western / Eastern numerals to the visual right of the text column (by the icon); titles keep `textRTL` only */
+  statValueArabic: {
+    width: "100%",
+    textAlign: "right",
+    writingDirection: "ltr",
+  },
   statTitle: {
     fontSize: 12,
     color: COLORS.textLight,
@@ -1366,9 +1375,7 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 24,
   },
-  chipsContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   chip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -1456,9 +1463,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  rowBetweenRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   label: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -1472,9 +1477,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
   },
-  gridRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   miniCard: {
     backgroundColor: 'white',
     borderRadius: 12,
@@ -1586,9 +1589,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
-  confirmButtonsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   confirmBtn: {
     flex: 1,
     paddingVertical: 12,
@@ -1623,36 +1624,14 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   // RTL Styles
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
-  addBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
-  statsGridRTL: {
-    flexDirection: 'row-reverse',
-  },
-  filterBarRTL: {
-    flexDirection: 'row-reverse',
-  },
-  searchContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   searchInputRTL: {
     textAlign: 'right',
   },
   textRTL: {
     textAlign: 'right',
   },
-  userMetaRTL: {
-    flexDirection: 'row-reverse',
-  },
-  detailsBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
-  statCardRTL: {
-    alignItems: 'flex-end',
-  },
+
   // Assign Employee Modal Styles
   modalContainer: {
     flex: 1,
@@ -1713,9 +1692,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
   },
-  actionButtonsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   actionButtonsContainer: {
     flexDirection: 'row',
     gap: 8,
@@ -1757,10 +1734,5 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     fontWeight: 'bold',
   },
-  employeeItemRTL: {
-    flexDirection: 'row-reverse',
-  },
-  modalHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
+
 });

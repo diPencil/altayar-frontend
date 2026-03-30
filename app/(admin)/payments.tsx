@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { adminApi } from "../../src/services/api";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 import { useRouter } from "expo-router";
 
 const COLORS = {
@@ -67,26 +68,26 @@ export default function AdminPayments() {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
-        <Text style={styles.headerTitle}>{t('admin.managePayments.title')}</Text>
-        <Text style={styles.headerSubtitle}>{t('admin.managePayments.subtitle')}</Text>
+      <View style={styles.header}>
+        <Text style={[styles.headerTitle, isRTL && styles.headerTitleRTL]}>{t('admin.managePayments.title')}</Text>
+        <Text style={[styles.headerSubtitle, isRTL && styles.headerSubtitleRTL]}>{t('admin.managePayments.subtitle')}</Text>
       </View>
 
       {/* Stats */}
-      <View style={[styles.statsRow, isRTL && styles.statsRowRTL]}>
+      <View style={[styles.statsRow]}>
         <View style={[styles.statCard, { backgroundColor: `${COLORS.success}15` }]}>
-          <View style={[styles.statCardContent, isRTL && styles.statCardContentRTL]}>
+          <View style={styles.statCardContent}>
             <Ionicons name="checkmark-circle" size={28} color={COLORS.success} />
-            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginEnd: 12, marginStart: 0 }]}>
+            <View style={[styles.statTextContainer, isRTL && styles.statTextContainerRTL]}>
               <Text style={[styles.statValue, isRTL && styles.textRTL]}>{totalPaid.toLocaleString()}</Text>
               <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{t('admin.managePayments.totalPaid')}</Text>
             </View>
           </View>
         </View>
         <View style={[styles.statCard, { backgroundColor: `${COLORS.warning}15` }]}>
-          <View style={[styles.statCardContent, isRTL && styles.statCardContentRTL]}>
+          <View style={styles.statCardContent}>
             <Ionicons name="time" size={28} color={COLORS.warning} />
-            <View style={[styles.statTextContainer, isRTL && { alignItems: 'flex-end', marginEnd: 12, marginStart: 0 }]}>
+            <View style={[styles.statTextContainer, isRTL && styles.statTextContainerRTL]}>
               <Text style={[styles.statValue, isRTL && styles.textRTL]}>
                 {payments.filter(p => p.status === 'PENDING' || p.status === 'UNPAID').length}
               </Text>
@@ -97,13 +98,13 @@ export default function AdminPayments() {
       </View>
 
       {/* Recent Payments */}
-      <View style={[styles.card, isRTL && styles.cardRTL]}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardTitle}>{t('admin.managePayments.recent')}</Text>
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <View style={styles.cardTitleWrap}>
+            <Text style={[styles.cardTitle, isRTL && styles.cardTitleRTL]}>{t('admin.managePayments.recent')}</Text>
           </View>
           <TouchableOpacity
-            style={[styles.filterBtn, isRTL && styles.filterBtnRTL, activeFilter !== 'ALL' && { backgroundColor: COLORS.primary + '20' }]}
+            style={[styles.filterBtn, activeFilter !== 'ALL' && { backgroundColor: COLORS.primary + '20' }]}
             onPress={() => setFilterVisible(true)}
           >
             <Ionicons name="filter" size={18} color={COLORS.primary} />
@@ -155,7 +156,7 @@ export default function AdminPayments() {
             {['ALL', 'PAID', 'PENDING', 'UNPAID'].map((status) => (
               <TouchableOpacity
                 key={status}
-                style={[styles.modalOption, isRTL && styles.modalOptionRTL]}
+                style={[styles.modalOption]}
                 onPress={() => {
                   setActiveFilter(status as any);
                   setFilterVisible(false);
@@ -201,13 +202,15 @@ function PaymentRow({ user, amount, currency, status, method, time, isRTL, onPre
   const color = statusColors[status] || COLORS.textLight;
 
   return (
-    <TouchableOpacity style={[styles.paymentRow, isRTL && styles.paymentRowRTL]} onPress={onPress}>
+    <TouchableOpacity style={[styles.paymentRow]} onPress={onPress}>
       <View style={[styles.paymentInfo, isRTL && styles.paymentInfoRTL]}>
         <Text style={[styles.paymentUser, isRTL && styles.textRTL]}>{user}</Text>
         <Text style={[styles.paymentMeta, isRTL && styles.textRTL]}>{method} • {time}</Text>
       </View>
       <View style={[styles.paymentRight, isRTL && styles.paymentRightRTL]}>
-        <Text style={[styles.paymentAmount, isRTL && styles.textRTL]}>{amount} {currency || t('common.currency.usd')}</Text>
+        <Text style={[styles.paymentAmount, isRTL ? styles.paymentAmountRTL : undefined]}>
+          {amount} {formatCurrencyLabel(currency, t)}
+        </Text>
         <View style={[styles.statusBadge, { backgroundColor: `${color}15` }]}>
           <Text style={[styles.statusText, { color: color }]}>{statusLabels[status] || status}</Text>
         </View>
@@ -225,18 +228,21 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: 20,
   },
-  headerRTL: {
-    alignItems: 'flex-end',
-  },
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
     color: COLORS.text,
     marginBottom: 4,
   },
+  headerTitleRTL: {
+    textAlign: "right",
+  },
   headerSubtitle: {
     fontSize: 14,
     color: COLORS.textLight,
+  },
+  headerSubtitleRTL: {
+    textAlign: "right",
   },
   statsRow: {
     flexDirection: "row",
@@ -254,22 +260,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  statCardContentRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   statTextContainer: {
     marginStart: 12,
+    flex: 1,
+    minWidth: 0,
+    alignItems: 'flex-start',
   },
   statTextContainerRTL: {
     marginStart: 0,
     marginEnd: 12,
-    alignItems: 'flex-end',
   },
   statValue: {
     fontSize: 24,
     fontWeight: "bold",
     color: COLORS.text,
-    marginTop: 8,
   },
   statLabel: {
     fontSize: 12,
@@ -288,10 +293,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 12,
   },
+  cardTitleWrap: {
+    flex: 1,
+    marginEnd: 8,
+  },
   cardTitle: {
     fontSize: 17,
     fontWeight: "600",
     color: COLORS.text,
+  },
+  cardTitleRTL: {
+    textAlign: "right",
   },
   filterBtn: {
     flexDirection: "row",
@@ -322,25 +334,30 @@ const styles = StyleSheet.create({
   },
   paymentInfo: {
     flex: 1,
+    minWidth: 0,
     marginEnd: 12,
   },
   paymentUser: {
     fontSize: 15,
     fontWeight: "500",
     color: COLORS.text,
+    alignSelf: "stretch",
   },
   paymentMeta: {
     fontSize: 12,
     color: COLORS.textLight,
     marginTop: 2,
+    alignSelf: "stretch",
   },
   paymentRight: {
+    flexShrink: 0,
     alignItems: "flex-end",
   },
   paymentAmount: {
     fontSize: 15,
     fontWeight: "600",
     color: COLORS.text,
+    maxWidth: 140,
   },
   statusBadge: {
     paddingHorizontal: 8,
@@ -353,33 +370,17 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   // RTL Styles
-  statsRowRTL: {
-    flexDirection: 'row-reverse',
-  },
-  statCardRTL: {
-    flexDirection: 'row-reverse',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-  },
-  cardRTL: {
-    // alignItems: 'flex-end', // REMOVED: This breaks justifyContent space-between
-  },
-  cardHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
-  filterBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
-  paymentRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   paymentInfoRTL: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     marginEnd: 0,
     marginStart: 12,
   },
   paymentRightRTL: {
     alignItems: 'flex-start',
+  },
+  paymentAmountRTL: {
+    textAlign: 'left',
   },
   textRTL: {
     textAlign: 'right',
@@ -416,9 +417,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  modalOptionRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   modalOptionText: {
     fontSize: 16,
     color: COLORS.text,

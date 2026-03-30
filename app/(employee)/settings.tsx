@@ -69,20 +69,20 @@ export default function EmployeeSettings() {
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("common.account")}</Text>
             <View style={styles.card}>
                 <TouchableOpacity
-                    style={[styles.settingRow, isRTL && styles.settingRowRTL]}
+                    style={[styles.settingRow]}
                     onPress={() => setEditProfileVisible(true)}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="person-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("profile.editProfile")}</Text>
                     </View>
                     <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={20} color={COLORS.textLight} />
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 0 }]}
+                    style={[styles.settingRow, { borderBottomWidth: 0 }]}
                     onPress={() => setChangePasswordVisible(true)}
                 >
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="lock-closed-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("auth.security.changePassword")}</Text>
                     </View>
@@ -92,8 +92,8 @@ export default function EmployeeSettings() {
 
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("admin.manageSettings.preferences")}</Text>
             <View style={styles.card}>
-                <View style={[styles.settingRow, isRTL && styles.settingRowRTL, { borderBottomWidth: 0 }]}>
-                    <View style={[styles.rowLeft, isRTL && styles.rowLeftRTL]}>
+                <View style={[styles.settingRow, { borderBottomWidth: 0 }]}>
+                    <View style={[styles.rowLeft]}>
                         <Ionicons name="globe-outline" size={22} color={COLORS.primary} />
                         <Text style={[styles.settingLabel, isRTL && styles.textRTL]}>{t("admin.manageSettings.language")}</Text>
                     </View>
@@ -157,7 +157,7 @@ function EditProfileModal({ visible, onClose }: { visible: boolean; onClose: () 
     const handlePickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            showToast('Sorry, we need camera roll permissions to make this work!', 'error');
+            showToast(t('profile.photoLibraryPermission'), 'error');
             return;
         }
 
@@ -199,7 +199,7 @@ function EditProfileModal({ visible, onClose }: { visible: boolean; onClose: () 
                     avatarUrl = uploadRes.url;
                 } catch (err: any) {
                     console.error('Avatar upload error:', err);
-                    showToast('Failed to upload image. Profile will be updated without image change.', 'error');
+                    showToast(t('profile.avatarUploadError'), 'error');
                 }
             }
 
@@ -212,7 +212,7 @@ function EditProfileModal({ visible, onClose }: { visible: boolean; onClose: () 
             // Refresh user data
             if (refreshUser) await refreshUser();
 
-            showToast('Profile updated successfully!', 'success');
+            showToast(t('profile.updateSuccess'), 'success');
             setTimeout(onClose, 1500);
         } catch (error: any) {
             showToast(error.message || t("profile.updateError"), 'error');
@@ -492,12 +492,7 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         marginEnd: 20,
     },
-    settingRowRTL: {
-        flexDirection: 'row-reverse',
-    },
-    rowLeftRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     // Modal Styles
     modalContainer: {
         flex: 1,

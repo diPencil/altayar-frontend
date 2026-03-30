@@ -14,7 +14,8 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
-import { walletApi } from "../../src/services/api";
+import { walletApi, type WalletBalance } from "../../src/services/api";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
   primary: "#1071b8",
@@ -47,6 +48,7 @@ export default function WalletScreen() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [balance, setBalance] = useState(0);
+  const [walletCurrency, setWalletCurrency] = useState("USD");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
@@ -64,7 +66,9 @@ export default function WalletScreen() {
       ]);
 
       if (balanceRes.status === 'fulfilled') {
-        setBalance((balanceRes.value as any)?.balance || 0);
+        const wb = balanceRes.value as WalletBalance | undefined;
+        setBalance(wb?.balance ?? 0);
+        setWalletCurrency(wb?.currency || "USD");
       }
       if (transRes.status === 'fulfilled') {
         setTransactions((transRes.value as any) || []);
@@ -90,7 +94,7 @@ export default function WalletScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -113,7 +117,7 @@ export default function WalletScreen() {
             {t('wallet.balance')}
           </Text>
           <Text style={styles.balanceAmount}>
-            {balance.toLocaleString()} {t('wallet.currency')}
+            {balance.toLocaleString()} {formatCurrencyLabel(walletCurrency, t)}
           </Text>
         </View>
 
@@ -143,10 +147,10 @@ export default function WalletScreen() {
               const displayAmount = isDebit ? -Math.abs(trans.amount) : Math.abs(trans.amount);
               const displayColor = isCredit ? COLORS.success : COLORS.error;
               const description = trans.description || trans.description_en || trans.description_ar || t('wallet.transaction', 'Transaction');
-              const currency = trans.currency || 'USD';
-              
+              const currencyCode = trans.currency || walletCurrency || "USD";
+
               return (
-                <View key={trans.id} style={[styles.transactionItem, isRTL && styles.transactionItemRTL]}>
+                <View key={trans.id} style={[styles.transactionItem]}>
                   <View style={[
                     styles.transactionIcon,
                     { backgroundColor: isCredit ? '#dcfce7' : '#fee2e2' }
@@ -169,7 +173,7 @@ export default function WalletScreen() {
                     styles.transactionAmount,
                     { color: displayColor }
                   ]}>
-                    {displayAmount > 0 ? '+' : ''}{displayAmount.toFixed(2)} {currency}
+                    {displayAmount > 0 ? '+' : ''}{displayAmount.toFixed(2)} {formatCurrencyLabel(currencyCode, t)}
                   </Text>
                 </View>
               );
@@ -202,9 +206,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -261,9 +263,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
   },
-  transactionItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   transactionIcon: {
     width: 44,
     height: 44,
@@ -276,9 +276,9 @@ const styles = StyleSheet.create({
     marginStart: 12,
   },
   transactionInfoRTL: {
-    marginStart: 0,
-    marginEnd: 12,
-    alignItems: "flex-end",
+//     marginStart: 0,  /* removed double-flip for Native RTL */
+//     marginEnd: 12,  /* removed double-flip for Native RTL */
+    alignItems: "flex-start",
   },
   transactionDesc: {
     fontSize: 15,

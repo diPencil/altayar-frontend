@@ -80,7 +80,7 @@ export default function PointsPage() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
         </TouchableOpacity>
@@ -99,7 +99,7 @@ export default function PointsPage() {
         >
           {!isMember ? (
             <LinearGradient colors={['#0f172a', '#334155', '#64748b']} style={styles.lockedCard}>
-              <View style={[styles.lockedHeaderRow, isRTL && styles.lockedHeaderRowRTL]}>
+              <View style={[styles.lockedHeaderRow]}>
                 <View style={[styles.lockIconWrap]}>
                   <Ionicons name="lock-closed" size={20} color="#fff" />
                 </View>
@@ -113,7 +113,7 @@ export default function PointsPage() {
               </Text>
 
               <TouchableOpacity
-                style={[styles.lockedBtn, isRTL && styles.lockedBtnRTL]}
+                style={[styles.lockedBtn]}
                 onPress={() => router.push('/(user)/memberships-explore')}
                 activeOpacity={0.85}
               >
@@ -163,7 +163,7 @@ export default function PointsPage() {
           <View style={styles.historySection}>
             <Text style={[styles.historyTitle, isRTL && styles.textRTL]}>{t('points.history', 'Points History')}</Text>
             {transactions.slice(0, 5).map((item, index) => (
-              <View key={index} style={[styles.historyItem, isRTL && styles.rowRTL]}>
+              <View key={index} style={[styles.historyItem]}>
                 <View style={[styles.iconContainer, { backgroundColor: item.points > 0 ? '#dcfce7' : '#fee2e2' }]}>
                   <Ionicons
                     name={item.points > 0 ? "add" : "remove"}
@@ -218,9 +218,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   backButton: {
     width: 40,
     height: 40,
@@ -342,9 +340,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  rowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   iconContainer: {
     width: 36,
     height: 36,
@@ -380,9 +376,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  lockedHeaderRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   lockIconWrap: {
     width: 36,
     height: 36,
@@ -414,9 +408,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
   },
-  lockedBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   lockedBtnText: {
     color: '#0f172a',
     fontWeight: '900',

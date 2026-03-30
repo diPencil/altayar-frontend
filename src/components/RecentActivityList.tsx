@@ -142,7 +142,7 @@ export default function RecentActivityList({ fetchData, type, onViewAll }: Recen
 
     return (
         <View style={styles.card}>
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <Text style={[styles.title, isRTL && styles.textRTL]}>
                     {t('admin.dashboard.recentActivity', 'Recent Activity')}
                 </Text>
@@ -155,7 +155,7 @@ export default function RecentActivityList({ fetchData, type, onViewAll }: Recen
 
             <View style={styles.list}>
                 {activities.slice(0, 5).map((item) => (
-                    <View key={item.id} style={[styles.item, isRTL && styles.itemRTL]}>
+                    <View key={item.id} style={[styles.item]}>
                         {item.user_avatar ? (
                             <Image source={{ uri: item.user_avatar }} style={styles.avatar} />
                         ) : (
@@ -195,9 +195,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 12,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     title: {
         fontSize: 16,
         fontWeight: 'bold',
@@ -215,9 +213,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    itemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatar: {
         width: 36,
         height: 36,

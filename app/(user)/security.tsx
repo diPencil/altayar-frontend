@@ -117,7 +117,7 @@ export default function SecurityScreen() {
         style={{ flex: 1 }}
       >
         {/* Header */}
-        <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+        <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
           </TouchableOpacity>
@@ -129,7 +129,7 @@ export default function SecurityScreen() {
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {/* Security Info */}
-          <View style={[styles.infoCard, isRTL && styles.infoCardRTL]}>
+          <View style={[styles.infoCard]}>
             <Ionicons name="shield-checkmark" size={24} color={COLORS.primary} />
             <Text style={[styles.infoText, isRTL && styles.textRTL]}>
               <Text style={[styles.infoText, isRTL && styles.textRTL]}>
@@ -289,7 +289,7 @@ export default function SecurityScreen() {
 
 function RequirementItem({ met, text, isRTL }: { met: boolean; text: string; isRTL: boolean }) {
   return (
-    <View style={[styles.requirementRow, isRTL && styles.requirementRowRTL]}>
+    <View style={[styles.requirementRow]}>
       <Ionicons
         name={met ? "checkmark-circle" : "ellipse-outline"}
         size={16}
@@ -323,9 +323,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -345,9 +343,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 20,
   },
-  infoCardRTL: {
-    flexDirection: "row-reverse",
-  },
+
   infoText: {
     flex: 1,
     fontSize: 14,
@@ -418,17 +414,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 6,
   },
-  requirementRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   requirementText: {
     fontSize: 13,
     color: COLORS.textLight,
     marginStart: 8,
   },
   requirementTextRTL: {
-    marginStart: 0,
-    marginEnd: 8,
+//     marginStart: 0,  /* removed double-flip for Native RTL */
+//     marginEnd: 8,  /* removed double-flip for Native RTL */
   },
   requirementMet: {
     color: COLORS.success,

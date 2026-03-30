@@ -27,7 +27,7 @@ const CommentItemComponent: React.FC<CommentItemProps> = ({ comment, onLike, onR
     return (
         <View style={[styles.commentItem, level > 0 && styles.replyItem, level > 0 && isRTL && styles.replyItemRTL]}>
             <View style={styles.commentHeader}>
-                <View style={[styles.commentUserRow, isRTL && styles.commentUserRowRTL]}>
+                <View style={[styles.commentUserRow]}>
                     {comment.user_avatar ? (() => {
                         const baseUrl = api.getBaseUrl().replace('/api', '');
                         let avatarUri = comment.user_avatar;
@@ -71,10 +71,10 @@ const CommentItemComponent: React.FC<CommentItemProps> = ({ comment, onLike, onR
             <Text style={[styles.commentContent, isRTL && styles.textRTL]}>{comment.content}</Text>
 
             {/* Action Row: Like, Reply */}
-            <View style={[styles.commentActions, isRTL && styles.commentActionsRTL]}>
+            <View style={[styles.commentActions]}>
                 <TouchableOpacity style={styles.commentActionButton} onPress={onLike}>
                     <Ionicons name="heart-outline" size={18} color="#666" />
-                    <Text style={styles.commentActionText}>
+                    <Text style={[styles.commentActionText, isRTL && styles.textRTL]}>
                         {comment.likes_count > 0 ? comment.likes_count : t('reels.like')}
                     </Text>
                 </TouchableOpacity>
@@ -82,7 +82,7 @@ const CommentItemComponent: React.FC<CommentItemProps> = ({ comment, onLike, onR
                 {level === 0 && ( // Only allow reply to top-level comments
                     <TouchableOpacity style={styles.commentActionButton} onPress={onReply}>
                         <Ionicons name="chatbubble-outline" size={16} color="#666" />
-                        <Text style={styles.commentActionText}>{t('reels.reply')}</Text>
+                        <Text style={[styles.commentActionText, isRTL && styles.textRTL]}>{t('reels.reply')}</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -90,7 +90,7 @@ const CommentItemComponent: React.FC<CommentItemProps> = ({ comment, onLike, onR
             {/* Show Replies Toggle (placeholder for nested replies) */}
             {level === 0 && comment.replies && comment.replies.length > 0 && (
                 <TouchableOpacity
-                    style={[styles.showRepliesButton, isRTL && styles.showRepliesButtonRTL]}
+                    style={[styles.showRepliesButton]}
                     onPress={() => setShowReplies(!showReplies)}
                 >
                     <Text style={[styles.showRepliesText, isRTL && styles.textRTL]}>
@@ -451,7 +451,7 @@ export default function ReelsPage() {
     return (
         <View style={styles.container}>
             {/* Custom Header Overlay - Matching Reference */}
-            <View style={[styles.headerContainer, { paddingTop: insets.top + 10 }, isRTL && styles.headerContainerRTL]}>
+            <View style={[styles.headerContainer, { paddingTop: insets.top + 10 }]}>
                 {/* Back Button */}
                 <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={28} color="white" />
@@ -461,7 +461,7 @@ export default function ReelsPage() {
                 <Text style={styles.headerTitle}>{t('reels.title')}</Text>
 
                 {/* Right: Search + Profile */}
-                <View style={[styles.headerIcons, isRTL && styles.headerIconsRTL]}>
+                <View style={[styles.headerIcons]}>
                     <TouchableOpacity style={styles.iconButton} onPress={() => setSearchModalVisible(true)}>
                         <Ionicons name="search" size={26} color="white" />
                     </TouchableOpacity>
@@ -497,7 +497,7 @@ export default function ReelsPage() {
             >
                 <View style={styles.searchModalContainer}>
                     <View style={styles.searchModalContent}>
-                        <View style={[styles.searchHeader, isRTL && styles.searchHeaderRTL]}>
+                        <View style={[styles.searchHeader]}>
                             <TouchableOpacity
                                 onPress={() => {
                                     setSearchModalVisible(false);
@@ -505,7 +505,7 @@ export default function ReelsPage() {
                                     setReels(allReels);
                                 }}
                             >
-                                <Ionicons name="arrow-back" size={24} color="#333" />
+                                <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color="#333" />
                             </TouchableOpacity>
                             <TextInput
                                 style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -524,7 +524,7 @@ export default function ReelsPage() {
                                 </TouchableOpacity>
                             )}
                         </View>
-                        <View style={[styles.searchResults, isRTL && styles.searchResultsRTL]}>
+                        <View style={[styles.searchResults]}>
                             <Text style={[styles.searchResultsText, isRTL && styles.textRTL]}>
                                 {reels.length} {reels.length === 1 ? t('reels.reelFound') : t('reels.reelsFound')}
                             </Text>
@@ -576,7 +576,7 @@ export default function ReelsPage() {
             >
                 <View style={styles.modalOverlay}>
                     <View style={[styles.commentModal, isRTL && styles.commentModalRTL]}>
-                        <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+                        <View style={[styles.modalHeader]}>
                             <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t('reels.comments')}</Text>
                             <TouchableOpacity onPress={() => setCommentModalVisible(false)}>
                                 <Ionicons name="close" size={28} color="#333" />
@@ -607,7 +607,7 @@ export default function ReelsPage() {
                         {/* Add Comment/Reply Input */}
                         <View style={styles.addCommentSection}>
                             {replyingTo && (
-                                <View style={[styles.replyingToBar, isRTL && styles.replyingToBarRTL]}>
+                                <View style={[styles.replyingToBar]}>
                                     <Text style={[styles.replyingToText, isRTL && styles.textRTL]}>
                                         {t('reels.replyingTo')} {comments.find(c => c.id === replyingTo)?.user_name || t('reels.comment')}
                                     </Text>
@@ -616,7 +616,7 @@ export default function ReelsPage() {
                                     </TouchableOpacity>
                                 </View>
                             )}
-                            <View style={[styles.inputRow, isRTL && styles.inputRowRTL]}>
+                            <View style={[styles.inputRow]}>
                                 <TextInput
                                     style={[styles.commentInput, isRTL && styles.commentInputRTL]}
                                     placeholder={replyingTo ? t('reels.writeReply') : t('reels.writeComment')}
@@ -669,9 +669,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
         paddingBottom: 10,
     },
-    headerContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         padding: 4,
         zIndex: 2,
@@ -697,9 +695,7 @@ const styles = StyleSheet.create({
         gap: 16,
         zIndex: 2,
     },
-    headerIconsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     iconButton: {
         padding: 4,
     },
@@ -728,9 +724,7 @@ const styles = StyleSheet.create({
         gap: 12,
         marginBottom: 16,
     },
-    searchHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     searchInput: {
         flex: 1,
         fontSize: 16,
@@ -748,9 +742,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingVertical: 12,
     },
-    searchResultsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     searchResultsText: {
         fontSize: 14,
         color: '#666',
@@ -791,9 +783,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#eee',
     },
-    modalHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -848,8 +838,8 @@ const styles = StyleSheet.create({
         maxHeight: 100,
     },
     commentInputRTL: {
-        marginEnd: 0,
-        marginStart: 10,
+//         marginEnd: 0,  /* removed double-flip for Native RTL */
+//         marginStart: 10,  /* removed double-flip for Native RTL */
     },
     submitButton: {
         backgroundColor: '#007AFF',
@@ -875,8 +865,8 @@ const styles = StyleSheet.create({
         borderLeftColor: '#e0e0e0',
     },
     replyItemRTL: {
-        marginStart: 0,
-        marginEnd: 40,
+//         marginStart: 0,  /* removed double-flip for Native RTL */
+//         marginEnd: 40,  /* removed double-flip for Native RTL */
         paddingStart: 0,
         paddingEnd: 12,
         borderLeftWidth: 0,
@@ -891,9 +881,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
-    commentUserRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentAvatar: {
         width: 32,
         height: 32,
@@ -929,9 +917,7 @@ const styles = StyleSheet.create({
         gap: 20,
         marginTop: 8,
     },
-    commentActionsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentActionButton: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -947,9 +933,7 @@ const styles = StyleSheet.create({
         gap: 4,
         marginTop: 8,
     },
-    showRepliesButtonRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     showRepliesText: {
         color: '#007AFF',
         fontSize: 13,
@@ -965,9 +949,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 8,
     },
-    replyingToBarRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     replyingToText: {
         color: '#007AFF',
         fontSize: 13,
@@ -977,7 +959,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    inputRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
 });

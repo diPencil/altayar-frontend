@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import paymentService from '../../../src/services/paymentService';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../../src/contexts/LanguageContext';
+import { formatCurrencyLabel } from '../../../src/utils/currencyLabel';
 
 export default function PaymentFailScreen() {
     const { paymentId } = useLocalSearchParams<{ paymentId: string }>();
@@ -93,7 +94,7 @@ export default function PaymentFailScreen() {
                                 {t('payment.amount', 'المبلغ')}:
                             </Text>
                             <Text style={[styles.detailValue, isRTL && styles.rtlText]}>
-                                {paymentDetails.amount} {paymentDetails.currency}
+                                {paymentDetails.amount} {formatCurrencyLabel(paymentDetails.currency, t)}
                             </Text>
                         </View>
 

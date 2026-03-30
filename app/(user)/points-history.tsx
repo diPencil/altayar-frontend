@@ -81,7 +81,7 @@ export default function PointsHistory() {
         const description = language === 'ar' && item.description_ar ? item.description_ar : (item.description_en || item.transaction_type);
 
         return (
-            <View style={[styles.card, isRTL && styles.cardRTL]}>
+            <View style={[styles.card]}>
                 <View style={[styles.iconContainer, { backgroundColor: `${iconColor}15` }]}>
                     <Ionicons name={iconName} size={24} color={iconColor} />
                 </View>
@@ -104,7 +104,7 @@ export default function PointsHistory() {
     return (
         <View style={styles.container}>
             {/* Custom Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -115,7 +115,7 @@ export default function PointsHistory() {
             {!isMember ? (
                 <View style={{ padding: 16 }}>
                     <LinearGradient colors={['#0f172a', '#334155', '#64748b']} style={styles.lockedCard}>
-                        <View style={[styles.lockedHeaderRow, isRTL && styles.lockedHeaderRowRTL]}>
+                        <View style={[styles.lockedHeaderRow]}>
                             <View style={styles.lockIconWrap}>
                                 <Ionicons name="lock-closed" size={20} color="#fff" />
                             </View>
@@ -127,7 +127,7 @@ export default function PointsHistory() {
                             {t('membership.locked.body', 'Subscribe to explore the app and access all features.')}
                         </Text>
                         <TouchableOpacity
-                            style={[styles.lockedBtn, isRTL && styles.lockedBtnRTL]}
+                            style={[styles.lockedBtn]}
                             onPress={() => router.push("/(user)/memberships-explore" as any)}
                             activeOpacity={0.85}
                         >
@@ -182,9 +182,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -226,9 +224,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
     },
-    cardRTL: {
-        flexDirection: "row-reverse",
-    },
+
     iconContainer: {
         width: 40,
         height: 40,
@@ -242,8 +238,8 @@ const styles = StyleSheet.create({
         marginEnd: 12,
     },
     contentRTL: {
-        marginEnd: 0,
-        marginStart: 12,
+//         marginEnd: 0,  /* removed double-flip for Native RTL */
+//         marginStart: 12,  /* removed double-flip for Native RTL */
     },
     title: {
         fontSize: 16,
@@ -290,9 +286,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 10,
     },
-    lockedHeaderRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     lockIconWrap: {
         width: 36,
         height: 36,
@@ -324,9 +318,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 10,
     },
-    lockedBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     lockedBtnText: {
         color: '#0f172a',
         fontWeight: '900',

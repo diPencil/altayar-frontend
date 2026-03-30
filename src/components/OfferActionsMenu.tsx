@@ -43,7 +43,7 @@ export default function OfferActionsMenu({
           </Text>
 
           <TouchableOpacity
-            style={[styles.row, isRTL && styles.rowRTL]}
+            style={[styles.row]}
             onPress={onPressFavorite}
             activeOpacity={0.85}
           >
@@ -56,7 +56,7 @@ export default function OfferActionsMenu({
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.row, isRTL && styles.rowRTL]}
+            style={[styles.row]}
             onPress={onPressRate}
             activeOpacity={0.85}
           >
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f8fafc",
     marginBottom: 10,
   },
-  rowRTL: { flexDirection: "row-reverse" },
+
   rowText: {
     fontSize: 13,
     fontWeight: "800",

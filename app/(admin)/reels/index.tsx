@@ -6,9 +6,9 @@ import * as ImagePicker from 'expo-image-picker';
 import Video from 'expo-av/build/Video';
 import { ResizeMode } from 'expo-av/build/Video.types';
 import { reelsService, Reel } from '../../../src/services/reels';
+import { resolveReelMediaUrl, rewriteBackendMediaUrl } from '../../../src/services/api';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '../../../src/contexts/LanguageContext';
-import Constants from 'expo-constants';
 
 export default function AdminReelsPage() {
     const { t } = useTranslation();
@@ -238,7 +238,7 @@ export default function AdminReelsPage() {
         };
         
         return (
-            <View style={[styles.analyticsContainer, isRTL && styles.analyticsContainerRTL]}>
+            <View style={[styles.analyticsContainer]}>
                 <View style={styles.statBox}>
                     <Text style={[styles.statValue, isRTL && styles.textRTL]}>{safeAnalytics.total_views || 0}</Text>
                     <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{t("admin.manageReels.totalViews", "Total Views")}</Text>
@@ -259,62 +259,26 @@ export default function AdminReelsPage() {
         router.push(`/(admin)/reels/${reelId}`);
     };
 
-    // Get API base URL for video sources
-    const getApiBaseUrl = (): string => {
-        const apiUrl = Constants.expoConfig?.extra?.apiUrl;
-        if (apiUrl && typeof apiUrl === 'string') {
-            return apiUrl;
-        }
-        if (Platform.OS === 'web') {
-            return 'http://localhost:8082/api';
-        }
-        const manifest = Constants.expoConfig || Constants.manifest;
-        let ip: string | null = null;
-        if (manifest?.hostUri) {
-            ip = manifest.hostUri.split(':')[0];
-        }
-        if (!ip && Constants.debuggerHost) {
-            ip = Constants.debuggerHost.split(':')[0];
-        }
-        if (!ip && manifest?.extra?.devServerIp) {
-            ip = manifest.extra.devServerIp;
-        }
-        if (!ip) {
-            ip = '192.168.1.27';
-        }
-        return `http://${ip}:8082/api`;
-    };
+    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
 
     const renderItem = ({ item }: { item: Reel }) => {
-        // Determine thumbnail source - Try to extract from different sources
-        let thumbnailSource = null;
-        let videoSource = null;
-        
+        let thumbnailSource: { uri: string } | null = null;
+        let videoSource: string | null = null;
+
         if (item.thumbnail_url) {
-            // Use explicit thumbnail if available
-            thumbnailSource = { uri: item.thumbnail_url };
+            const u = rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url;
+            thumbnailSource = { uri: u };
         } else if (item.video_url) {
-            // For YouTube videos, extract thumbnail
-            if (item.video_type === 'YOUTUBE' || item.video_url.includes('youtube.com') || item.video_url.includes('youtu.be')) {
-                // Extract YouTube video ID and construct thumbnail URL
-                const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
-                const match = item.video_url.match(youtubeRegex);
-                if (match && match[1]) {
-                    thumbnailSource = { uri: `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg` };
-                }
+            const yt = item.video_url.match(youtubeRegex);
+            if (yt?.[1]) {
+                thumbnailSource = { uri: `https://img.youtube.com/vi/${yt[1]}/mqdefault.jpg` };
             } else if (item.video_type === 'UPLOAD') {
-                // For uploaded videos, use video URL as source for Video component
-                const baseUrl = getApiBaseUrl();
-                if (item.video_url.startsWith('/')) {
-                    videoSource = `${baseUrl}${item.video_url}`;
-                } else if (item.video_url.startsWith('http://') || item.video_url.startsWith('https://')) {
-                    videoSource = item.video_url;
-                } else {
-                    videoSource = `${baseUrl}/reels/video/${item.video_url.split('/').pop()}`;
-                }
-            } else if (item.video_type === 'URL') {
-                // For direct video URLs from CDNs, try using as thumbnail (may not work)
-                thumbnailSource = { uri: item.video_url };
+                videoSource = resolveReelMediaUrl(item.video_url) ?? null;
+            } else if (
+                item.video_type === 'URL' &&
+                (item.video_url.startsWith('http://') || item.video_url.startsWith('https://'))
+            ) {
+                videoSource = resolveReelMediaUrl(item.video_url) ?? null;
             }
         }
 
@@ -327,7 +291,7 @@ export default function AdminReelsPage() {
 
         return (
             <TouchableOpacity 
-                style={[styles.row, isRTL && styles.rowRTL]}
+                style={[styles.row]}
                 onPress={() => handleReelPress(item.id)}
                 activeOpacity={0.7}
             >
@@ -379,7 +343,7 @@ export default function AdminReelsPage() {
                 <View style={styles.rowContent}>
                     <Text style={[styles.rowTitle, isRTL && styles.textRTL]}>{item.title || t("admin.manageReels.noTitle", "(No Title)")}</Text>
                     <Text style={[styles.rowSub, isRTL && styles.textRTL]}>{t("admin.manageReels.views", "views")}: {item.views_count} • {t("admin.manageReels.likes", "likes")}: {item.likes_count}</Text>
-                    <View style={[styles.statusRow, isRTL && styles.statusRowRTL]}>
+                    <View style={[styles.statusRow]}>
                         <Text style={[styles.rowStatus, isRTL && styles.textRTL]}>{item.status}</Text>
                         {item.video_type && (
                             <Text style={[styles.videoTypeLabel, isRTL && styles.textRTL]}>
@@ -406,13 +370,13 @@ export default function AdminReelsPage() {
             <Stack.Screen options={{ title: t("admin.reelsManagement", "Reels"), headerBackTitle: t("common.back") }} />
 
             {/* Header Actions */}
-            <View style={[styles.headerRow, isRTL && styles.headerRowRTL]}>
+            <View style={[styles.headerRow]}>
                 <View style={isRTL && { alignItems: 'flex-end' }}>
                     <Text style={[styles.pageTitle, isRTL && styles.textRTL]}>{t("admin.reelsManagement", "Reels")}</Text>
                     <Text style={[styles.pageSubtitle, isRTL && styles.textRTL]}>{reels.length} {t("admin.manageReels.totalReels", "Total Reels")}</Text>
                 </View>
                 <TouchableOpacity
-                    style={[styles.createBtn, isRTL && styles.createBtnRTL]}
+                    style={[styles.createBtn]}
                     onPress={() => setIsModalVisible(true)}
                 >
                     <Ionicons name="add" size={24} color="white" />
@@ -509,7 +473,7 @@ export default function AdminReelsPage() {
                         onChangeText={setNewDesc}
                     />
 
-                    <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+                    <View style={[styles.modalButtons]}>
                         <TouchableOpacity onPress={() => {
                             setIsModalVisible(false);
                             setNewVideoUrl('');
@@ -539,9 +503,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         elevation: 2
     },
-    analyticsContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     statBox: { alignItems: 'center' },
     statValue: { fontSize: 20, fontWeight: 'bold', color: '#333' },
     statLabel: { fontSize: 12, color: '#666' },
@@ -554,9 +516,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#e2e8f0',
     },
-    headerRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     pageTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -583,9 +543,7 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         marginStart: 6,
     },
-    createBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     createBtnTextRTL: {
         marginStart: 0,
         marginEnd: 6,
@@ -600,9 +558,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         alignItems: 'center'
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     thumbnail: {
         width: 50, 
         height: 80, 
@@ -658,9 +614,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 4,
     },
-    statusRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     rowStatus: { fontSize: 12, color: 'blue' },
     videoTypeLabel: {
         fontSize: 11,
@@ -738,7 +692,7 @@ const styles = StyleSheet.create({
         color: '#007AFF',
     },
     modalButtons: { flexDirection: 'row', justifyContent: 'flex-end', gap: 10, marginTop: 10 },
-    modalButtonsRTL: { flexDirection: 'row-reverse' },
+
     cancelBtn: { padding: 15 },
     submitBtn: { backgroundColor: '#007AFF', padding: 15, borderRadius: 8 }
 });

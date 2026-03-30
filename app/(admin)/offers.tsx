@@ -99,13 +99,13 @@ export default function AdminOffers() {
         <View style={styles.container}>
             <Stack.Screen options={{ title: t("admin.manageOffers.title"), headerBackTitle: t("common.back") }} />
 
-            <View style={[styles.headerRow, isRTL && styles.headerRowRTL]}>
+            <View style={[styles.headerRow]}>
                 <View style={isRTL && { alignItems: 'flex-end' }}>
                     <Text style={[styles.pageTitle, isRTL && styles.textRTL]}>{t("admin.manageOffers.title")}</Text>
                     <Text style={[styles.pageSubtitle, isRTL && styles.textRTL]}>{offers.length} {t("admin.manageOffers.activeOffers")}</Text>
                 </View>
                 <TouchableOpacity
-                    style={[styles.createBtn, isRTL && styles.createBtnRTL]}
+                    style={[styles.createBtn]}
                     onPress={() => router.push("/(admin)/offers/create")}
                 >
                     <Ionicons name="add" size={24} color="white" />
@@ -228,12 +228,12 @@ function OfferCard({ offer, onDelete, onEdit }: any) {
     };
 
     return (
-        <View style={[styles.card, isRTL && styles.cardRTL]}>
+        <View style={[styles.card]}>
             <Image source={{ uri: offer.image_url }} style={[styles.offerImage, isRTL && styles.offerImageRTL]} />
             <View style={[styles.cardContent, isRTL && styles.cardContentRTL]}>
-                <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+                <View style={[styles.cardHeader]}>
                     <Text style={[styles.offerTitle, isRTL && styles.textRTL]} numberOfLines={1}>{isRTL ? (offer.title_ar || offer.title_en) : offer.title_en}</Text>
-                    <View style={[styles.actionsContainer, isRTL && styles.actionsContainerRTL]}>
+                    <View style={[styles.actionsContainer]}>
                         <TouchableOpacity onPress={onEdit}>
                             <Ionicons name="create-outline" size={20} color={COLORS.primary} />
                         </TouchableOpacity>
@@ -247,7 +247,7 @@ function OfferCard({ offer, onDelete, onEdit }: any) {
                 </View>
                 <Text style={[styles.offerDest, isRTL && styles.textRTL]}>{offer.destination}</Text>
 
-                <View style={[styles.priceRow, isRTL && styles.priceRowRTL]}>
+                <View style={[styles.priceRow]}>
                     {offer.original_price > offer.discounted_price && (
                         <Text style={[styles.originalPrice, isRTL && styles.textRTL]}>{offer.original_price}</Text>
                     )}
@@ -375,32 +375,17 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     // RTL Styles
-    headerRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     textRTL: {
         textAlign: 'right',
     },
-    createBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
-    cardRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     offerImageRTL: {
     },
     cardContentRTL: {
         alignItems: 'flex-end',
     },
-    cardHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
-    actionsContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
-    priceRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     pill: {
         paddingHorizontal: 16,
         paddingVertical: 6,

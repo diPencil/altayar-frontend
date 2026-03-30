@@ -40,7 +40,7 @@
       "usd": "دولار",
       "sar": "ريال",
       "eur": "يورو",
-      "egp": "جنية",
+      "egp": "جنيه",
       "pts": "نقطة"
     },
     "time": {
@@ -214,10 +214,10 @@
     "closeSymbol": "✕",
     "maxValue": "(الحد الأقصى: {{value}})",
     "loading": "جاري التحميل...",
-    "restartRequiredTitle": "مطلوب إعادة التشغيل",
-    "restartRequiredBody": "لتطبيق اتجاه الكتابة بشكل صحيح، يرجى إعادة تشغيل التطبيق.",
+    "restartRequiredTitle": "تغيير اتجاه التطبيق",
+    "restartRequiredBody": "لتطبيق اتجاه الكتابة بشكل صحيح، يرجى إغلاق التطبيق تماماً من قائمة التطبيقات المفتوحة ثم إعادة فتحه.",
     "restartNow": "إعادة التشغيل الآن",
-    "restartLater": "لاحقًا",
+    "restartLater": "حسناً، سأغلق التطبيق",
     "notificationsLabel": "الإشعارات",
     "notifications": {
       "title": "الإشعارات",
@@ -564,6 +564,9 @@
         "sendVoucher": "إرسال قسيمة",
         "broadcast": "بث"
       }
+    },
+    "orders": {
+      "searchPlaceholder": "ابحث برقم الطلب أو الاسم أو الهاتف..."
     },
     "chat": {
       "myChats": "محادثاتي",
@@ -948,6 +951,8 @@
     "usernameImmutable": "لا يمكن تغيير اسم المستخدم",
     "emailImmutable": "لا يمكن تغيير البريد الإلكتروني",
     "updateSuccess": "تم تحديث البيانات بنجاح",
+    "avatarUploadError": "تعذر رفع الصورة. تم حفظ ملفك دون تغيير الصورة.",
+    "photoLibraryPermission": "يُرجى السماح بالوصول إلى مكتبة الصور لاختيار صورة الملف الشخصي.",
     "updateError": "فشل في تحديث البيانات",
     "saveChanges": "حفظ التغييرات",
     "selectAppLanguage": "اختر لغة التطبيق",
@@ -1490,9 +1495,45 @@
         "unpaid": "غير مدفوع",
         "failed": "فشل",
         "expired": "منتهي"
+      },
+      "paymentType": {
+        "order": "طلب",
+        "booking": "حجز",
+        "subscription": "اشتراك",
+        "membership": "عضوية",
+        "invoice": "فاتورة",
+        "refund": "استرداد",
+        "wallet": "محفظة",
+        "adjustment": "تعديل",
+        "package": "باقة",
+        "discount": "خصم",
+        "other": "أخرى"
+      },
+      "paymentSource": {
+        "payment": "دفع",
+        "wallet": "محفظة",
+        "admin": "إدارة",
+        "system": "النظام",
+        "order": "مزود من طلب",
+        "booking": "مزود من حجز",
+        "refund": "استرداد",
+        "other": "أخرى"
+      },
+      "methodLabels": {
+        "cash": "نقدي",
+        "card": "بطاقة",
+        "stripe": "بطاقة (سترايب)",
+        "paypal": "باي بال",
+        "bank_transfer": "تحويل بنكي",
+        "free": "مجاني",
+        "n/a": "غير متوفر",
+        "na": "غير متوفر"
       }
     },
     "dashboard": {
+      "hello": "مرحباً",
+      "brandAccountName": "AltayarVIP",
+      "fallbackName": "مدير",
       "dashboard": "لوحة التحكم",
       "recentActivity": "أحدث النشاطات",
       "allMemberships": "جميع العضويات",
@@ -2473,7 +2514,8 @@
       "broadcast": "بث للجميع",
       "sendDiscount": "إرسال خصم",
       "sendOffer": "إرسال عرض",
-      "sendVoucher": "إرسال قسيمة"
+      "sendVoucher": "إرسال قسيمة",
+      "voucherHintShort": "قسيمة مميزة"
     },
     "recentActivity": "النشاط الأخير",
     "subtitle": "أنشئ وأدر حملاتك"
@@ -2573,7 +2615,8 @@
     "notConfirmed": {
       "title": "لم يتم تأكيد الدفع",
       "subtitle": "قد تكون العملية فشلت أو لم تصلنا نتيجة الدفع بعد."
-    }
+    },
+    "secureCheckout": "دفع آمن"
   },
   "membership": {
     "active": "نشط",

@@ -97,7 +97,7 @@ export default function BookingDetailsScreen() {
             // Manual Booking (No Invoice) - Pay directly via booking
             try {
                 setPaying(true);
-                const res = await bookingsApi.payBooking(booking.id as string, 1, saveCard);
+                const res = await bookingsApi.payBooking(booking.id as string, 2, saveCard);
                 if (res.payment_url) {
                     router.push({
                         pathname: '/(user)/payment/[paymentId]',
@@ -161,7 +161,7 @@ export default function BookingDetailsScreen() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.headerBtn}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -177,7 +177,7 @@ export default function BookingDetailsScreen() {
             >
                 {/* Status Card */}
                 <View style={styles.card}>
-                    <View style={[styles.statusHeader, isRTL && styles.statusHeaderRTL]}>
+                    <View style={[styles.statusHeader]}>
                         <View>
                             <Text style={[styles.bookingNumber, isRTL && styles.textRTL]}>{booking.booking_number}</Text>
                             <Text style={[styles.bookingDate, isRTL && styles.textRTL]}>{new Date(booking.created_at).toLocaleDateString()}</Text>
@@ -189,7 +189,7 @@ export default function BookingDetailsScreen() {
 
                     <View style={styles.divider} />
 
-                    <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+                    <View style={[styles.infoRow]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("bookings.paymentStatus") || "Payment Status"}:</Text>
                         <Text style={[
                             styles.value,
@@ -205,7 +205,7 @@ export default function BookingDetailsScreen() {
                 <View style={styles.card}>
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{isRTL ? booking.title_ar : booking.title_en}</Text>
 
-                    <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
+                    <View style={[styles.detailItem]}>
                         <Ionicons name="calendar-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                         <View>
                             <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.dates") || "Dates"}</Text>
@@ -215,7 +215,7 @@ export default function BookingDetailsScreen() {
                         </View>
                     </View>
 
-                    <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
+                    <View style={[styles.detailItem]}>
                         <Ionicons name="people-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                         <View>
                             <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.guests") || "Guests"}</Text>
@@ -224,7 +224,7 @@ export default function BookingDetailsScreen() {
                     </View>
 
                     {booking.booking_type && (
-                        <View style={[styles.detailItem, isRTL && styles.detailItemRTL]}>
+                        <View style={[styles.detailItem]}>
                             <Ionicons name="pricetag-outline" size={20} color={COLORS.primary} style={[styles.icon, isRTL ? { marginStart: 12, marginEnd: 0 } : { marginEnd: 12, marginStart: 0 }]} />
                             <View>
                                 <Text style={[styles.detailLabel, isRTL && styles.textRTL]}>{t("bookings.type") || "Type"}</Text>
@@ -239,7 +239,7 @@ export default function BookingDetailsScreen() {
                     <View style={styles.card}>
                         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("bookings.items") || "Items"}</Text>
                         {booking.items.map((item, idx) => (
-                            <View key={idx} style={[styles.itemRow, isRTL && styles.itemRowRTL]}>
+                            <View key={idx} style={[styles.itemRow]}>
                                 <View style={{ flex: 1 }}>
                                     <Text style={[styles.itemDesc, isRTL && styles.textRTL]}>{isRTL ? item.description_ar : item.description_en}</Text>
                                     <Text style={[styles.itemQty, isRTL && styles.textRTL]}>
@@ -254,7 +254,7 @@ export default function BookingDetailsScreen() {
 
                         <View style={styles.divider} />
 
-                        <View style={[styles.totalRow, isRTL && styles.totalRowRTL]}>
+                        <View style={[styles.totalRow]}>
                             <Text style={styles.totalLabel}>{t("bookings.total") || "Total"}</Text>
                             <Text style={styles.totalValue}>
                                 {formatCurrency(booking.total_amount, booking.currency, language === 'ar' ? 'ar-EG' : 'en-US')}
@@ -276,7 +276,7 @@ export default function BookingDetailsScreen() {
             {/* Footer / Actions */}
             {(booking.payment_status === 'UNPAID' || booking.payment_status === 'PARTIAL_PAID') && (
                 <View style={[styles.footer, { paddingBottom: 20, marginBottom: 85 }]}>
-                    <View style={[styles.saveCardContainer, isRTL && { flexDirection: 'row-reverse' }]}>
+                    <View style={[styles.saveCardContainer]}>
                         <TouchableOpacity
                             style={[styles.checkbox, saveCard && styles.checkboxChecked]}
                             onPress={() => setSaveCard(!saveCard)}
@@ -346,9 +346,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     headerBtn: {
         padding: 8,
     },
@@ -401,9 +399,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
     },
-    statusHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     bookingNumber: {
         fontSize: 16,
         fontWeight: 'bold',
@@ -437,9 +433,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    infoRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     label: {
         fontSize: 14,
         color: COLORS.textLight,
@@ -460,9 +454,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 12,
     },
-    detailItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
 
     detailLabel: {
         fontSize: 12,
@@ -481,9 +473,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f1f5f9',
     },
-    itemRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     itemDesc: {
         fontSize: 14,
         color: COLORS.text,
@@ -503,9 +493,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         alignItems: 'center',
     },
-    totalRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     totalLabel: {
         fontSize: 16,
         fontWeight: 'bold',

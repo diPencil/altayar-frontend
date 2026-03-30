@@ -277,11 +277,11 @@ export default function BookingDetails() {
                 <ScrollView contentContainerStyle={styles.scrollContent}>
                     {/* Header Card */}
                     <View style={[styles.card, isRTL && styles.cardRTL]}>
-                        <View style={[styles.row, isRTL && styles.rowRTL]}>
+                        <View style={[styles.row]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.orderDate')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{new Date(created_at).toLocaleDateString()}</Text>
                         </View>
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.status')}</Text>
                             <View style={[styles.badge, { backgroundColor: statusColor + '20' }]}>
                                 <Text style={[styles.badgeText, { color: statusColor }]}>{t(`common.statuses.${status}`)}</Text>
@@ -289,7 +289,7 @@ export default function BookingDetails() {
                         </View>
 
                         {/* Status Change Buttons */}
-                        <View style={[styles.actionButtons, isRTL && styles.actionButtonsRTL]}>
+                        <View style={[styles.actionButtons]}>
                             {status === 'PENDING' && (
                                 <TouchableOpacity style={[styles.actionBtn, { backgroundColor: COLORS.success }]} onPress={() => handleChangeStatus('CONFIRMED')}>
                                     <Ionicons name="checkmark-circle" size={18} color="#fff" />
@@ -316,12 +316,12 @@ export default function BookingDetails() {
                         <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.customer')}</Text>
                     </View>
                     <View style={[styles.card, isRTL && styles.cardRTL]}>
-                        <View style={[styles.row, isRTL && styles.rowRTL]}>
+                        <View style={[styles.row]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.name')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{customer_name}</Text>
                         </View>
                         {bookingData.membership_id && (
-                            <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                            <View style={[styles.row, { marginTop: 8 }]}>
                                 <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.memberId')}</Text>
                                 <Text style={[styles.value, isRTL && styles.textRTL]}>{bookingData.membership_id}</Text>
                             </View>
@@ -334,19 +334,19 @@ export default function BookingDetails() {
                         <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.bookingDetails')}</Text>
                     </View>
                     <View style={[styles.card, isRTL && styles.cardRTL]}>
-                        <View style={[styles.row, isRTL && styles.rowRTL]}>
+                        <View style={[styles.row]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.bookingType')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{t(`admin.bookings.types.${bookingData.booking_type?.toLowerCase()}`) || bookingData.booking_type}</Text>
                         </View>
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.destination')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{isRTL ? bookingData.title_ar : bookingData.title_en}</Text>
                         </View>
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.dates')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{bookingData.start_date} → {bookingData.end_date}</Text>
                         </View>
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.numPersons')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{bookingData.guest_count}</Text>
                         </View>
@@ -354,12 +354,12 @@ export default function BookingDetails() {
 
                     {/* Financials */}
                     <View style={[styles.card, isRTL && styles.cardRTL, { marginTop: 20 }]}>
-                        <View style={[styles.row, isRTL && styles.rowRTL]}>
+                        <View style={[styles.row]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.originalPrice')}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>{bookingData.subtotal} {bookingData.currency}</Text>
                         </View>
                         {bookingData.discount_amount > 0 && (
-                            <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                            <View style={[styles.row, { marginTop: 8 }]}>
                                 <Text style={[styles.label, { color: COLORS.success }, isRTL && styles.labelRTL]}>{t('admin.bookings.discount')}</Text>
                                 <Text style={[styles.value, { color: COLORS.success }, isRTL && styles.textRTL]}>
                                     {t("common.amountNegative", { amount: `${bookingData.discount_amount} ${bookingData.currency}` })}
@@ -367,12 +367,12 @@ export default function BookingDetails() {
                             </View>
                         )}
                         <View style={[styles.divider, { marginVertical: 12 }]} />
-                        <View style={[styles.row, isRTL && styles.rowRTL]}>
+                        <View style={[styles.row]}>
                             <Text style={[styles.totalLabel, isRTL && styles.totalLabelRTL]}>{t('admin.bookings.finalPrice')}</Text>
                             <Text style={[styles.totalValue, isRTL && styles.textRTL]}>{bookingData.total_amount} {bookingData.currency}</Text>
                         </View>
 
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 16 }]}>
+                        <View style={[styles.row, { marginTop: 16 }]}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.paymentStatus')}</Text>
                             <View style={[styles.badge, {
                                 backgroundColor: payment_status === 'PAID' ? COLORS.success + '20' : COLORS.warning + '20'
@@ -410,7 +410,7 @@ export default function BookingDetails() {
         <View style={styles.container}>
             <Stack.Screen options={{
                 title: t("admin.bookings.edit"),
-                headerBackTitle: "Back",
+                headerBackTitle: t("common.back"),
                 headerRight: undefined
             }} />
 
@@ -425,7 +425,7 @@ export default function BookingDetails() {
                 {/* Step 1: User (Read Only) */}
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.customer')}</Text>
-                    <View style={[styles.userSelector, isRTL && styles.userSelectorRTL, { backgroundColor: '#f8fafc', paddingHorizontal: 8, borderRadius: 8, borderBottomWidth: 0 }]}>
+                    <View style={[styles.userSelector, { backgroundColor: '#f8fafc', paddingHorizontal: 8, borderRadius: 8, borderBottomWidth: 0 }]}>
                         {selectedUser ? (
                             <View>
                                 <Text style={[styles.userName, isRTL && { textAlign: 'right' }]}>{selectedUser.first_name} {selectedUser.last_name}</Text>
@@ -441,7 +441,7 @@ export default function BookingDetails() {
 
                     {/* Booking Type */}
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.bookingType')}</Text>
-                    <View style={[styles.typeRow, isRTL && styles.typeRowRTL]}>
+                    <View style={[styles.typeRow]}>
                         {['TRIP', 'HOTEL', 'FLIGHT', 'PACKAGE', 'OFFER', 'CUSTOM'].map((type) => (
                             <TouchableOpacity
                                 key={type}
@@ -471,7 +471,7 @@ export default function BookingDetails() {
                     />
 
                     {/* Dates */}
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <View style={{ flex: 1 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.startDate')}</Text>
                             {Platform.OS === 'web' ? (
@@ -485,7 +485,7 @@ export default function BookingDetails() {
                                 />
                             ) : (
                                 <TouchableOpacity
-                                    style={[styles.dateBtn, isRTL && styles.dateBtnRTL]}
+                                    style={[styles.dateBtn]}
                                     onPress={() => setShowStartPicker(true)}
                                 >
                                     <Text style={styles.dateText}>{startDate}</Text>
@@ -506,7 +506,7 @@ export default function BookingDetails() {
                                 />
                             ) : (
                                 <TouchableOpacity
-                                    style={[styles.dateBtn, isRTL && styles.dateBtnRTL]}
+                                    style={[styles.dateBtn]}
                                     onPress={() => setShowEndPicker(true)}
                                 >
                                     <Text style={styles.dateText}>{endDate}</Text>
@@ -538,7 +538,7 @@ export default function BookingDetails() {
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.pricing')}</Text>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <View style={{ flex: 1 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.originalPrice')}</Text>
                             <TextInput
@@ -572,13 +572,13 @@ export default function BookingDetails() {
                         keyboardType="numeric"
                     />
 
-                    <View style={[styles.finalPriceRow, isRTL && styles.finalPriceRowRTL]}>
+                    <View style={[styles.finalPriceRow]}>
                         <Text style={styles.finalPriceLabel}>{t('admin.bookings.finalPrice')}:</Text>
                         <Text style={styles.finalPriceValue}>{calculateFinalPrice().final.toFixed(2)} {currency}</Text>
                     </View>
 
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.paymentStatus')}</Text>
-                    <View style={[styles.typeRow, isRTL && styles.typeRowRTL]}>
+                    <View style={[styles.typeRow]}>
                         {['PAID', 'UNPAID', 'PARTIAL'].map((status) => (
                             <TouchableOpacity
                                 key={status}
@@ -663,7 +663,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     userSelector: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: COLORS.border },
-    userSelectorRTL: { flexDirection: "row-reverse" },
+
     userName: { fontSize: 16, fontWeight: "600", color: COLORS.text },
     userEmail: { fontSize: 12, color: COLORS.textLight },
     label: { fontSize: 14, fontWeight: "500", color: COLORS.textLight, marginTop: 4, marginBottom: 2 },
@@ -672,18 +672,18 @@ const styles = StyleSheet.create({
     input: { backgroundColor: "#f8fafc", borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 14, color: COLORS.text, textAlign: 'auto' },
     inputRTL: { textAlign: 'right' },
     row: { flexDirection: "row", gap: 12, alignItems: 'center', justifyContent: 'space-between' },
-    rowRTL: { flexDirection: "row-reverse" },
+
     typeRow: { flexDirection: "row", flexWrap: "wrap" },
-    typeRowRTL: { flexDirection: "row-reverse" },
+
     typeBtn: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: COLORS.border, backgroundColor: "#fff" },
     typeBtnActive: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
     typeBtnText: { fontSize: 12, color: COLORS.textLight },
     typeBtnTextActive: { color: "#fff", fontWeight: "600" },
     dateBtn: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#f8fafc", borderWidth: 1, borderColor: COLORS.border, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10 },
-    dateBtnRTL: { flexDirection: "row-reverse" },
+
     dateText: { fontSize: 14, color: COLORS.text },
     finalPriceRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 16, paddingTop: 16, borderTopWidth: 1, borderTopColor: COLORS.border },
-    finalPriceRowRTL: { flexDirection: "row-reverse" },
+
     finalPriceLabel: { fontSize: 16, fontWeight: "bold", color: COLORS.text },
     finalPriceValue: { fontSize: 18, fontWeight: "bold", color: COLORS.success },
     submitBtn: { backgroundColor: COLORS.primary, borderRadius: 12, paddingVertical: 14, alignItems: "center", marginTop: 24 },
@@ -697,7 +697,7 @@ const styles = StyleSheet.create({
     totalLabelRTL: { textAlign: 'right' },
     totalValue: { fontSize: 18, fontWeight: 'bold', color: COLORS.primary },
     actionButtons: { flexDirection: 'row', gap: 8, marginTop: 16 },
-    actionButtonsRTL: { flexDirection: 'row-reverse' },
+
     actionBtn: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 12, borderRadius: 8, gap: 4 },
     actionBtnText: { color: '#fff', fontWeight: '600', fontSize: 14 }
 });

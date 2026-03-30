@@ -10,6 +10,7 @@ import { offersApi, Offer } from "../../src/services/api";
 import { isMembershipActive } from "../../src/utils/membership";
 import { LinearGradient } from "expo-linear-gradient";
 import { MembershipRequiredModal } from "../../src/components/MembershipRequiredModal";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
   primary: "#1071b8",
@@ -79,7 +80,7 @@ export default function OfferCheckoutScreen() {
       offerTitle: title,
       price,
       currency,
-      defaultValue: `Hello Altayar, I want to book this offer: ${title}. Price: ${price} ${currency}.`,
+      defaultValue: `Hello Altayar, I want to book this offer: ${title}. Price: ${price} ${currencyLabel}.`,
     });
 
     router.push({
@@ -143,7 +144,7 @@ export default function OfferCheckoutScreen() {
         onClose={() => setMembershipModalVisible(false)}
       />
 
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -166,7 +167,7 @@ export default function OfferCheckoutScreen() {
       ) : (
         <View style={styles.body}>
           <View style={[styles.cartCard, isRTL && styles.cartCardRTL]}>
-            <View style={[styles.cartRow, isRTL && styles.cartRowRTL]}>
+            <View style={[styles.cartRow]}>
               <View style={styles.cartIcon}>
                 <Ionicons name="pricetag" size={18} color={COLORS.primary} />
               </View>
@@ -182,12 +183,12 @@ export default function OfferCheckoutScreen() {
 
             <View style={styles.divider} />
 
-            <View style={[styles.totalRow, isRTL && styles.totalRowRTL]}>
+            <View style={[styles.totalRow]}>
               <Text style={[styles.totalLabel, isRTL && styles.textRTL]}>
                 {t("common.total", "Total")}
               </Text>
               <Text style={styles.totalValue}>
-                {price} {currency}
+                {price} {formatCurrencyLabel(currency || "USD", t)}
               </Text>
             </View>
           </View>
@@ -201,7 +202,7 @@ export default function OfferCheckoutScreen() {
             </Text>
 
             <TouchableOpacity
-              style={[styles.primaryBtn, isRTL && styles.primaryBtnRTL]}
+              style={[styles.primaryBtn]}
               onPress={proceedToPayment}
               disabled={paying}
               activeOpacity={0.85}
@@ -219,7 +220,7 @@ export default function OfferCheckoutScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.secondaryBtn, isRTL && styles.secondaryBtnRTL]}
+              style={[styles.secondaryBtn]}
               onPress={goToChat}
               activeOpacity={0.85}
             >
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: { flexDirection: "row-reverse" },
+
   backBtn: { padding: 6 },
   headerTitle: { fontSize: 16, fontWeight: "900", color: COLORS.text },
   errorText: { color: COLORS.textLight, fontWeight: "700" },
@@ -261,9 +262,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  cartCardRTL: { alignItems: "flex-end" },
+  cartCardRTL: { alignItems: "flex-start" },
   cartRow: { flexDirection: "row", gap: 12, alignItems: "center" },
-  cartRowRTL: { flexDirection: "row-reverse" },
+
   cartIcon: {
     width: 40,
     height: 40,
@@ -277,7 +278,7 @@ const styles = StyleSheet.create({
   cartSub: { marginTop: 4, fontSize: 12, color: COLORS.textLight, fontWeight: "700" },
   divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 14 },
   totalRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-  totalRowRTL: { flexDirection: "row-reverse" },
+
   totalLabel: { fontSize: 13, color: COLORS.textLight, fontWeight: "800" },
   totalValue: { fontSize: 16, color: COLORS.text, fontWeight: "900" },
 
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  primaryBtnRTL: { flexDirection: "row-reverse" },
+
   primaryBtnText: { color: "#fff", fontWeight: "900" },
 
   secondaryBtn: {
@@ -317,7 +318,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  secondaryBtnRTL: { flexDirection: "row-reverse" },
+
   secondaryBtnText: { color: "#0e7490", fontWeight: "900" },
 });
 

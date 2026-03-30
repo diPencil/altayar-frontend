@@ -60,7 +60,7 @@ export default function AdminReports() {
 
             {stats && (
                 <>
-                    <View style={[styles.grid, isRTL && styles.gridRTL]}>
+                    <View style={[styles.grid]}>
                         <StatCard
                             title={t("admin.manageReports.totalRevenue")}
                             value={`${stats.revenue?.total?.toLocaleString()} ${t("common.currency.usd")}`}
@@ -116,7 +116,7 @@ function StatCard({ title, value, change, icon, color, isRTL }: any) {
             <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{title}</Text>
             <Text style={[styles.statValue, isRTL && styles.textRTL]}>{value}</Text>
             {change !== undefined && (
-                <View style={[styles.changeBadge, { backgroundColor: change >= 0 ? `${COLORS.success}15` : `${COLORS.error}15` }, isRTL && styles.changeBadgeRTL]}>
+                <View style={[styles.changeBadge, { backgroundColor: change >= 0 ? `${COLORS.success}15` : `${COLORS.error}15` }]}>
                     <Ionicons name={change >= 0 ? "arrow-up" : "arrow-down"} size={12} color={change >= 0 ? COLORS.success : COLORS.error} />
                     <Text style={[styles.changeText, { color: change >= 0 ? COLORS.success : COLORS.error }]}>
                         {Math.abs(change)}%
@@ -218,18 +218,14 @@ const styles = StyleSheet.create({
     textRTL: {
         textAlign: 'right',
     },
-    gridRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     statCardRTL: {
         alignItems: 'flex-end',
     },
     iconBoxRTL: {
         // alignSelf if needed
     },
-    changeBadgeRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     cardRTL: {
         alignItems: 'flex-end',
     }

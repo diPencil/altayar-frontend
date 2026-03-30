@@ -84,11 +84,11 @@ export default function EmployeeOrderDetails() {
             <ScrollView contentContainerStyle={styles.content}>
                 {/* Header Card - Payment Status */}
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("orders.orderDate")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>{new Date(order.created_at).toLocaleDateString()}</Text>
                     </View>
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                    <View style={[styles.row, { marginTop: 8 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.paymentStatus")}</Text>
                         {order.is_free ? (
                             <View style={[styles.badge, { backgroundColor: COLORS.success + '20' }]}>
@@ -109,13 +109,13 @@ export default function EmployeeOrderDetails() {
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("common.customerInfo")}</Text>
                 </View>
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.name")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>
                             {user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || user.username || 'Unknown' : 'Unknown'}
                         </Text>
                     </View>
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                    <View style={[styles.row, { marginTop: 8 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.email")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>{user?.email || "-"}</Text>
                     </View>
@@ -127,7 +127,7 @@ export default function EmployeeOrderDetails() {
                 </View>
                 <View style={[styles.card, isRTL && styles.cardRTL]}>
                     {items && items.map((item: any, index: number) => (
-                        <View key={index} style={[styles.itemRow, isRTL && styles.itemRowRTL, index !== items.length - 1 && styles.borderBottom]}>
+                        <View key={index} style={[styles.itemRow, index !== items.length - 1 && styles.borderBottom]}>
                             <View style={{ flex: 1 }}>
                                 <Text style={[styles.itemTitle, isRTL && styles.textRTL]}>{isRTL && item.description_ar ? item.description_ar : item.description_en || item.description}</Text>
                                 {item.description ? <Text style={[styles.itemDesc, isRTL && styles.textRTL]}>{item.description}</Text> : null}
@@ -142,13 +142,13 @@ export default function EmployeeOrderDetails() {
 
                 {/* Totals */}
                 <View style={[styles.card, isRTL && styles.cardRTL, { marginTop: 20 }]}>
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.manageInvoices.subtotal")}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL]}>{order.subtotal || order.total_amount} {currency}</Text>
                     </View>
 
                     {order.tax_amount > 0 && (
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.manageInvoices.tax")}</Text>
                             <Text style={[styles.value, isRTL && styles.textRTL]}>
                                 {t("common.amountPositive", { amount: `${order.tax_amount} ${currency}` })}
@@ -157,7 +157,7 @@ export default function EmployeeOrderDetails() {
                     )}
 
                     {order.discount_amount > 0 && (
-                        <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 8 }]}>
+                        <View style={[styles.row, { marginTop: 8 }]}>
                             <Text style={[styles.label, { color: COLORS.success }, isRTL && styles.textRTL]}>{t("common.discount")}</Text>
                             <Text style={[styles.value, { color: COLORS.success }, isRTL && styles.textRTL]}>
                                 {t("common.amountNegative", { amount: `${order.discount_amount} ${currency}` })}
@@ -167,7 +167,7 @@ export default function EmployeeOrderDetails() {
 
                     <View style={[styles.divider, { marginVertical: 12 }]} />
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.totalLabel, isRTL && styles.textRTL]}>{t("orders.total")}</Text>
                         <Text style={[styles.totalValue, isRTL && styles.textRTL]}>{order.total_amount} {currency}</Text>
                     </View>
@@ -175,7 +175,7 @@ export default function EmployeeOrderDetails() {
 
                 {/* Back Button */}
                 <TouchableOpacity
-                    style={[styles.backButtonFull, isRTL && { flexDirection: 'row-reverse' }]}
+                    style={[styles.backButtonFull]}
                     onPress={handleGoBack}
                 >
                     <Ionicons
@@ -236,9 +236,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     label: {
         fontSize: 14,
         color: COLORS.textLight,
@@ -274,9 +272,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 12,
     },
-    itemRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     itemTitle: {
         fontSize: 14,
         fontWeight: '600',

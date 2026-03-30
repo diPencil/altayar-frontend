@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { adminApi, ordersApi } from "../../src/services/api";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
     primary: "#1071b8",
@@ -55,7 +56,7 @@ export default function AdminOrders() {
             <Stack.Screen options={{ title: t("admin.manageOrders.title"), headerBackTitle: t("common.back") }} />
 
             {/* Header Actions */}
-            <View style={[styles.headerRow, isRTL && styles.headerRowRTL]}>
+            <View style={[styles.headerRow]}>
                 <View style={isRTL && { alignItems: 'flex-end' }}>
                     <Text style={[styles.pageTitle, isRTL && styles.textRTL]}>{t("admin.manageOrders.title")}</Text>
                     <Text style={[styles.pageSubtitle, isRTL && styles.textRTL]}>{orders.length} {t("admin.manageOrders.totalOrders")}</Text>
@@ -70,7 +71,7 @@ export default function AdminOrders() {
             </View>
 
             {/* Search Bar */}
-            <View style={[styles.searchContainer, isRTL && styles.rowRTL]}>
+            <View style={[styles.searchContainer]}>
                 <Ionicons name="search" size={20} color={COLORS.textLight} style={{ marginHorizontal: 8 }} />
                 <TextInput
                     style={[styles.searchInput, isRTL && styles.textRTL]}
@@ -134,7 +135,7 @@ function OrderCard({ order }: any) {
 
     return (
         <TouchableOpacity style={[styles.card, isRTL && styles.cardRTL]} onPress={() => router.push(`/(admin)/orders/${order.id}` as any)}>
-            <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+            <View style={[styles.cardHeader]}>
                 <View style={{ flex: 1 }}>
                     <Text style={[styles.orderNumber, isRTL && styles.textRTL]}>{order.order_number}</Text>
                 </View>
@@ -155,17 +156,19 @@ function OrderCard({ order }: any) {
             <View style={styles.divider} />
 
             <View style={[styles.cardBody, isRTL && styles.cardBodyRTL]}>
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.manageOrders.customer")}:</Text>
                     <Text style={[styles.value, isRTL && styles.textRTL]}>
                         {order.user ? `${order.user.first_name || ''} ${order.user.last_name || ''}`.trim() || order.user.username : (order.user_id ? `${t("common.user")} ${order.user_id.substring(0, 6)}` : t("common.unknown") || "Unknown")}
                     </Text>
                 </View>
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.manageOrders.total")}:</Text>
-                    <Text style={[styles.amount, isRTL && styles.textRTL]}>{order.total_amount} {t(`common.currency.${order.currency?.toLowerCase()}`) || order.currency}</Text>
+                    <Text style={[styles.amount, isRTL && styles.textRTL]}>
+                        {order.total_amount} {formatCurrencyLabel(order.currency, t)}
+                    </Text>
                 </View>
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.textRTL]}>{t("admin.manageOrders.date")}:</Text>
                     <Text style={[styles.value, isRTL && styles.textRTL]}>{new Date(order.created_at).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}</Text>
                 </View>
@@ -291,24 +294,18 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     // RTL Styles
-    headerRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     textRTL: {
         textAlign: 'right',
     },
     cardRTL: {
         alignItems: 'stretch',
     },
-    cardHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     cardBodyRTL: {
         alignItems: 'stretch',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',

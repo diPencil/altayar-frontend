@@ -167,7 +167,7 @@ export default function MemberCardScreen() {
             <View style={styles.container}>
                 <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
                     {/* Header */}
-                    <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+                    <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                             <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                         </TouchableOpacity>
@@ -183,7 +183,7 @@ export default function MemberCardScreen() {
                             style={styles.membershipCard}
                         >
                             <View style={styles.cardContent}>
-                                <View style={[styles.profileHeaderRow, isRTL && styles.profileHeaderRowRTL]}>
+                                <View style={[styles.profileHeaderRow]}>
                                     <View style={styles.avatarSection}>
                                         <View style={styles.avatarPlaceholder}>
                                             <Ionicons name="lock-closed" size={35} color="rgba(255,255,255,0.9)" />
@@ -236,7 +236,7 @@ export default function MemberCardScreen() {
             <ScrollView showsVerticalScrollIndicator={false} style={styles.scrollView}>
 
                 {/* Header */}
-                <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+                <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                     <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                         <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                     </TouchableOpacity>
@@ -257,7 +257,7 @@ export default function MemberCardScreen() {
                         {/* Card Content - Modern Layout */}
                         <View style={styles.cardContent}>
                             {/* Profile Header Row */}
-                            <View style={[styles.profileHeaderRow, isRTL && styles.profileHeaderRowRTL]}>
+                            <View style={[styles.profileHeaderRow]}>
                                 <View style={styles.avatarSection}>
                                     {user?.avatar ? (
                                         <Image source={{ uri: user.avatar }} style={styles.avatar} />
@@ -432,9 +432,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -509,15 +507,13 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         gap: 16,
     },
-    profileHeaderRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userInfoColumn: {
         flex: 1,
         justifyContent: 'center',
     },
     userInfoColumnRTL: {
-        alignItems: 'flex-end',
+        alignItems: 'flex-start',
     },
     avatarSection: {
         // marginBottom removed

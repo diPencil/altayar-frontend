@@ -95,16 +95,19 @@ export default function EmployeeChatsScreen() {
     useEffect(() => {
         if (currentScreen === "list") {
             const interval = setInterval(() => {
-                loadConversations();
+                loadConversations({ silent: true });
             }, 5000);
 
             return () => clearInterval(interval);
         }
     }, [currentScreen, statusFilter]);
 
-    const loadConversations = async () => {
+    const loadConversations = async (options?: { silent?: boolean }) => {
+        const silent = options?.silent ?? false;
         try {
-            setIsLoading(true);
+            if (!silent) {
+                setIsLoading(true);
+            }
 
             // Use getAssigned() for employees - only shows conversations assigned to them
             const status = statusFilter !== "all" ? statusFilter.toUpperCase() : undefined;
@@ -135,7 +138,9 @@ export default function EmployeeChatsScreen() {
             console.error("Failed to load conversations:", error);
             showToast(t("employee.chat.loadError", "Failed to load conversations"), "error");
         } finally {
-            setIsLoading(false);
+            if (!silent) {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -373,14 +378,14 @@ export default function EmployeeChatsScreen() {
         <SafeAreaView style={styles.container}>
             {currentScreen === "list" ? (
                 <>
-                    <View style={[styles.header, isRTL && styles.headerRTL]}>
+                    <View style={[styles.header]}>
                         <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>
                             {t('employee.chat.myChats')}
                         </Text>
                     </View>
 
                     <View style={styles.filterContainer}>
-                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterScroll, isRTL && styles.filterScrollRTL]}>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={[styles.filterScroll]}>
                             {(['all', 'waiting', 'active', 'closed'] as const).map((filter) => (
                                 <TouchableOpacity
                                     key={filter}
@@ -404,7 +409,7 @@ export default function EmployeeChatsScreen() {
                         </ScrollView>
                     </View>
 
-                    <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL]}>
+                    <View style={[styles.searchContainer]}>
                         <Ionicons name="search" size={18} color={COLORS.textLight} style={styles.searchIcon} />
                         <TextInput
                             style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -431,7 +436,7 @@ export default function EmployeeChatsScreen() {
                             {filteredConversations.map((conversation) => (
                                 <TouchableOpacity
                                     key={conversation.id}
-                                    style={[styles.conversationItem, isRTL && styles.conversationItemRTL]}
+                                    style={[styles.conversationItem]}
                                     onPress={() => selectConversation(conversation)}
                                     activeOpacity={0.7}
                                 >
@@ -451,7 +456,7 @@ export default function EmployeeChatsScreen() {
                                     </View>
 
                                     <View style={styles.conversationContent}>
-                                        <View style={[styles.conversationTop, isRTL && styles.conversationTopRTL]}>
+                                        <View style={[styles.conversationTop]}>
                                             <Text style={[styles.conversationName, isRTL && styles.textRTL]} numberOfLines={1}>
                                                 {conversation.customer_name || t('common.user')}
                                             </Text>
@@ -460,7 +465,7 @@ export default function EmployeeChatsScreen() {
                                             </Text>
                                         </View>
 
-                                        <View style={[styles.conversationBottom, isRTL && styles.conversationBottomRTL]}>
+                                        <View style={[styles.conversationBottom]}>
                                             <Text
                                                 style={[
                                                     styles.conversationMessage,
@@ -480,7 +485,7 @@ export default function EmployeeChatsScreen() {
                                             )}
                                         </View>
 
-                                        <View style={[styles.statusRow, isRTL && styles.statusRowRTL]}>
+                                        <View style={[styles.statusRow]}>
                                             <View style={[styles.statusDot, { backgroundColor: getStatusColor(conversation.status) }, isRTL && styles.statusDotRTL]} />
                                             <Text style={[styles.statusLabel, isRTL && styles.textRTL]}>
                                                 {getStatusText(conversation.status)}
@@ -494,7 +499,7 @@ export default function EmployeeChatsScreen() {
                 </>
             ) : (
                 <>
-                    <View style={[styles.chatHeader, isRTL && styles.chatHeaderRTL]}>
+                    <View style={[styles.chatHeader]}>
                         <TouchableOpacity
                             style={styles.backBtn}
                             onPress={goBackToList}
@@ -502,7 +507,7 @@ export default function EmployeeChatsScreen() {
                             <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                         </TouchableOpacity>
 
-                        <View style={[styles.chatHeaderInfo, isRTL && styles.chatHeaderInfoRTL]}>
+                        <View style={[styles.chatHeaderInfo]}>
                             <View style={styles.avatarContainer}>
                                 {selectedConversation?.customer_avatar ? (
                                     <Image
@@ -521,7 +526,7 @@ export default function EmployeeChatsScreen() {
                                 <Text style={[styles.chatUserName, isRTL && styles.textRTL]}>
                                     {selectedConversation?.customer_name || t('common.user')}
                                 </Text>
-                                <View style={[styles.statusBadgeContainer, isRTL && styles.statusBadgeContainerRTL]}>
+                                <View style={[styles.statusBadgeContainer]}>
                                     <View style={[styles.statusDot, { backgroundColor: getStatusColor(selectedConversation?.status || 'WAITING') }]} />
                                     <Text style={[styles.chatUserStatus, isRTL && styles.textRTL]}>
                                         {getStatusText(selectedConversation?.status || 'WAITING')}
@@ -556,8 +561,6 @@ export default function EmployeeChatsScreen() {
                                 <View key={msg.id} style={[
                                     styles.messageRow,
                                     msg.sender === "employee" && styles.messageRowEmployee,
-                                    isRTL && msg.sender === "user" && styles.messageRowUserRTL,
-                                    isRTL && msg.sender === "employee" && styles.messageRowEmployeeRTL,
                                 ]}>
                                     {msg.sender === "user" && (
                                         <View style={styles.messageAvatarContainer}>
@@ -632,7 +635,7 @@ export default function EmployeeChatsScreen() {
                         })}
                     </ScrollView>
 
-                    <View style={[styles.inputArea, isRTL && styles.inputAreaRTL]}>
+                    <View style={[styles.inputArea]}>
                         <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
                             <TextInput
                                 style={[styles.input, isRTL && styles.inputRTL]}
@@ -675,17 +678,17 @@ export default function EmployeeChatsScreen() {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: COLORS.screenBg },
     header: { paddingHorizontal: 20, paddingVertical: 16, backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border },
-    headerRTL: { flexDirection: 'row-reverse' },
+
     headerTitle: { fontSize: 24, fontWeight: '700', color: COLORS.text },
     filterContainer: { backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border },
     filterScroll: { paddingHorizontal: 16, paddingVertical: 12, gap: 8 },
-    filterScrollRTL: { flexDirection: 'row-reverse' },
+
     filterTab: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: COLORS.searchBg, marginEnd: 8 },
     filterTabActive: { backgroundColor: COLORS.primary },
     filterTabText: { fontSize: 14, fontWeight: '600', color: COLORS.textLight },
     filterTabTextActive: { color: COLORS.background },
     searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.searchBg, marginHorizontal: 16, marginVertical: 12, paddingHorizontal: 12, paddingVertical: 10, borderRadius: 20, gap: 8 },
-    searchContainerRTL: { flexDirection: 'row-reverse' },
+
     searchIcon: {},
     searchInput: { flex: 1, fontSize: 15, color: COLORS.text, paddingVertical: 0 },
     searchInputRTL: { textAlign: 'right' },
@@ -694,46 +697,44 @@ const styles = StyleSheet.create({
     emptyText: { fontSize: 16, color: COLORS.textLight, marginTop: 16 },
     conversationsList: { flex: 1 },
     conversationItem: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border, gap: 12 },
-    conversationItemRTL: { flexDirection: 'row-reverse' },
+
     avatarContainer: { position: 'relative' },
     conversationAvatar: { width: 56, height: 56, borderRadius: 28, justifyContent: 'center', alignItems: 'center' },
     conversationAvatarText: { color: COLORS.background, fontSize: 20, fontWeight: '600' },
     conversationContent: { flex: 1 },
     conversationTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-    conversationTopRTL: { flexDirection: 'row-reverse' },
+
     conversationName: { fontSize: 16, fontWeight: '600', color: COLORS.text, flex: 1 },
     conversationTime: { fontSize: 13, color: COLORS.textLight, marginStart: 8 },
     conversationTimeRTL: { marginStart: 0, marginEnd: 8 },
     conversationBottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
-    conversationBottomRTL: { flexDirection: 'row-reverse' },
+
     conversationMessage: { fontSize: 14, color: COLORS.textLight, flex: 1 },
     conversationMessageUnread: { fontWeight: '600', color: COLORS.text },
     unreadBadge: { backgroundColor: COLORS.unreadBadge, borderRadius: 10, minWidth: 20, height: 20, justifyContent: 'center', alignItems: 'center', paddingHorizontal: 6, marginStart: 8 },
     unreadBadgeRTL: { marginStart: 0, marginEnd: 8 },
     unreadBadgeText: { color: COLORS.background, fontSize: 12, fontWeight: '700' },
     statusRow: { flexDirection: 'row', alignItems: 'center' },
-    statusRowRTL: { flexDirection: 'row-reverse' },
+
     statusDot: { width: 6, height: 6, borderRadius: 3, marginEnd: 6 },
     statusDotRTL: { marginEnd: 0, marginStart: 6 },
     statusLabel: { fontSize: 12, color: COLORS.textLight },
     chatHeader: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, backgroundColor: COLORS.background, borderBottomWidth: 1, borderBottomColor: COLORS.border },
-    chatHeaderRTL: { flexDirection: 'row-reverse' },
+
     backBtn: { padding: 4, marginEnd: 12 },
     chatHeaderInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-    chatHeaderInfoRTL: { flexDirection: 'row-reverse' },
+
     chatAvatar: { width: 40, height: 40, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginEnd: 12 },
     chatAvatarText: { color: COLORS.background, fontSize: 18, fontWeight: '600' },
     chatUserName: { fontSize: 17, fontWeight: '600', color: COLORS.text, marginBottom: 2 },
     statusBadgeContainer: { flexDirection: 'row', alignItems: 'center' },
-    statusBadgeContainerRTL: { flexDirection: 'row-reverse' },
+
     chatUserStatus: { fontSize: 13, color: COLORS.textLight },
     actionBtn: { padding: 8 },
     messagesScroll: { flex: 1, backgroundColor: COLORS.screenBg },
     messagesContent: { padding: 16, paddingBottom: 8 },
     messageRow: { flexDirection: 'row', marginBottom: 4, justifyContent: 'flex-end' },
     messageRowEmployee: { justifyContent: 'flex-start' },
-    messageRowUserRTL: { flexDirection: 'row-reverse', justifyContent: 'flex-start' },
-    messageRowEmployeeRTL: { flexDirection: 'row-reverse', justifyContent: 'flex-end' },
     messageAvatarContainer: { width: 32, marginEnd: 8 },
     messageAvatar: { width: 28, height: 28, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
     messageAvatarText: { color: COLORS.background, fontSize: 12, fontWeight: '600' },
@@ -750,7 +751,7 @@ const styles = StyleSheet.create({
     messageTime: { fontSize: 11, color: 'rgba(255,255,255,0.7)', alignSelf: 'flex-end' },
     employeeMessageTime: { color: COLORS.textLight },
     inputArea: { flexDirection: 'row', alignItems: 'flex-end', paddingHorizontal: 12, paddingVertical: 10, backgroundColor: COLORS.background, borderTopWidth: 1, borderTopColor: COLORS.border },
-    inputAreaRTL: { flexDirection: 'row-reverse' },
+
     inputContainer: { flex: 1, backgroundColor: COLORS.searchBg, borderRadius: 20, paddingHorizontal: 16, paddingVertical: 10, marginEnd: 8, maxHeight: 100 },
     inputContainerRTL: { marginEnd: 0, marginStart: 8 },
     input: { fontSize: 15, color: COLORS.text, paddingVertical: 0 },

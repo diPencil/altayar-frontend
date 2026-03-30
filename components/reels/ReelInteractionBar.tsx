@@ -142,7 +142,7 @@ const ReelInteractionBar: React.FC<ReelInteractionBarProps> = ({
                     <View style={styles.modalContent}>
                         {/* Save to Favorites */}
                         <TouchableOpacity
-                            style={[styles.menuItem, isRTL && styles.menuItemRTL]}
+                            style={[styles.menuItem]}
                             onPress={handleSaveToFavorites}
                         >
                             <MaterialCommunityIcons name="heart-outline" size={24} color="#333" />
@@ -151,7 +151,7 @@ const ReelInteractionBar: React.FC<ReelInteractionBarProps> = ({
 
                         {/* Copy Link */}
                         <TouchableOpacity
-                            style={[styles.menuItem, isRTL && styles.menuItemRTL]}
+                            style={[styles.menuItem]}
                             onPress={handleCopyLink}
                         >
                             <MaterialCommunityIcons name="link-variant" size={24} color="#333" />
@@ -160,7 +160,7 @@ const ReelInteractionBar: React.FC<ReelInteractionBarProps> = ({
 
                         {/* Share to Chat */}
                         <TouchableOpacity
-                            style={[styles.menuItem, isRTL && styles.menuItemRTL]}
+                            style={[styles.menuItem]}
                             onPress={handleShareToChat}
                         >
                             <MaterialCommunityIcons name="chat-outline" size={24} color="#333" />
@@ -231,9 +231,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#f0f0f0',
     },
-    menuItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     menuText: {
         fontSize: 16,
         color: '#333',

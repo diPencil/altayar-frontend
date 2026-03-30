@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { I18nManager, View, ActivityIndicator, Platform, Text, TouchableOpacity, DevSettings } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import { loadSavedLanguage, changeLanguage as i18nChangeLanguage } from '../i18n';
+import { View, ActivityIndicator, Platform } from 'react-native';
+import { loadSavedLanguage } from '../i18n';
 import i18n from '../i18n';
+import { applyLanguage, setWebDirection, syncNativeLayoutDirection } from '../i18n/applyLanguage';
 import { COLORS } from '../utils/theme';
-import * as Updates from 'expo-updates';
 
 type Language = 'en' | 'ar';
 
@@ -20,12 +19,11 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const { t } = useTranslation();
   const [language, setLanguage] = useState<Language>('en');
   const [isRTL, setIsRTL] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
-  const [restartRequired, setRestartRequired] = useState(false);
+  const [isLanguageReady, setIsLanguageReady] = useState(false);
 
   useEffect(() => {
     initializeLanguage();
@@ -63,66 +61,34 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
   const initializeLanguage = async () => {
     try {
-      // Load saved language synchronously if possible
       const savedLang = await loadSavedLanguage();
       const lang = (savedLang === 'ar' ? 'ar' : 'en') as Language;
+
       setLanguage(lang);
       setIsRTL(lang === 'ar');
 
-      // RTL is already initialized in i18n/index.ts at app startup
-      // We only need to set the state here
-      console.log('LanguageContext initialized with:', { lang, isRTL: lang === 'ar', nativeRTL: I18nManager.isRTL });
+      if (Platform.OS === 'web' || typeof document !== 'undefined') {
+        setWebDirection(lang);
+      }
+
+      await syncNativeLayoutDirection(lang);
     } catch (error) {
       console.log('Error initializing language:', error);
-      // Set defaults
       setLanguage('en');
       setIsRTL(false);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const requestRestart = async () => {
-    // Use expo-updates for production reload, DevSettings for dev
-    try {
-      // Try expo-updates first (works in production and preview builds)
-      if (Platform.OS !== 'web' && Updates.reloadAsync) {
-        console.log('🔄 Attempting Updates.reloadAsync()...');
-        await Updates.reloadAsync();
-        return;
-      }
-    } catch (error) {
-      console.log('expo-updates reload failed:', error);
-    }
-
-    // Fallback to DevSettings in development
-    try {
-      if (Platform.OS !== 'web' && DevSettings?.reload) {
-        console.log('🔄 Attempting DevSettings.reload()...');
-        DevSettings.reload();
-        return;
-      }
-    } catch (error) {
-      console.log('DevSettings reload failed:', error);
+      // Mark language as ready — app will NOT render until this is set
+      setIsLanguageReady(true);
     }
   };
 
   const changeLanguage = async (lang: Language) => {
     try {
-      console.log('🔄 LanguageContext - Changing language to:', lang);
-      await i18nChangeLanguage(lang);
+      await applyLanguage(i18n, lang);
       setLanguage(lang);
-
-      const newIsRTL = lang === 'ar';
-      setIsRTL(newIsRTL);
-      console.log('✅ LanguageContext - Language changed:', { lang, isRTL: newIsRTL });
-
-      if (newIsRTL !== I18nManager.isRTL) {
-        I18nManager.allowRTL(newIsRTL);
-        I18nManager.forceRTL(newIsRTL);
-        // Immediately trigger reload for better UX
-        setTimeout(() => requestRestart(), 500);
-      }
+      setIsRTL(lang === 'ar');
+      // On native, applyLanguage may call Updates.reloadAsync() when I18nManager RTL changes.
     } catch (error) {
       console.log('Error changing language:', error);
     }
@@ -133,40 +99,12 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     await changeLanguage(newLang);
   };
 
-  // Show loading while i18n is not ready
-  if (!isReady) {
+  // Show loading while i18n is not ready OR while saved language is still loading from storage.
+  // This ensures isRTL is correctly set before ANY component renders.
+  if (!isReady || !isLanguageReady) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.backgroundLight }}>
         <ActivityIndicator size="large" color={COLORS.primary} />
-      </View>
-    );
-  }
-
-  if (restartRequired) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: COLORS.backgroundLight }}>
-        <Text style={{ fontSize: 18, fontWeight: '800', color: COLORS.text, textAlign: 'center' }}>
-          {t('common.restartRequiredTitle')}
-        </Text>
-        <Text style={{ marginTop: 10, fontSize: 14, color: COLORS.textSecondary, textAlign: 'center', lineHeight: 20 }}>
-          {t('common.restartRequiredBody')}
-        </Text>
-
-        <TouchableOpacity
-          onPress={async () => {
-            await requestRestart();
-          }}
-          style={{ marginTop: 16, backgroundColor: COLORS.primary, paddingHorizontal: 18, paddingVertical: 12, borderRadius: 12 }}
-        >
-          <Text style={{ color: '#fff', fontWeight: '800' }}>{t('common.restartNow')}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => setRestartRequired(false)}
-          style={{ marginTop: 10, paddingHorizontal: 18, paddingVertical: 12 }}
-        >
-          <Text style={{ color: COLORS.textSecondary, fontWeight: '700' }}>{t('common.restartLater')}</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -182,7 +120,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         toggleLanguage,
       }}
     >
-      {children}
+      {/* Yoga `direction` must be set on native too: I18nManager + reload can fail in dev; this keeps flex rows mirroring with language. */}
+      <View style={{ flex: 1, direction: isRTL ? 'rtl' : 'ltr' }}>
+        {children}
+      </View>
     </LanguageContext.Provider>
   );
 }

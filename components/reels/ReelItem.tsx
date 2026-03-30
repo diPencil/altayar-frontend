@@ -12,7 +12,7 @@ import { WebView } from 'react-native-webview';
 import { useLanguage } from '../../src/contexts/LanguageContext';
 import { useTranslation } from 'react-i18next';
 
-import { getBaseUrl } from '../../src/services/api';
+import { resolveReelMediaUrl, rewriteBackendMediaUrl } from '../../src/services/api';
 
 // Safe alert function that works on both mobile and web with confirmation
 const showConfirmAlert = (
@@ -114,26 +114,6 @@ const ReelItem: React.FC<ReelItemProps> = ({
         isUploaded,
         isExternalUrl
     });
-
-    // Get proper video source URL
-    // Legacy getApiBaseUrl removed in favor of import
-
-    const getVideoSource = () => {
-        if (isUploaded) {
-            // Uploaded videos are served from our API
-            const baseUrl = getBaseUrl();
-            if (item.video_url.startsWith('/')) {
-                return { uri: `${baseUrl}${item.video_url}` };
-            }
-            return { uri: item.video_url };
-        } else if (isExternalUrl) {
-            // External URLs (direct video links)
-            return { uri: item.video_url };
-        } else {
-            // This shouldn't happen for YouTube videos in this component
-            return { uri: item.video_url };
-        }
-    };
 
     // Aggressive Auto-play/pause based on isActive
     useEffect(() => {
@@ -259,9 +239,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
     const renderVideoContent = () => {
         // Case 1: Uploaded video file (MP4, MOV, etc.) - Native video player
         if (item.video_type === 'UPLOAD' || (isUploaded && !isYouTube)) {
-            const videoUri = item.video_url.startsWith('/')
-                ? `${getBaseUrl()}${item.video_url}`
-                : item.video_url;
+            const videoUri = resolveReelMediaUrl(item.video_url) ?? item.video_url;
 
             console.log('[ReelItem] Uploaded video:', {
                 video_type: item.video_type,
@@ -274,7 +252,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
                 <Video
                     ref={videoRef}
                     style={styles.video}
-                    source={isActive ? { uri: videoUri } : undefined} // Only provide source if active
+                    source={{ uri: videoUri }}
                     useNativeControls={false}
                     resizeMode={ResizeMode.CONTAIN}
                     isLooping
@@ -284,7 +262,11 @@ const ReelItem: React.FC<ReelItemProps> = ({
                         setStatus(() => status);
                         // Optional logging removed for cleaner code
                     }}
-                    posterSource={item.thumbnail_url ? { uri: item.thumbnail_url } : undefined}
+                    posterSource={
+                        item.thumbnail_url
+                            ? { uri: rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url }
+                            : undefined
+                    }
                     posterStyle={{ resizeMode: 'contain' }}
                     usePoster={true}
                     onError={(error) => {
@@ -312,11 +294,12 @@ const ReelItem: React.FC<ReelItemProps> = ({
                 if (__DEV__) {
                     console.log('Attempting to play video:', item.video_url);
                 }
+                const directUri = resolveReelMediaUrl(item.video_url) ?? item.video_url;
                 return (
                     <Video
                         ref={videoRef}
                         style={styles.video}
-                        source={{ uri: item.video_url }}
+                        source={{ uri: directUri }}
                         useNativeControls={false}
                         resizeMode={ResizeMode.CONTAIN}
                         isLooping
@@ -331,7 +314,11 @@ const ReelItem: React.FC<ReelItemProps> = ({
                                 handleVideoError();
                             }
                         }}
-                        posterSource={item.thumbnail_url ? { uri: item.thumbnail_url } : undefined}
+                        posterSource={
+                            item.thumbnail_url
+                                ? { uri: rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url }
+                                : undefined
+                        }
                         posterStyle={{ resizeMode: 'contain' }}
                         usePoster={true}
                         onError={handleVideoError}
@@ -376,7 +363,9 @@ const ReelItem: React.FC<ReelItemProps> = ({
                 {/* Show thumbnail if available */}
                 {item.thumbnail_url ? (
                     <Image
-                        source={{ uri: item.thumbnail_url }}
+                        source={{
+                            uri: rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url,
+                        }}
                         style={styles.fallbackImage}
                         resizeMode="contain"
                     />
@@ -404,8 +393,8 @@ const ReelItem: React.FC<ReelItemProps> = ({
 
                 {/* Fallback message */}
                 <View style={styles.fallbackMessage}>
-                    <Text style={[styles.fallbackText, isRTL && styles.textRTL]}>{t('reels.externalVideo')}</Text>
-                    <Text style={[styles.fallbackSubtext, isRTL && styles.textRTL]}>
+                    <Text style={styles.fallbackText}>{t('reels.externalVideo')}</Text>
+                    <Text style={styles.fallbackSubtext}>
                         {t('reels.tapToOpen')}
                     </Text>
                 </View>
@@ -480,7 +469,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
             {/* Info Section - Instagram/Facebook Style */}
             <View style={[styles.infoContainer, isRTL && styles.infoContainerRTL]}>
                 {/* User Row: Avatar | Name */}
-                <View style={[styles.userRow, isRTL && styles.userRowRTL]}>
+                <View style={[styles.userRow]}>
                     <Image
                         source={{ uri: item.user?.avatar_url || 'https://via.placeholder.com/100' }}
                         style={[styles.avatar, isRTL && styles.avatarRTL]}
@@ -682,9 +671,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 8,
     },
-    userRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatar: {
         width: 36,
         height: 36,
@@ -766,7 +753,6 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
     },
     audioRowRTL: {
-        flexDirection: 'row-reverse',
         alignSelf: 'flex-end',
     },
     audioText: {

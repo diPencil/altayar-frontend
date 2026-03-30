@@ -126,7 +126,7 @@ export default function InvoicesScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -155,7 +155,7 @@ export default function InvoicesScreen() {
         ) : (
           orders.map((order) => (
             <TouchableOpacity key={order.id} style={styles.invoiceCard} onPress={() => openOrderDetails(order)}>
-              <View style={[styles.invoiceHeader, isRTL && styles.invoiceHeaderRTL]}>
+              <View style={[styles.invoiceHeader]}>
                 <View>
                   <Text style={[styles.invoiceId, isRTL && styles.textRTL]}>
                     #{order.id.slice(0, 8).toUpperCase()}
@@ -179,7 +179,7 @@ export default function InvoicesScreen() {
 
               {order.payment_status === 'PAID' && (
                 <View
-                  style={[styles.downloadBtn, isRTL && styles.downloadBtnRTL]}
+                  style={[styles.downloadBtn]}
                 >
                   <Ionicons name="download-outline" size={20} color={COLORS.primary} />
                   <Text style={[styles.downloadBtnText, isRTL && styles.downloadBtnTextRTL]}>
@@ -195,7 +195,7 @@ export default function InvoicesScreen() {
       {/* Details Modal */}
       <Modal visible={detailsVisible} animationType="slide" presentationStyle="pageSheet">
         <View style={styles.modalContainer}>
-          <View style={[styles.modalHeader, isRTL && styles.headerRTL]}>
+          <View style={[styles.modalHeader]}>
             <Text style={styles.modalTitle}>{t('invoices.details') || "Invoice Details"}</Text>
             <TouchableOpacity onPress={() => setDetailsVisible(false)} style={styles.closeBtn}>
               <Ionicons name="close" size={24} color={COLORS.text} />
@@ -219,7 +219,7 @@ export default function InvoicesScreen() {
               </View>
 
               {/* Order Date */}
-              <View style={[styles.infoRow, isRTL && styles.infoRowRTL]}>
+              <View style={[styles.infoRow]}>
                 <Text style={[styles.infoLabel, isRTL && styles.textRTL]}>{t('common.date') || "Date"}:</Text>
                 <Text style={[styles.infoValue, isRTL && styles.textRTL]}>
                   {new Date(orderDetails.created_at).toLocaleDateString()}
@@ -236,7 +236,7 @@ export default function InvoicesScreen() {
                 const description = lines.length > 1 ? lines.slice(1).join('\n') : '';
 
                 return (
-                  <View key={idx} style={[styles.itemRow, isRTL && styles.itemRowRTL]}>
+                  <View key={idx} style={[styles.itemRow]}>
                     <View style={{ flex: 1 }}>
                       <Text style={[styles.itemTitle, isRTL && styles.textRTL]}>{title}</Text>
                       {description && (
@@ -256,20 +256,20 @@ export default function InvoicesScreen() {
               <View style={styles.divider} />
 
               {/* Summary Section */}
-              <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+              <View style={[styles.summaryRow]}>
                 <Text style={[styles.summaryLabel, isRTL && styles.textRTL]}>{t('admin.manageInvoices.subtotal') || "Subtotal"}</Text>
                 <Text style={[styles.summaryValue, isRTL && styles.textRTL]}>{formatCurrency(orderDetails.subtotal, orderDetails.currency, isRTL ? 'ar-EG' : 'en-US')}</Text>
               </View>
 
               {orderDetails.tax_amount > 0 && (
-                <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                <View style={[styles.summaryRow]}>
                   <Text style={[styles.summaryLabel, isRTL && styles.textRTL]}>{t('admin.manageInvoices.tax') || "Tax"}</Text>
                   <Text style={[styles.summaryValue, isRTL && styles.textRTL]}>{formatCurrency(orderDetails.tax_amount, orderDetails.currency, isRTL ? 'ar-EG' : 'en-US')}</Text>
                 </View>
               )}
 
               {orderDetails.discount_amount > 0 && (
-                <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                <View style={[styles.summaryRow]}>
                   <Text style={[styles.summaryLabel, isRTL && styles.textRTL, { color: COLORS.warning }]}>{t('common.discount') || "Discount"}</Text>
                   <Text style={[styles.summaryValue, isRTL && styles.textRTL, { color: COLORS.warning }]}>
                     {t("common.amountNegative", {
@@ -279,7 +279,7 @@ export default function InvoicesScreen() {
                 </View>
               )}
 
-              <View style={[styles.totalRow, isRTL && styles.totalRowRTL]}>
+              <View style={[styles.totalRow]}>
                 <Text style={[styles.totalLabelLarge, isRTL && styles.textRTL]}>{t('admin.manageInvoices.total') || "Total"}</Text>
                 <Text style={[styles.totalValueLarge, isRTL && styles.textRTL]}>{formatCurrency(orderDetails.total_amount, orderDetails.currency, isRTL ? 'ar-EG' : 'en-US')}</Text>
               </View>
@@ -344,9 +344,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -381,9 +379,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
-  invoiceHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   invoiceId: {
     fontSize: 16,
     fontWeight: "600",
@@ -410,7 +406,7 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.lightGray,
   },
   invoiceBodyRTL: {
-    alignItems: "flex-end",
+    alignItems: "flex-start",
   },
   invoiceAmount: {
     fontSize: 24,
@@ -426,17 +422,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 16,
   },
-  downloadBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   downloadBtnText: {
     color: COLORS.primary,
     fontWeight: "600",
     marginStart: 8,
   },
   downloadBtnTextRTL: {
-    marginStart: 0,
-    marginEnd: 8,
+//     marginStart: 0,  /* removed double-flip for Native RTL */
+//     marginEnd: 8,  /* removed double-flip for Native RTL */
   },
   // Modal Styles
   modalContainer: {
@@ -475,9 +469,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 16,
   },
-  infoRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   infoLabel: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -501,9 +493,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
   },
-  itemRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   itemTitle: {
     fontSize: 14,
     fontWeight: '600',
@@ -534,9 +524,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 10,
   },
-  summaryRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   summaryLabel: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -554,9 +542,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: COLORS.lightGray,
   },
-  totalRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   totalLabelLarge: {
     fontSize: 18,
     fontWeight: 'bold',

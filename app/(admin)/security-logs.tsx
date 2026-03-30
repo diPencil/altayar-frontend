@@ -67,7 +67,7 @@ export default function SecurityLogs() {
             style={styles.container}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={[styles.backBtn, isRTL && styles.backBtnRTL]}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -82,7 +82,7 @@ export default function SecurityLogs() {
                         <Text style={[styles.emptyText, isRTL && styles.textRTL]}>{t('admin.manageActivities.empty') || "No logs found"}</Text>
                     ) : (
                         activities.map((activity, index) => (
-                            <View key={index} style={[styles.activityItem, isRTL && styles.activityItemRTL]}>
+                            <View key={index} style={[styles.activityItem]}>
                                 <View style={[styles.activityIcon, { backgroundColor: `${getActivityColor(activity.type)}15` }, isRTL && { marginStart: 0, marginEnd: 0 }]}>
                                     <Ionicons name={activity.icon || "shield-checkmark-outline"} size={20} color={getActivityColor(activity.type)} />
                                 </View>
@@ -173,9 +173,7 @@ const styles = StyleSheet.create({
         color: COLORS.textLight,
     },
     // RTL Styles
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backBtnRTL: {
         marginEnd: 0,
         marginStart: 16,
@@ -186,9 +184,7 @@ const styles = StyleSheet.create({
     textRTL: {
         textAlign: 'right',
     },
-    activityItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     activityContentRTL: {
         marginStart: 0,
         marginEnd: 12,

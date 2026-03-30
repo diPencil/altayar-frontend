@@ -115,7 +115,7 @@ function SummaryCards({ yearlyTotal, monthlyTotal, isRTL }: { yearlyTotal: numbe
     const monthlyProgress = Math.min(1, monthlyTotal / MONTHLY_TARGET);
 
     return (
-        <View style={[styles.statsRow, isRTL && styles.statsRowRTL]}>
+        <View style={[styles.statsRow]}>
             <View style={styles.statCard}>
                 <View style={styles.statHeader}>
                     <Ionicons name="calendar-outline" size={18} color={COLORS.primary} />
@@ -156,7 +156,7 @@ function PerformanceCard({ yearlyTotal, monthlyTotal, chartData, isRTL, currentR
 
             <View style={styles.perfCardContent}>
                 {/* Header */}
-                <View style={[styles.perfHeader, isRTL && styles.perfHeaderRTL]}>
+                <View style={[styles.perfHeader]}>
                     <View style={styles.perfHeaderLeft}>
                         <LinearGradient
                             colors={['#6366f1', '#a855f7']}
@@ -174,7 +174,7 @@ function PerformanceCard({ yearlyTotal, monthlyTotal, chartData, isRTL, currentR
                 </View>
 
                 {/* Stats Grid */}
-                <View style={[styles.perfStatsGrid, isRTL && styles.perfStatsGridRTL]}>
+                <View style={[styles.perfStatsGrid]}>
                     <View style={styles.perfStatItem}>
                         <Text style={styles.perfStatLabel}>{t('employee.competition.totalYearly', 'Yearly Total')}</Text>
                         <Text style={styles.perfStatValue}>{yearlyTotal}</Text>
@@ -192,7 +192,7 @@ function PerformanceCard({ yearlyTotal, monthlyTotal, chartData, isRTL, currentR
 
                 {/* Chart Area */}
                 <View style={styles.perfChartArea}>
-                    <View style={[styles.perfChartPlot, isRTL && styles.perfChartPlotRTL]}>
+                    <View style={[styles.perfChartPlot]}>
                         {chartData.map((item, index) => {
                             const barHeightPercentage = maxCount > 0 ? (item.count / maxCount) * 100 : 0;
                             // Visual tweak: min height for visibility if > 0
@@ -213,7 +213,7 @@ function PerformanceCard({ yearlyTotal, monthlyTotal, chartData, isRTL, currentR
                 </View>
 
                 {/* Footer */}
-                <View style={[styles.perfFooter, isRTL && styles.perfFooterRTL]}>
+                <View style={[styles.perfFooter]}>
                     <TouchableOpacity
                         style={styles.perfFooterLeft}
                         activeOpacity={0.7}
@@ -268,7 +268,7 @@ function CompetitionHero({ yearlyTotal, isRTL }: { yearlyTotal: number; isRTL: b
                 colors={["#1e3a5f", "#2d4a6f"]}
                 style={styles.heroCard}
             >
-                <View style={[styles.heroContent, isRTL && styles.heroContentRTL]}>
+                <View style={[styles.heroContent]}>
                     <View style={{ flex: 1, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
                         <Text style={styles.heroTitle}>
                             {t('employee.competition.yearlyRank', 'Yearly Rank')}
@@ -579,9 +579,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    heroContentRTL: {
-        flexDirection: "row-reverse",
-    },
+
     heroTitle: {
         fontSize: 14,
         color: "rgba(255,255,255,0.7)",
@@ -625,9 +623,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 24,
     },
-    statsRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     statCard: {
         backgroundColor: '#ffffff',
         borderRadius: 16,
@@ -708,9 +704,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 20,
     },
-    perfHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     perfHeaderLeft: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -754,9 +748,7 @@ const styles = StyleSheet.create({
         gap: 12,
         marginBottom: 20,
     },
-    perfStatsGridRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     perfStatItem: {
         flex: 1,
         backgroundColor: '#f8fafc', // bg-slate-50
@@ -798,9 +790,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 4,
     },
-    perfChartPlotRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     perfBarGroup: {
         flex: 1,
         height: '100%',
@@ -832,9 +822,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    perfFooterRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     perfFooterLeft: {
         flexDirection: 'row',
         alignItems: 'center',

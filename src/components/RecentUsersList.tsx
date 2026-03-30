@@ -20,7 +20,7 @@ export default function RecentUsersList({ users, onSelectUser, onClear }: Recent
 
     return (
         <View style={styles.container}>
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <Text style={[styles.title, isRTL && styles.textRTL]}>{t('common.recentUsers')}</Text>
                 <TouchableOpacity onPress={onClear}>
                     <Text style={styles.clearText}>{t('common.clear')}</Text>
@@ -33,7 +33,7 @@ export default function RecentUsersList({ users, onSelectUser, onClear }: Recent
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={[styles.listContent, isRTL && styles.listContentRTL]}
+                    contentContainerStyle={[styles.listContent]}
                 >
                     {users.map(user => (
                         <TouchableOpacity
@@ -77,9 +77,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         paddingHorizontal: 4,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     title: {
         fontSize: 14,
         fontWeight: 'bold',
@@ -97,9 +95,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         gap: 12,
     },
-    listContentRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userCard: {
         alignItems: 'center',
         width: 80,

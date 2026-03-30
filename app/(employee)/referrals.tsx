@@ -115,7 +115,7 @@ export default function EmployeeReferrals() {
             }
         >
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <Text style={styles.pageTitle}>{t('employee.referrals.title', 'My Referrals')}</Text>
             </View>
 
@@ -248,9 +248,7 @@ const styles = StyleSheet.create({
     header: {
         marginBottom: 20,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     pageTitle: {
         fontSize: 24,
         fontWeight: "bold",

@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Linking,
   Alert,
+  Keyboard,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -404,7 +405,7 @@ export default function ChatScreen() {
         // ===== CONVERSATIONS LIST SCREEN =====
         <>
           {/* Header */}
-          <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+          <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
             <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>
               {t('chat.support')}
             </Text>
@@ -504,27 +505,27 @@ export default function ChatScreen() {
       ) : (
         // ===== INDIVIDUAL CHAT SCREEN =====
         <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={{ flex: 1, marginBottom: 88 }}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
           {/* Chat Header */}
-          <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+          <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
             <TouchableOpacity
               style={styles.backBtn}
               onPress={goBackToList}
             >
               <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
             </TouchableOpacity>
-            <View style={[styles.headerInfo, isRTL && styles.headerInfoRTL]}>
+            <View style={[styles.headerInfo]}>
               <View style={styles.supportAvatar}>
                 <Ionicons name="headset" size={24} color={COLORS.primary} />
               </View>
-              <View style={isRTL ? { alignItems: "flex-end" } : undefined}>
+              <View style={isRTL ? { alignItems: "flex-start" } : undefined}>
                 <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>
                   {t('chat.support')}
                 </Text>
-                <View style={[styles.statusRow, isRTL && styles.statusRowRTL]}>
+                <View style={[styles.statusRow]}>
                   <View style={[
                     styles.onlineDot,
                     { backgroundColor: conversationState === "waiting_agent" ? COLORS.warning : COLORS.success }
@@ -543,7 +544,7 @@ export default function ChatScreen() {
           <ScrollView
             ref={scrollRef}
             style={styles.messagesContainer}
-            contentContainerStyle={[styles.messagesContent, { paddingBottom: 20 }]}
+            contentContainerStyle={[styles.messagesContent, { paddingBottom: 16 }]}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
@@ -639,8 +640,19 @@ export default function ChatScreen() {
             ))}
           </ScrollView>
 
+          {/* Emoji Picker - rendered BEFORE input so it appears below, pushing input up */}
+          {showEmojiPicker && (
+            <EmojiPicker
+              visible={showEmojiPicker}
+              onEmojiSelect={(emoji) => {
+                setMessage(prev => prev + emoji);
+              }}
+              onClose={() => setShowEmojiPicker(false)}
+            />
+          )}
+
           {/* Input */}
-          <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL, { paddingBottom: insets.bottom || 8 }]}>
+          <View style={[styles.inputContainer, { paddingBottom: insets.bottom || 8 }]}>
             <TouchableOpacity
               style={styles.emojiBtn}
               onPress={() => setShowEmojiPicker(!showEmojiPicker)}
@@ -689,17 +701,6 @@ export default function ChatScreen() {
               )}
             </TouchableOpacity>
           </View>
-
-          {/* Emoji Picker */}
-          {showEmojiPicker && (
-            <EmojiPicker
-              visible={showEmojiPicker}
-              onEmojiSelect={(emoji) => {
-                setMessage(prev => prev + emoji);
-              }}
-              onClose={() => setShowEmojiPicker(false)}
-            />
-          )}
         </KeyboardAvoidingView>
       )}
       <Toast
@@ -733,17 +734,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerInfo: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
   },
-  headerInfoRTL: {
-    flexDirection: "row-reverse",
-  },
+
   supportAvatar: {
     width: 44,
     height: 44,
@@ -766,9 +763,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 2,
   },
-  statusRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   onlineDot: {
     width: 8,
     height: 8,
@@ -1047,9 +1042,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: COLORS.lightGray,
   },
-  inputContainerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   emojiBtn: {
     padding: 4,
     marginEnd: 8,

@@ -1,0 +1,24 @@
+# Ignore dependencies
+node_modules/
+
+# Ignore build artifacts
+build/
+dist/
+web-build/
+.expo/
+
+# Ignore Android-specific build folders and caches
+android/app/build/
+android/.gradle/
+.gradle/
+android/build/
+
+# Ignore iOS-specific build folders
+ios/build/
+ios/DerivedData/
+
+# Ignore Metro cache
+.metro-cache/
+
+# Ignore local env files
+.env*.local

@@ -5,7 +5,6 @@ import { adminApi } from "../../../../src/services/api";
 import { useTranslation } from "react-i18next";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useLanguage } from "../../../../src/contexts/LanguageContext";
-import { useRTLStyles } from "../../../../src/hooks/useRTLStyles";
 import Toast from "../../../../src/components/Toast";
 import { TextInput } from "react-native";
 
@@ -27,7 +26,6 @@ export default function MembershipMembers() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isRTL, isReady } = useLanguage();
-  const rtlStyles = useRTLStyles(styles);
   const params = useLocalSearchParams();
   const planId = params.id as string;
 
@@ -117,7 +115,7 @@ export default function MembershipMembers() {
   };
 
   const renderMemberRow = ({ item: member, index }: { item: any; index: number }) => (
-    <View style={[styles.memberRow, isRTL && styles.memberRowRTL]}>
+    <View style={[styles.memberRow]}>
       <View style={styles.memberInfo}>
         <Text style={[styles.memberName, isRTL && styles.textRTL]}>{member.name || 'N/A'}</Text>
         <Text style={[styles.memberEmail, isRTL && styles.textRTL]}>{member.email}</Text>
@@ -143,7 +141,7 @@ export default function MembershipMembers() {
       </View>
 
       <TouchableOpacity
-        style={[styles.cardButton, isRTL && styles.cardButtonRTL]}
+        style={[styles.cardButton]}
         onPress={() => handleShowMemberCard(member)}
       >
         <Ionicons name="card-outline" size={20} color={COLORS.primary} />
@@ -173,7 +171,7 @@ export default function MembershipMembers() {
   return (
     <ScrollView style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <TouchableOpacity
           style={styles.backButton}
           onPress={() => router.back()}
@@ -261,9 +259,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   backButton: {
     padding: 8,
     marginEnd: 16,
@@ -321,9 +317,7 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  memberRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   memberInfo: {
     flex: 1,
   },
@@ -380,9 +374,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
   },
-  cardButtonRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   cardButtonText: {
     color: COLORS.cardBg,
     fontSize: 14,

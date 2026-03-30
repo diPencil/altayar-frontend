@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { membershipsApi } from "../../src/services/api";
 import { LinearGradient } from "expo-linear-gradient";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
   primary: "#1071b8",
@@ -210,25 +211,32 @@ export default function MembershipsExploreScreen() {
         colors={tier.gradientColors || ["#ffffff", "#f8fafc"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[styles.loungeCard, isRTL && { flexDirection: "row-reverse" }]}
+        style={styles.loungeCard}
       >
-        <View
-          style={[
-            styles.loungeContent,
-            isRTL ? { paddingStart: 10, paddingEnd: 0, alignItems: "flex-end" } : { paddingEnd: 10, alignItems: "flex-start" },
-          ]}
-        >
+        {!!tier.image && (
+          <Image
+            source={tier.image}
+            style={[
+              styles.loungeImageBg,
+              isRTL
+                ? { left: -55, right: undefined, transform: [{ rotate: "12deg" }] }
+                : { right: -55, left: undefined, transform: [{ rotate: "-12deg" }] },
+            ]}
+            resizeMode="contain"
+          />
+        )}
+        <View style={styles.loungeContent}>
           <Text style={[styles.loungeTitle, { color: tier.primaryColor, textAlign: isRTL ? "right" : "left" }]}>
             {title}
           </Text>
 
           {!!description && (
-            <Text style={[styles.loungeDesc, { color: tier.accentColor, textAlign: isRTL ? "right" : "left" }]} numberOfLines={3}>
+            <Text style={[styles.loungeDesc, { color: tier.accentColor, textAlign: isRTL ? "right" : "left" }]} numberOfLines={4}>
               {description}
             </Text>
           )}
 
-          <View style={{ flexDirection: 'row', alignItems: "center", gap: 12, marginTop: 4 }}>
+          <View style={styles.loungeMetaRow}>
             {showPoints && (
               <Text style={[styles.loungePoints, { color: tier.accentColor }]}>
                 {Number(tier.pointsNeeded).toLocaleString()} {t("common.pts", "PTS")}
@@ -236,21 +244,21 @@ export default function MembershipsExploreScreen() {
             )}
 
             {showPrice && (
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <View style={{ width: 1, height: 12, backgroundColor: tier.accentColor, opacity: 0.3, marginHorizontal: 12 }} />
+              <View style={styles.loungePriceRow}>
+                <View style={[styles.loungePriceDivider, { backgroundColor: tier.accentColor }]} />
                 <Text style={[styles.loungePoints, { color: tier.primaryColor, fontWeight: "800" }]}>
-                  {tier.price.toLocaleString()} {tier.currency}
+                  {tier.price.toLocaleString()} {formatCurrencyLabel(tier.currency, t)}
                 </Text>
               </View>
             )}
           </View>
 
-          <View style={[styles.loungeCtaRow, isRTL && styles.loungeCtaRowRTL]}>
+          <View style={styles.loungeCtaRow}>
             <Text style={[styles.loungeCtaHint, isRTL && styles.textRTL]} numberOfLines={2}>
               {t("membership.plans.subscribeHint", "To subscribe to this tier, tap Subscribe.")}
             </Text>
             <TouchableOpacity
-              style={[styles.loungeCtaBtn, isRTL && styles.loungeCtaBtnRTL]}
+              style={styles.loungeCtaBtn}
               onPress={() => contactUs(tier.plan)}
               activeOpacity={0.9}
             >
@@ -258,24 +266,13 @@ export default function MembershipsExploreScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
-        {!!tier.image && (
-          <Image
-            source={tier.image}
-            style={[
-              styles.loungeImage,
-              isRTL && { right: undefined, left: -15, transform: [{ rotate: "10deg" }] },
-            ]}
-            resizeMode="contain"
-          />
-        )}
       </LinearGradient>
     );
   };
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <TouchableOpacity onPress={() => (router.canGoBack() ? router.back() : router.push("/(user)"))}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -298,7 +295,7 @@ export default function MembershipsExploreScreen() {
             end={{ x: 1, y: 1 }}
             style={styles.heroCard}
           >
-            <View style={[styles.heroTopRow, isRTL && styles.heroTopRowRTL]}>
+            <View style={[styles.heroTopRow]}>
               <View style={styles.heroIconWrap}>
                 <Ionicons name="sparkles" size={22} color="#fff" />
               </View>
@@ -311,7 +308,7 @@ export default function MembershipsExploreScreen() {
               </View>
             </View>
 
-            <View style={[styles.heroHintRow, isRTL && styles.heroHintRowRTL]}>
+            <View style={[styles.heroHintRow]}>
               <Ionicons name="chatbubbles-outline" size={16} color="rgba(255,255,255,0.9)" />
               <Text style={[styles.heroHintText, isRTL && styles.textRTL]} numberOfLines={2}>
                 {t("membership.plans.subscribeHint", "To subscribe to this tier, tap Subscribe.")}
@@ -348,7 +345,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: { flexDirection: "row-reverse" },
+
   headerTitle: { fontSize: 16, fontWeight: "800", color: COLORS.text },
   body: { padding: 16 },
   textRTL: { textAlign: "right" },
@@ -363,7 +360,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   introRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: 8 },
-  introRowRTL: { flexDirection: "row-reverse" },
+
   introTitle: { fontSize: 16, fontWeight: "800", color: COLORS.text, flex: 1 },
   introText: { color: COLORS.textLight, lineHeight: 20 },
 
@@ -383,9 +380,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     gap: 12,
   },
-  heroTopRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   heroIconWrap: {
     width: 42,
     height: 42,
@@ -416,9 +411,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "rgba(255,255,255,0.18)",
   },
-  heroHintRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   heroHintText: {
     color: "rgba(255,255,255,0.9)",
     flex: 1,
@@ -435,14 +428,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignSelf: "stretch",
     flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "flex-start",
+    alignItems: "stretch",
     gap: 8,
   },
-  loungeCtaRowRTL: { alignItems: "flex-end" },
   loungeCtaHint: {
     color: COLORS.textLight,
-    flex: 1,
   },
   loungeCtaBtn: {
     backgroundColor: COLORS.primary,
@@ -451,19 +441,31 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     alignSelf: "flex-start",
   },
-  loungeCtaBtnRTL: {
-    alignSelf: "flex-end",
+  loungeMetaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 12,
+    marginTop: 4,
+  },
+  loungePriceRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  loungePriceDivider: {
+    width: 1,
+    height: 12,
+    opacity: 0.3,
+    marginHorizontal: 12,
   },
   loungeCtaBtnText: { color: "#fff", fontWeight: "900", fontSize: 12 },
 
-  // Lounge card styles (aligned with `membership-journey`)
+  // Lounge card: watermark image in back; text uses full card width (same for LTR/RTL)
   loungeCard: {
     borderRadius: 20,
     padding: 24,
-    flexDirection: "row",
-    alignItems: "center",
     overflow: "hidden",
-    height: 200,
+    minHeight: 200,
     position: "relative",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -471,20 +473,18 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  loungeContent: {
-    flex: 1,
-    paddingEnd: 10,
-    zIndex: 2,
-    justifyContent: "center",
-  },
-  loungeImage: {
-    width: 110,
-    height: 110,
+  loungeImageBg: {
     position: "absolute",
-    right: -15,
-    bottom: -15,
-    opacity: 0.9,
-    transform: [{ rotate: "-10deg" }],
+    width: 220,
+    height: 220,
+    bottom: -70,
+    opacity: 0.2,
+    zIndex: 0,
+  },
+  loungeContent: {
+    zIndex: 1,
+    width: "100%",
+    justifyContent: "center",
   },
   loungeTitle: {
     fontSize: 22,

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { StyleSheet, ViewStyle, TextStyle, I18nManager } from 'react-native';
+import { Platform, StyleSheet, ViewStyle, TextStyle, I18nManager } from 'react-native';
 import { useLanguage } from '../contexts/LanguageContext';
 
 type Style = ViewStyle | TextStyle;
@@ -61,7 +61,9 @@ export function useRTLStyles<T extends StyleRecord>(styles: T): T {
   
   return useMemo(() => {
     if (!isRTL) return styles;
-    
+    // Native I18nManager already mirrors rows when forceRTL is on; skip JS flips.
+    if (Platform.OS !== 'web' && I18nManager.isRTL) return styles;
+
     const flippedStyles: any = {};
     
     for (const key in styles) {

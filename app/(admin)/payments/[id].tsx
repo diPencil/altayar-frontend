@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { adminApi } from "../../../src/services/api";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "../../../src/contexts/LanguageContext";
+import { formatCurrencyLabel } from "../../../src/utils/currencyLabel";
 
 const COLORS = {
     primary: "#1071b8",
@@ -18,9 +17,31 @@ const COLORS = {
     border: "#e2e8f0",
 };
 
+function normalizeEnumKey(raw: string): string {
+    return String(raw).trim().toLowerCase().replace(/[\s-]+/g, "_");
+}
+
+function translatePaymentStatus(status: string | undefined, t: (k: string, o?: object) => string): string {
+    if (!status) return t("common.na");
+    const k = normalizeEnumKey(status);
+    return t(`admin.managePayments.status.${k}`, { defaultValue: status });
+}
+
+function translatePaymentEnum(
+    raw: string | null | undefined,
+    t: (k: string, o?: object) => string,
+    group: "paymentType" | "paymentSource" | "methodLabels"
+): string {
+    if (raw == null || raw === "") return t("common.na");
+    const s = String(raw).trim();
+    if (s.toUpperCase() === "N/A") return t("common.na");
+    const k = normalizeEnumKey(s);
+    return t(`admin.managePayments.${group}.${k}`, { defaultValue: s });
+}
+
 export default function PaymentDetails() {
-    const { t } = useTranslation();
-    const { isRTL } = useLanguage();
+    const { t, i18n } = useTranslation();
+    const dateLocale = i18n.language?.startsWith("ar") ? "ar-EG" : "en-US";
     const router = useRouter();
     const params = useLocalSearchParams();
     const paymentId = params.id as string;
@@ -35,7 +56,6 @@ export default function PaymentDetails() {
     const fetchPaymentDetails = async () => {
         try {
             setLoading(true);
-            // Use api.get which handles authentication properly
             const { api } = await import('../../../src/services/api');
 
             console.log('[PaymentDetails] Fetching payment:', paymentId);
@@ -50,7 +70,6 @@ export default function PaymentDetails() {
             console.error("[PaymentDetails] Error name:", e.name);
             console.error("[PaymentDetails] Error message:", e.message);
 
-            // Show user-friendly error based on error type
             let errorMessage = 'Failed to load payment details';
 
             if (e.message?.includes('Authentication required')) {
@@ -66,8 +85,6 @@ export default function PaymentDetails() {
             }
 
             console.error('[PaymentDetails] User-facing error:', errorMessage);
-            // Note: Alert is not available in React Native without import
-            // The error will be shown via the empty state in the UI
         } finally {
             setLoading(false);
         }
@@ -115,13 +132,15 @@ export default function PaymentDetails() {
                         color={getStatusColor(payment.status)}
                     />
                     <Text style={[styles.statusText, { color: getStatusColor(payment.status) }]}>
-                        {payment.status}
+                        {translatePaymentStatus(payment.status, t)}
                     </Text>
                 </View>
 
                 <View style={styles.amountSection}>
                     <Text style={styles.amountLabel}>{t('admin.managePayments.amount')}</Text>
-                    <Text style={styles.amountValue}>{payment.amount} {payment.currency || 'USD'}</Text>
+                    <Text style={styles.amountValue}>
+                        {payment.amount} {formatCurrencyLabel(payment.currency, t)}
+                    </Text>
                 </View>
             </View>
 
@@ -130,10 +149,22 @@ export default function PaymentDetails() {
                 <Text style={styles.sectionTitle}>{t('admin.managePayments.paymentInfo')}</Text>
 
                 <InfoRow label={t('admin.managePayments.paymentId')} value={payment.id} />
-                <InfoRow label={t('admin.managePayments.type')} value={payment.payment_type || 'N/A'} />
-                <InfoRow label={t('admin.managePayments.source')} value={payment.source || 'N/A'} />
-                <InfoRow label={t('admin.managePayments.method')} value={payment.payment_method || 'N/A'} />
-                <InfoRow label={t('admin.managePayments.date')} value={new Date(payment.created_at).toLocaleString()} />
+                <InfoRow
+                    label={t('admin.managePayments.type')}
+                    value={translatePaymentEnum(payment.payment_type, t, 'paymentType')}
+                />
+                <InfoRow
+                    label={t('admin.managePayments.source')}
+                    value={translatePaymentEnum(payment.source, t, 'paymentSource')}
+                />
+                <InfoRow
+                    label={t('admin.managePayments.method')}
+                    value={translatePaymentEnum(payment.payment_method, t, 'methodLabels')}
+                />
+                <InfoRow
+                    label={t('admin.managePayments.date')}
+                    value={new Date(payment.created_at).toLocaleString(dateLocale)}
+                />
                 {payment.transaction_id && (
                     <InfoRow label={t('admin.managePayments.transactionId')} value={payment.transaction_id} />
                 )}

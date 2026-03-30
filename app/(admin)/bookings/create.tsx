@@ -257,7 +257,7 @@ export default function CreateBooking() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: t("admin.bookings.create"), headerBackTitle: "Back" }} />
+            <Stack.Screen options={{ title: t("admin.bookings.create"), headerBackTitle: t("common.back") }} />
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
 
@@ -265,7 +265,7 @@ export default function CreateBooking() {
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.selectUser')}</Text>
                     <TouchableOpacity
-                        style={[styles.userSelector, isRTL && styles.userSelectorRTL]}
+                        style={[styles.userSelector]}
                         onPress={() => setUserModalVisible(true)}
                     >
                         {selectedUser ? (
@@ -286,7 +286,7 @@ export default function CreateBooking() {
 
                     {/* Booking Type */}
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.bookingType')}</Text>
-                    <View style={[styles.typeRow, isRTL && styles.typeRowRTL]}>
+                    <View style={[styles.typeRow]}>
                         {['TRIP', 'HOTEL', 'FLIGHT', 'PACKAGE', 'OFFER', 'CUSTOM'].map((type) => (
                             <TouchableOpacity
                                 key={type}
@@ -321,7 +321,7 @@ export default function CreateBooking() {
                     />
 
                     {/* Dates - Hybrid Input (Picker for Native, Manual for Web) */}
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <View style={{ flex: 1 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>
                                 {bookingType === 'HOTEL' ? t('admin.bookings.checkInDate') :
@@ -347,7 +347,7 @@ export default function CreateBooking() {
                                 // Native: DateTimePicker Button
                                 <>
                                     <TouchableOpacity
-                                        style={[styles.dateBtn, isRTL && styles.dateBtnRTL]}
+                                        style={[styles.dateBtn]}
                                         onPress={() => setShowStartPicker(true)}
                                     >
                                         <Text style={styles.dateText}>{startDate}</Text>
@@ -394,7 +394,7 @@ export default function CreateBooking() {
                                 // Native: DateTimePicker Button
                                 <>
                                     <TouchableOpacity
-                                        style={[styles.dateBtn, isRTL && styles.dateBtnRTL]}
+                                        style={[styles.dateBtn]}
                                         onPress={() => setShowEndPicker(true)}
                                     >
                                         <Text style={styles.dateText}>{endDate}</Text>
@@ -442,7 +442,7 @@ export default function CreateBooking() {
                 <View style={styles.section}>
                     <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.pricing')}</Text>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <View style={{ flex: 1 }}>
                             <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.originalPrice')}</Text>
                             <TextInput
@@ -480,14 +480,14 @@ export default function CreateBooking() {
                         placeholder="0.00"
                     />
 
-                    <View style={[styles.finalPriceRow, isRTL && styles.finalPriceRowRTL]}>
+                    <View style={[styles.finalPriceRow]}>
                         <Text style={styles.finalPriceLabel}>{t('admin.bookings.finalPrice')}:</Text>
                         <Text style={styles.finalPriceValue}>{calculateFinalPrice().final.toFixed(2)} {currency}</Text>
                     </View>
 
                     {/* Payment Status */}
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.paymentStatus')}</Text>
-                    <View style={[styles.typeRow, isRTL && styles.typeRowRTL]}>
+                    <View style={[styles.typeRow]}>
                         {['PAID', 'UNPAID', 'PARTIAL'].map((status) => (
                             <TouchableOpacity
                                 key={status}
@@ -509,7 +509,7 @@ export default function CreateBooking() {
 
                     {/* Payment Method */}
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.paymentMethod')}</Text>
-                    <View style={[styles.typeRow, isRTL && styles.typeRowRTL, { flexWrap: 'wrap' }]}>
+                    <View style={[styles.typeRow, { flexWrap: 'wrap' }]}>
                         {['CASH', 'CARD', 'WALLET'].map((method) => (
                             <TouchableOpacity
                                 key={method}
@@ -538,14 +538,14 @@ export default function CreateBooking() {
                             <Text style={[styles.sectionTitle, isRTL && styles.sectionTitleRTL]}>{t('admin.bookings.membershipPoints')}</Text>
 
                             {/* User Balances Display */}
-                            <View style={[styles.balanceRow, isRTL && styles.balanceRowRTL]}>
-                                <View style={[styles.balanceBadge, isRTL && styles.balanceBadgeRTL, { backgroundColor: COLORS.warning + '20' }]}>
+                            <View style={[styles.balanceRow]}>
+                                <View style={[styles.balanceBadge, { backgroundColor: COLORS.warning + '20' }]}>
                                     <Ionicons name="star" size={14} color={COLORS.warning} />
                                     <Text style={[styles.balanceText, { color: COLORS.warning }]}>
                                         {userBalances.points} {t('admin.bookings.availablePoints')}
                                     </Text>
                                 </View>
-                                <View style={[styles.balanceBadge, isRTL && styles.balanceBadgeRTL, { backgroundColor: COLORS.success + '20' }]}>
+                                <View style={[styles.balanceBadge, { backgroundColor: COLORS.success + '20' }]}>
                                     <Ionicons name="wallet" size={14} color={COLORS.success} />
                                     <Text style={[styles.balanceText, { color: COLORS.success }]}>
                                         {userBalances.wallet.toFixed(2)} {currency}
@@ -560,7 +560,7 @@ export default function CreateBooking() {
                                     {t('admin.bookings.pointsAdjustmentDesc')}
                                 </Text>
 
-                                <View style={[styles.typeRow, isRTL && styles.typeRowRTL]}>
+                                <View style={[styles.typeRow]}>
                                     {['NONE', 'ADD', 'DEDUCT'].map((action) => (
                                         <TouchableOpacity
                                             key={action}
@@ -680,7 +680,7 @@ export default function CreateBooking() {
             {/* User Selection Modal */}
             < Modal visible={userModalVisible} animationType="slide" >
                 <View style={styles.modalContainer}>
-                    <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+                    <View style={[styles.modalHeader]}>
                         <Text style={styles.modalTitle}>{t('admin.bookings.selectUser')}</Text>
                         <TouchableOpacity onPress={() => setUserModalVisible(false)}>
                             <Ionicons name="close" size={24} color="black" />
@@ -694,7 +694,7 @@ export default function CreateBooking() {
                             keyExtractor={item => item.id}
                             renderItem={({ item }) => (
                                 <TouchableOpacity
-                                    style={[styles.userItem, isRTL && styles.userItemRTL]}
+                                    style={[styles.userItem]}
                                     onPress={() => {
                                         setSelectedUser(item);
                                         setUserModalVisible(false);
@@ -779,9 +779,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    userSelectorRTL: {
-        flexDirection: "row-reverse",
-    },
+
     placeholder: {
         color: COLORS.textLight,
     },
@@ -831,9 +829,7 @@ const styles = StyleSheet.create({
         gap: 8,
         marginTop: 8,
     },
-    typeRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     typeBtn: {
         paddingHorizontal: 16,
         paddingVertical: 8,
@@ -859,9 +855,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         gap: 10,
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     dateBtn: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -872,9 +866,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 10,
     },
-    dateBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     dateText: {
         fontSize: 14,
         color: COLORS.text,
@@ -889,9 +881,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: COLORS.border,
     },
-    finalPriceRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     finalPriceLabel: {
         fontSize: 18,
         fontWeight: "bold",
@@ -927,9 +917,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    modalHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modalTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -941,9 +929,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    userItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatar: {
         width: 40,
         height: 40,
@@ -962,9 +948,7 @@ const styles = StyleSheet.create({
         gap: 10,
         marginBottom: 16,
     },
-    balanceRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     balanceBadge: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -973,9 +957,7 @@ const styles = StyleSheet.create({
         paddingVertical: 4,
         borderRadius: 12,
     },
-    balanceBadgeRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     balanceText: {
         fontSize: 12,
         fontWeight: "600",

@@ -13,6 +13,7 @@ import {
   Modal,
   Platform,
   Alert,
+  FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,13 +21,14 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
-import { walletApi, pointsApi, cashbackApi, ordersApi, bookingsApi, offersApi, Offer, api } from "../../src/services/api";
+import { walletApi, pointsApi, cashbackApi, ordersApi, bookingsApi, offersApi, Offer, api, resolveReelMediaUrl, rewriteBackendMediaUrl } from "../../src/services/api";
 import { reelsService, Reel } from "../../src/services/reels";
 import NotificationBell from "../../src/components/NotificationBell";
 import Video from 'expo-av/build/Video';
 import { ResizeMode } from 'expo-av/build/Video.types';
 import { initiateBookingPayment, initiateOrderPayment } from "../../src/services/paymentHelpers";
 import { formatCurrency } from "../../src/utils/currency";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 import { isMembershipActive } from "../../src/utils/membership";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -101,21 +103,23 @@ export default function UserDashboard() {
     if (isAutoPlayPaused || featuredOffers.length === 0) return;
 
     const interval = setInterval(() => {
-      if (scrollRef.current) {
+      if (flatListRef.current && featuredOffers.length > 0) {
         let nextSlide = activeSlide + 1;
         if (nextSlide >= featuredOffers.length) {
           nextSlide = 0; // Loop back to start
         }
 
-        // Calculate offset based on card width
-        const offset = nextSlide * (width - 32);
-        scrollRef.current.scrollTo({ x: offset, animated: true });
+        // Use exact mathematical offset to prevent RTL Coordinate conflicts
+        const offset = nextSlide * width;
+        flatListRef.current.scrollToOffset({ offset, animated: true });
         setActiveSlide(nextSlide);
       }
-    }, 4000); // 4 seconds per slide
+    }, 4500); 
 
     return () => clearInterval(interval);
-  }, [activeSlide, isAutoPlayPaused, featuredOffers.length]);
+  }, [activeSlide, isAutoPlayPaused, featuredOffers.length, isRTL, language]);
+
+  const flatListRef = useRef<any>(null);
 
   // Load user data from API if authenticated
   useEffect(() => {
@@ -297,13 +301,13 @@ export default function UserDashboard() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <Image
           source={{ uri: 'https://customer-assets.emergentagent.com/job_viptraveller/artifacts/hsqancxd_altayarlogo.png' }}
           style={styles.logoImage}
           resizeMode="contain"
         />
-        <View style={[styles.headerRight, isRTL && styles.headerRightRTL]}>
+        <View style={[styles.headerRight]}>
           <TouchableOpacity style={styles.langBtn} onPress={toggleLanguage}>
             <Text style={styles.langText}>{language === 'ar' ? 'EN' : 'ع'}</Text>
           </TouchableOpacity>
@@ -404,35 +408,49 @@ export default function UserDashboard() {
         </View>
         {/* Hero Banner Slider - Dynamic */}
         {featuredOffers.length > 0 ? (
-          <>
-            <ScrollView
-              ref={scrollRef}
+          <View style={{ direction: 'ltr' } as any}>
+            <FlatList
+              key={`hero-slider-native-${language}`}
+              ref={flatListRef}
+              data={featuredOffers}
+              keyExtractor={(item, index) => (item.id || index).toString()}
               horizontal
               pagingEnabled
               showsHorizontalScrollIndicator={false}
               style={styles.slider}
               onTouchStart={() => setIsAutoPlayPaused(true)}
               onTouchEnd={() => setIsAutoPlayPaused(false)}
-              onScroll={(e) => {
-                const slide = Math.round(e.nativeEvent.contentOffset.x / (width - 32));
-                setActiveSlide(slide);
+              onMomentumScrollEnd={(e) => {
+                const x = e.nativeEvent.contentOffset.x;
+                const slide = Math.round(x / width);
+                if (slide >= 0 && slide < featuredOffers.length && slide !== activeSlide) {
+                  setActiveSlide(slide);
+                }
               }}
               scrollEventThrottle={16}
-            >
-              {featuredOffers.map((offer, index) => (
-                <BannerCard
-                  key={offer.id || index}
-                  title={language === 'ar' ? offer.title_ar : offer.title_en}
-                  subtitle={offer.discount_percentage ? `${offer.discount_percentage}% ${t("common.off")}` : (language === 'ar' ? offer.description_ar : offer.description_en)}
-                  image={offer.image_url}
-                  gradient={index % 2 === 0 ? ["#1071b8", "#167dc1"] : ["#7c3aed", "#a78bfa"]}
-                  icon="sunny"
-                  isRTL={isRTL}
-                  learnMore={t("common.learnMore")}
-                  onPress={() => router.push(`/(user)/offer/${offer.id}` as any)}
-                />
-              ))}
-            </ScrollView>
+              renderItem={({ item, index }) => (
+                <View style={{ width: width }}>
+                  <BannerCard
+                    title={language === 'ar' ? item.title_ar : item.title_en}
+                    subtitle={item.discount_percentage ? `${item.discount_percentage}% ${t("common.off")}` : (language === 'ar' ? item.description_ar : item.description_en)}
+                    image={item.image_url}
+                    gradient={index % 2 === 0 ? ["#1071b8", "#167dc1"] : ["#7c3aed", "#a78bfa"]}
+                    icon="sunny"
+                    isRTL={isRTL}
+                    learnMore={t("common.learnMore")}
+                    onPress={() => router.push(`/(user)/offer/${item.id}` as any)}
+                  />
+                </View>
+              )}
+              initialNumToRender={1}
+              maxToRenderPerBatch={2}
+              windowSize={3}
+              getItemLayout={(_, index) => ({
+                length: width,
+                offset: width * index,
+                index,
+              })}
+            />
 
             <View style={styles.dots}>
               {featuredOffers.map((_, i) => (
@@ -442,7 +460,7 @@ export default function UserDashboard() {
                 />
               ))}
             </View>
-          </>
+          </View>
         ) : (
           /* Fallback if no featured deals */
           <View style={[styles.bannerCard, { backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' }]}>
@@ -454,7 +472,7 @@ export default function UserDashboard() {
         <MembershipCard isRTL={isRTL} t={t} user={user} language={language} membership={user?.membership} router={router} />
 
         {/* Quick Stats Row */}
-        <View style={[styles.statsRow, isRTL && styles.statsRowRTL]}>
+        <View style={[styles.statsRow]}>
           <StatCard
             icon="wallet"
             label={t("dashboard.wallet")}
@@ -477,8 +495,8 @@ export default function UserDashboard() {
 
         {/* Payments Card - Pending Bills */}
         <View style={styles.card}>
-          <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-            <View style={[styles.cardTitleRow, isRTL && styles.cardTitleRowRTL]}>
+          <View style={[styles.cardHeader]}>
+            <View style={[styles.cardTitleRow]}>
               <Ionicons name="card" size={22} color={COLORS.primary} />
               <Text style={[styles.cardTitle, isRTL && styles.cardTitleRTL]}>
                 {t("dashboard.payments")}
@@ -490,8 +508,7 @@ export default function UserDashboard() {
               )}
             </View>
             <TouchableOpacity onPress={() => router.push("/(user)/orders" as any)}>
-              {/* Link to Orders history page */}
-              <Text style={styles.cardAction}>
+              <Text style={[styles.cardAction, isRTL && styles.textRTL]}>
                 {transactions.length > 1 ? t("common.viewAll") : t("common.history")}
               </Text>
             </TouchableOpacity>
@@ -509,7 +526,7 @@ export default function UserDashboard() {
               return (
                 <TouchableOpacity
                   key={0}
-                  style={[styles.paymentItem, isRTL && styles.paymentItemRTL]}
+                  style={[styles.paymentItem]}
                   onPress={() => openPaymentDetails(item)}
                   activeOpacity={0.7}
                 >
@@ -526,8 +543,8 @@ export default function UserDashboard() {
                       {t('common.due')}: {new Date(dueDate).toLocaleDateString()}
                     </Text>
                   </View>
-                  <Text style={[styles.paymentAmount, { color: COLORS.error }]}>
-                    {item.total_amount} {item.currency}
+                  <Text style={[styles.paymentAmount, { color: COLORS.error }, isRTL && styles.textRTL]}>
+                    {item.total_amount} {formatCurrencyLabel(item.currency, t)}
                   </Text>
                 </TouchableOpacity>
               );
@@ -543,7 +560,7 @@ export default function UserDashboard() {
 
           {transactions.length > 0 && (
             <TouchableOpacity
-              style={[styles.payNowBtn, isRTL && styles.payNowBtnRTL]}
+              style={[styles.payNowBtn]}
               onPress={() => {
                 // Open payment details for the first item
                 if (transactions.length > 0) {
@@ -570,23 +587,23 @@ export default function UserDashboard() {
         <PointsCard isRTL={isRTL} t={t} points={userData.points} total={userData.pointsTotal} isMember={isMember} />
 
         {/* Special Offers Section (Global) */}
-        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+        <View style={[styles.sectionHeader]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("dashboard.specialOffers")}
           </Text>
           <TouchableOpacity onPress={() => router.push("/(user)/offers")}>
-            <Text style={styles.seeAll}>{t("common.seeAll")}</Text>
+            <Text style={[styles.seeAll, isRTL && styles.textRTL]}>{t("common.seeAll")}</Text>
           </TouchableOpacity>
         </View>
 
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={[styles.offersScroll, isRTL && { transform: [{ scaleX: -1 }] }]}
+          style={styles.offersScroll}
         >
           {offers.length > 0 ? (
             offers.map((offer, index) => (
-              <View key={offer.id || index} style={isRTL && { transform: [{ scaleX: -1 }] }}>
+              <View key={offer.id || index}>
                 <OfferCard
                   title={language === 'ar' ? offer.title_ar : offer.title_en}
                   discount={offer.discount_percentage ? `${offer.discount_percentage}%` : ""}
@@ -606,13 +623,13 @@ export default function UserDashboard() {
         </ScrollView>
 
         {/* Membership Description Section */}
-        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL, { marginTop: 24 }]}>
+        <View style={[styles.sectionHeader, { marginTop: 24 }]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("membershipTiers.title")}
           </Text>
         </View>
 
-        <View style={[styles.membershipGrid, isRTL && styles.membershipGridRTL]}>
+        <View style={[styles.membershipGrid]}>
           {MEMBERSHIP_TIERS.map((tier) => (
             <TouchableOpacity
               key={tier.id}
@@ -637,22 +654,22 @@ export default function UserDashboard() {
         </View>
 
         {/* For You Section (Targeted) */}
-        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+        <View style={[styles.sectionHeader]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("dashboard.forYou")}
           </Text>
           <TouchableOpacity onPress={() => router.push("/(user)/for-you")}>
-            <Text style={styles.seeAll}>{t("common.seeAll")}</Text>
+            <Text style={[styles.seeAll, isRTL && styles.textRTL]}>{t("common.seeAll")}</Text>
           </TouchableOpacity>
         </View>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={[styles.offersScroll, isRTL && { transform: [{ scaleX: -1 }] }]}
+          style={styles.offersScroll}
         >
           {forYouOffers.length > 0 ? (
             forYouOffers.map((offer, index) => (
-              <View key={offer.id || index} style={isRTL && { transform: [{ scaleX: -1 }] }}>
+              <View key={offer.id || index}>
                 <OfferCard
                   title={language === 'ar' ? offer.title_ar : offer.title_en}
                   discount={offer.discount_percentage ? `${offer.discount_percentage}%` : ""}
@@ -674,21 +691,21 @@ export default function UserDashboard() {
         {/* Latest Reels Section */}
         {latestReels.length > 0 && (
           <>
-            <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+            <View style={[styles.sectionHeader]}>
               <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
                 {t("dashboard.latestReels", "Latest Reels")}
               </Text>
               <TouchableOpacity onPress={() => router.push("/(user)/reels")}>
-                <Text style={styles.seeAll}>{t("common.seeAll")}</Text>
+                <Text style={[styles.seeAll, isRTL && styles.textRTL]}>{t("common.seeAll")}</Text>
               </TouchableOpacity>
             </View>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              style={[styles.reelsScroll, isRTL && { transform: [{ scaleX: -1 }] }]}
+              style={styles.reelsScroll}
             >
               {latestReels.map((reel) => (
-                <View key={reel.id} style={isRTL && { transform: [{ scaleX: -1 }] }}>
+                <View key={reel.id}>
                   <ReelCard
                     reel={reel}
                     isRTL={isRTL}
@@ -710,7 +727,7 @@ export default function UserDashboard() {
         {/* Admin Access - Only show for admins */}
         {(user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
           <TouchableOpacity
-            style={[styles.adminBtn, isRTL && styles.adminBtnRTL]}
+            style={[styles.adminBtn]}
             onPress={() => router.push("/(admin)")}
           >
             <Ionicons name="shield-checkmark" size={20} color={COLORS.primary} />
@@ -728,7 +745,7 @@ export default function UserDashboard() {
         {/* Employee Access - Only show for employees */}
         {user?.role === "EMPLOYEE" && (
           <TouchableOpacity
-            style={[styles.adminBtn, isRTL && styles.adminBtnRTL]}
+            style={[styles.adminBtn]}
             onPress={() => router.push("/(employee)")}
           >
             <Ionicons name="briefcase" size={20} color={COLORS.gold} />
@@ -749,7 +766,7 @@ export default function UserDashboard() {
       {/* Payment Details Modal */}
       <Modal visible={paymentModalVisible} animationType="slide" presentationStyle="pageSheet">
         <View style={styles.modalContainer}>
-          <View style={[styles.modalHeader, isRTL && styles.headerRTL]}>
+          <View style={[styles.modalHeader]}>
             <Text style={styles.modalTitle}>{t('invoices.details') || "Payment Details"}</Text>
             <TouchableOpacity onPress={() => setPaymentModalVisible(false)} style={styles.closeBtn}>
               <Ionicons name="close" size={24} color={COLORS.text} />
@@ -792,7 +809,7 @@ export default function UserDashboard() {
                     const description = lines.length > 1 ? lines.slice(1).join('\n') : '';
 
                     return (
-                      <View key={idx} style={[styles.itemRow, isRTL && styles.itemRowRTL]}>
+                      <View key={idx} style={[styles.itemRow]}>
                         <View style={{ flex: 1 }}>
                           <Text style={[styles.itemTitle, isRTL && styles.textRTL]}>{title}</Text>
                           {description ? (
@@ -813,7 +830,7 @@ export default function UserDashboard() {
               )}
 
               {/* Financial Summary */}
-              <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+              <View style={[styles.summaryRow]}>
                 <Text style={styles.summaryLabel}>{t('admin.manageInvoices.subtotal') || "Subtotal"}</Text>
                 <Text style={styles.summaryValue}>
                   {formatCurrency(selectedPayment.subtotal || selectedPayment.total_amount, selectedPayment.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -821,7 +838,7 @@ export default function UserDashboard() {
               </View>
 
               {selectedPayment.tax_amount > 0 && (
-                <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+                <View style={[styles.summaryRow]}>
                   <Text style={styles.summaryLabel}>{t('admin.manageInvoices.tax') || "Tax"}</Text>
                   <Text style={styles.summaryValue}>
                     {formatCurrency(selectedPayment.tax_amount, selectedPayment.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -830,7 +847,7 @@ export default function UserDashboard() {
               )}
 
               {selectedPayment.discount_amount > 0 && (
-                <View style={[styles.summaryRow, isRTL && styles.headerRTL]}>
+                <View style={[styles.summaryRow]}>
                   <Text style={[styles.summaryLabel, { color: COLORS.warning }]}>{t('common.discount') || "Discount"}</Text>
                   <Text style={[styles.summaryValue, { color: COLORS.warning }]}>
                     - {formatCurrency(selectedPayment.discount_amount, selectedPayment.currency, isRTL ? 'ar-EG' : 'en-US')}
@@ -840,14 +857,14 @@ export default function UserDashboard() {
 
               <View style={styles.divider} />
 
-              <View style={[styles.totalRow, isRTL && styles.headerRTL]}>
+              <View style={[styles.totalRow]}>
                 <Text style={styles.totalLabelLarge}>{t('orders.total')}</Text>
                 <Text style={styles.amountLarge}>
                   {formatCurrency(selectedPayment.total_amount, selectedPayment.currency, isRTL ? 'ar-EG' : 'en-US')}
                 </Text>
               </View>
 
-              <View style={[styles.saveCardContainer, isRTL && { flexDirection: 'row-reverse' }]}>
+              <View style={[styles.saveCardContainer]}>
                 <TouchableOpacity
                   style={[styles.checkbox, saveCard && styles.checkboxChecked]}
                   onPress={() => setSaveCard(!saveCard)}
@@ -879,36 +896,37 @@ export default function UserDashboard() {
 function BannerCard({ title, subtitle, image, gradient, icon, isRTL, learnMore, onPress }: any) {
   return (
     <View style={styles.bannerCard} >
-      {image ? (
-        <Image source={{ uri: image }} style={[StyleSheet.absoluteFillObject, { borderRadius: 20 }]} resizeMode="cover" />
-      ) : (
-        <LinearGradient
-          colors={gradient as any}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={StyleSheet.absoluteFillObject}
-        />
-      )}
+      <View style={styles.bannerInner}>
+        {image ? (
+          <Image source={{ uri: image }} style={[StyleSheet.absoluteFillObject]} resizeMode="cover" />
+        ) : (
+          <LinearGradient
+            colors={gradient as any}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+        )}
 
-      {/* Content Overlay */}
-      <View style={[styles.bannerContent, isRTL && styles.bannerContentRTL]}>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
-          <Text style={[styles.bannerTitle, isRTL && styles.textRTL]} numberOfLines={1} adjustsFontSizeToFit>{title}</Text>
-          <Text style={[styles.bannerSubtitle, isRTL && styles.textRTL]} numberOfLines={1}>{subtitle}</Text>
+        <View style={[styles.bannerContent]}>
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-start' }}>
+            <Text style={[styles.bannerTitle, isRTL && styles.textRTL]} numberOfLines={1} adjustsFontSizeToFit>{title}</Text>
+            <Text style={[styles.bannerSubtitle, isRTL && styles.textRTL]} numberOfLines={1}>{subtitle}</Text>
+          </View>
+          <TouchableOpacity style={styles.bannerBtn} onPress={onPress}>
+            <Text style={styles.bannerBtnText}>{learnMore}</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={[styles.bannerBtn, isRTL && styles.bannerBtnRTL]} onPress={onPress}>
-          <Text style={styles.bannerBtnText}>{learnMore}</Text>
-        </TouchableOpacity>
-      </View>
 
-      {!image && (
-        <Ionicons
-          name={icon}
-          size={80}
-          color="rgba(255,255,255,0.2)"
-          style={[styles.bannerIcon, isRTL && styles.bannerIconRTL]}
-        />
-      )}
+        {!image && (
+          <Ionicons
+            name={icon}
+            size={80}
+            color="rgba(255,255,255,0.2)"
+            style={styles.bannerIcon}
+          />
+        )}
+      </View>
     </View>
   );
 }
@@ -997,12 +1015,12 @@ function MembershipCard({ isRTL, t, user, language, membership, router }: any) {
         }}
       />
 
-      <View style={[styles.membershipHeader, isRTL && styles.membershipHeaderRTL]}>
+      <View style={[styles.membershipHeader]}>
         <View>
           <Text style={[styles.membershipLabel, isRTL && styles.textRTL]}>
             {t('common.clubMembership')}
           </Text>
-          <View style={[styles.membershipTier, isRTL && styles.membershipTierRTL]}>
+          <View style={[styles.membershipTier]}>
             {isMember ? (
               <Image
                 source={tierConfig.icon}
@@ -1012,7 +1030,7 @@ function MembershipCard({ isRTL, t, user, language, membership, router }: any) {
             ) : (
               <Ionicons name="lock-closed" size={18} color="#fff" />
             )}
-            <Text style={[styles.membershipTierText, isRTL && styles.membershipTierTextRTL, { color: COLORS.white }]}>
+            <Text style={[styles.membershipTierText, { color: COLORS.white }]}>
               {isMember ? String(tierName).toUpperCase() : String(tierName)}
             </Text>
           </View>
@@ -1038,7 +1056,7 @@ function MembershipCard({ isRTL, t, user, language, membership, router }: any) {
         )}
       </View>
 
-      <View style={[styles.membershipFooter, isRTL && styles.membershipFooterRTL]}>
+      <View style={[styles.membershipFooter]}>
         <View>
           <Text style={[styles.membershipExpLabel, isRTL && styles.textRTL]}>
             {t("dashboard.validUntil")}
@@ -1100,7 +1118,7 @@ function StatCard({ icon, label, value, unit, color, isRTL, onPress }: any) {
         <Ionicons name={icon} size={22} color={color} />
       </View>
       <Text style={[styles.statLabel, isRTL && styles.textRTL]}>{label}</Text>
-      <View style={[styles.statValue, isRTL && styles.statValueRTL]}>
+      <View style={[styles.statValue]}>
         <Text style={styles.statNumber}>{value}</Text>
         <Text style={[styles.statUnit, isRTL && styles.statUnitRTL]}>{unit}</Text>
       </View>
@@ -1124,8 +1142,8 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
         end={{ x: 1, y: 1 }}
         style={[styles.card, styles.pointsLockedCard]}
       >
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-          <View style={[styles.cardTitleRow, isRTL && styles.cardTitleRowRTL]}>
+        <View style={[styles.cardHeader]}>
+          <View style={[styles.cardTitleRow]}>
             <Ionicons name="lock-closed" size={22} color="#fff" />
             <Text style={[styles.pointsLockedTitle, isRTL && styles.cardTitleRTL]}>
               {t("dashboard.loyaltyPoints")}
@@ -1145,7 +1163,7 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
           )}
         </Text>
 
-        <View style={[styles.pointsLockedPreviewRow, isRTL && styles.pointsLockedPreviewRowRTL]}>
+        <View style={[styles.pointsLockedPreviewRow]}>
           <View style={styles.pointsLockedPreviewPill}>
             <Ionicons name="trophy-outline" size={16} color="rgba(255,255,255,0.9)" />
             <Text style={styles.pointsLockedPreviewText}>{t("common.placeholderDash")}</Text>
@@ -1157,7 +1175,7 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
         </View>
 
         <TouchableOpacity
-          style={[styles.pointsLockedBtn, isRTL && styles.pointsLockedBtnRTL]}
+          style={[styles.pointsLockedBtn]}
           onPress={() => router.push("/(user)/memberships-explore" as any)}
           activeOpacity={0.85}
         >
@@ -1178,8 +1196,8 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
 
   return (
     <View style={styles.card}>
-      <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-        <View style={[styles.cardTitleRow, isRTL && styles.cardTitleRowRTL]}>
+      <View style={[styles.cardHeader]}>
+        <View style={[styles.cardTitleRow]}>
           <Ionicons name="trophy" size={22} color={COLORS.accent} />
           <Text style={[styles.cardTitle, isRTL && styles.cardTitleRTL]}>
             {t("dashboard.loyaltyPoints")}
@@ -1202,7 +1220,7 @@ function PointsCard({ isRTL, t, points, total, isMember }: any) {
         <View style={styles.progressBar}>
           <View style={[styles.progressFill, { width: `${progressPercent}%`, backgroundColor: COLORS.accent }]} />
         </View>
-        <View style={[styles.progressLabels, isRTL && styles.progressLabelsRTL]}>
+        <View style={[styles.progressLabels]}>
           <Text style={[styles.progressText, isRTL && styles.textRTL]}>
             {points} / {goal} {t("common.pts")}
           </Text>
@@ -1254,7 +1272,7 @@ function OfferCard({ id, title, discount, price, image, isRTL, currency, offer_t
 
       {/* Re-add badge if image was real */}
       {!isFallback && discount && (
-        <View style={[styles.discountBadge, { position: 'absolute', top: 12, right: 12 }, isRTL && { right: undefined, left: 12 }]}>
+        <View style={[styles.discountBadge, { position: 'absolute', top: 12, end: 12 }]}>
           <Text style={styles.discountText}>{discount} {t('common.off')}</Text>
         </View>
       )}
@@ -1262,43 +1280,38 @@ function OfferCard({ id, title, discount, price, image, isRTL, currency, offer_t
       <View style={[styles.offerInfo, isRTL && styles.offerInfoRTL]}>
         <Text style={[styles.offerTitle, isRTL && styles.textRTL]} numberOfLines={1}>{title}</Text>
         <Text style={[styles.offerPrice, isRTL && styles.textRTL]}>
-          {(offer_type === 'BROADCAST' || offer_type === 'OTHER') ? (t('common.readMore')) : `${t('common.from')} ${price} ${currency}`}
+          {(offer_type === 'BROADCAST' || offer_type === 'OTHER') ? (t('common.readMore')) : `${t('common.from')} ${price} ${formatCurrencyLabel(currency, t)}`}
         </Text>
       </View>
     </TouchableOpacity>
   );
 }
 
-// Get API base URL for video sources
-const getApiBaseUrl = (): string => {
-  return api.getBaseUrl();
-};
-
 function ReelCard({ reel, isRTL, t, onPress }: { reel: Reel; isRTL: boolean; t: any; onPress: () => void }) {
   // Get thumbnail or video source
   let thumbnailUrl = reel.thumbnail_url;
-  let videoSource = null;
+  let videoSource: string | null = null;
 
-  // For YouTube videos, extract thumbnail
-  if (!thumbnailUrl && reel.video_type === 'YOUTUBE' && reel.video_url) {
-    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+  const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+
+  // YouTube still image (works without server-side ffmpeg)
+  if (!thumbnailUrl && reel.video_url) {
     const match = reel.video_url.match(youtubeRegex);
-    if (match && match[1]) {
+    if (match?.[1]) {
       thumbnailUrl = `https://img.youtube.com/vi/${match[1]}/mqdefault.jpg`;
     }
-  } else if (reel.video_type === 'UPLOAD' && reel.video_url) {
-    // For uploaded videos, use video URL as source for Video component
-    const baseUrl = getApiBaseUrl();
-    if (reel.video_url.startsWith('/')) {
-      videoSource = `${baseUrl}${reel.video_url}`;
-    } else if (reel.video_url.startsWith('http://') || reel.video_url.startsWith('https://')) {
-      videoSource = reel.video_url;
-    } else {
-      const filename = reel.video_url.split('/').pop();
-      if (filename) {
-        videoSource = `${baseUrl}/reels/video/${filename}`;
-      }
-    }
+  }
+
+  if (reel.video_type === 'UPLOAD' && reel.video_url) {
+    videoSource = resolveReelMediaUrl(reel.video_url) ?? null;
+  } else if (
+    !thumbnailUrl &&
+    reel.video_type === 'URL' &&
+    reel.video_url &&
+    (reel.video_url.startsWith('http://') || reel.video_url.startsWith('https://')) &&
+    !youtubeRegex.test(reel.video_url)
+  ) {
+    videoSource = resolveReelMediaUrl(reel.video_url) ?? null;
   }
 
   return (
@@ -1306,7 +1319,7 @@ function ReelCard({ reel, isRTL, t, onPress }: { reel: Reel; isRTL: boolean; t: 
       <View style={styles.reelThumbnailContainer}>
         {thumbnailUrl ? (
           <Image
-            source={{ uri: thumbnailUrl }}
+            source={{ uri: rewriteBackendMediaUrl(thumbnailUrl) ?? thumbnailUrl }}
             style={styles.reelThumbnail}
             resizeMode="cover"
           />
@@ -1345,7 +1358,7 @@ function ReelCard({ reel, isRTL, t, onPress }: { reel: Reel; isRTL: boolean; t: 
         <Text style={[styles.reelTitle, isRTL && styles.textRTL]} numberOfLines={2}>
           {reel.title || t('reels.untitled', 'Untitled Reel')}
         </Text>
-        <View style={[styles.reelStats, isRTL && styles.reelStatsRTL]}>
+        <View style={[styles.reelStats]}>
           <View style={styles.reelStat}>
             <Ionicons name="heart" size={12} color="#FF3B30" />
             <Text style={styles.reelStatText}>{reel.likes_count || 0}</Text>
@@ -1382,9 +1395,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   logoImage: {
     width: 120,
     height: 40,
@@ -1394,9 +1405,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  headerRightRTL: {
-    flexDirection: "row-reverse",
-  },
+
   langBtn: {
     backgroundColor: "rgba(255,255,255,0.2)",
     paddingHorizontal: 10,
@@ -1422,8 +1431,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   badgeRTL: {
-    right: undefined,
-    left: -4,
+    // start/end handles this
   },
   badgeText: {
     color: COLORS.white,
@@ -1435,14 +1443,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingBottom: 24,
   },
   greeting: {
     marginTop: 20,
     marginBottom: 16,
+    paddingHorizontal: 16,
   },
   greetingRTL: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   greetingText: {
     fontSize: 26,
@@ -1466,29 +1475,34 @@ const styles = StyleSheet.create({
   slider: {
     marginBottom: 8,
   },
+  sliderContent: {
+    // No extra padding needed for paging
+  },
   bannerCard: {
-    width: width - 32,
-    height: 180, // Increased height for better aspect ratio
-    borderRadius: 20,
-    marginEnd: 12,
-    flexDirection: "row",
+    width: width,
+    height: 180,
+    paddingHorizontal: 16,
     overflow: "hidden",
+  },
+  bannerInner: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: "hidden",
+    position: 'relative',
   },
   bannerContent: {
     position: 'absolute',
     bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.6)', // Bottom overlay
+    start: 0,
+    end: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)', 
     paddingVertical: 12,
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  bannerContentRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   bannerTitle: {
     fontSize: 18, // Reduced from 24
     fontWeight: "bold",
@@ -1507,22 +1521,20 @@ const styles = StyleSheet.create({
     marginStart: 12,
   },
   bannerBtnRTL: {
-    marginStart: 0,
-    marginEnd: 12,
+    // marginStart natively flips in RTL
   },
   bannerBtnText: {
     color: COLORS.white,
     fontWeight: "600",
-    fontSize: 12, // Reduced from 13
+    fontSize: 12,
   },
   bannerIcon: {
     position: "absolute",
-    right: 10,
+    end: 10,
     bottom: 10,
   },
   bannerIconRTL: {
-    right: undefined,
-    left: 10,
+    // start/end handles this
   },
   dots: {
     flexDirection: "row",
@@ -1543,6 +1555,7 @@ const styles = StyleSheet.create({
   membershipCard: {
     borderRadius: 20,
     padding: 20,
+    marginHorizontal: 16,
     marginBottom: 16,
   },
   membershipHeader: {
@@ -1550,9 +1563,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
   },
-  membershipHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   membershipLabel: {
     fontSize: 11,
     color: "rgba(255,255,255,0.6)",
@@ -1563,9 +1574,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 4,
   },
-  membershipTierRTL: {
-    flexDirection: "row-reverse",
-  },
+
   membershipTierText: {
     fontSize: 20,
     fontWeight: "bold",
@@ -1573,8 +1582,7 @@ const styles = StyleSheet.create({
     marginStart: 6,
   },
   membershipTierTextRTL: {
-    marginStart: 0,
-    marginEnd: 6,
+    // handled by logical direction
   },
   manageBtn: {
     backgroundColor: "rgba(255,255,255,0.15)",
@@ -1591,7 +1599,7 @@ const styles = StyleSheet.create({
     marginTop: 24,
   },
   membershipDetailsRTL: {
-    alignItems: "flex-end",
+    // handled by logical direction
   },
   memberName: {
     fontSize: 18,
@@ -1609,9 +1617,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginTop: 20,
   },
-  membershipFooterRTL: {
-    flexDirection: "row-reverse",
-  },
+
   membershipExpLabel: {
     fontSize: 11,
     color: "rgba(255,255,255,0.5)",
@@ -1641,10 +1647,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 16,
+    paddingHorizontal: 16,
   },
-  statsRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   statCard: {
     flex: 1,
     backgroundColor: COLORS.white,
@@ -1675,9 +1680,7 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     marginTop: 4,
   },
-  statValueRTL: {
-    flexDirection: "row-reverse",
-  },
+
   statNumber: {
     fontSize: 18,
     fontWeight: "bold",
@@ -1689,13 +1692,13 @@ const styles = StyleSheet.create({
     marginStart: 3,
   },
   statUnitRTL: {
-    marginStart: 0,
-    marginEnd: 3,
+    // handled by logical direction
   },
   card: {
     backgroundColor: COLORS.white,
     borderRadius: 20,
     padding: 18,
+    marginHorizontal: 16,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -1709,16 +1712,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  cardHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardTitleRow: {
     flexDirection: "row",
     alignItems: "center",
   },
-  cardTitleRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardTitle: {
     fontSize: 17,
     fontWeight: "600",
@@ -1726,8 +1725,7 @@ const styles = StyleSheet.create({
     marginStart: 8,
   },
   cardTitleRTL: {
-    marginStart: 0,
-    marginEnd: 8,
+    // handled by logical direction
   },
   cardAction: {
     fontSize: 13,
@@ -1741,9 +1739,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
   },
-  paymentItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   paymentIcon: {
     width: 40,
     height: 40,
@@ -1756,9 +1752,7 @@ const styles = StyleSheet.create({
     marginStart: 12,
   },
   paymentInfoRTL: {
-    marginStart: 0,
-    marginEnd: 12,
-    alignItems: "flex-end",
+    // handled by logical direction
   },
   paymentTitle: {
     fontSize: 15,
@@ -1783,9 +1777,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 16,
   },
-  payNowBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   payNowText: {
     color: COLORS.white,
     fontSize: 15,
@@ -1825,9 +1817,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 8,
   },
-  progressLabelsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   progressText: {
     fontSize: 12,
     color: COLORS.textLight,
@@ -1858,9 +1848,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 10,
   },
-  pointsLockedPreviewRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   pointsLockedPreviewPill: {
     flex: 1,
     flexDirection: "row",
@@ -1889,9 +1877,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 10,
   },
-  pointsLockedBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   pointsLockedBtnText: {
     color: "#0f172a",
     fontWeight: "900",
@@ -1900,12 +1886,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 16,
     marginBottom: 12,
-    marginTop: 8,
+    marginTop: 24,
   },
-  sectionHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -1917,8 +1902,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   offersScroll: {
-    marginStart: -16,
-    paddingStart: 16,
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   offerCard: {
@@ -1946,7 +1930,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   discountBadgeRTL: {
-    alignSelf: "flex-start",
+    // Native RTL automatically mirrors to left padding and layout
   },
   discountText: {
     color: COLORS.white,
@@ -1957,7 +1941,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   offerInfoRTL: {
-    alignItems: "flex-end",
+    // Native RTL handles cross-axis layout natively
   },
   offerTitle: {
     fontSize: 14,
@@ -1978,9 +1962,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginTop: 8,
   },
-  adminBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   adminBtnText: {
     flex: 1,
     fontSize: 14,
@@ -1988,16 +1970,14 @@ const styles = StyleSheet.create({
     marginStart: 10,
   },
   adminBtnTextRTL: {
-    marginStart: 0,
-    marginEnd: 10,
+    // marginStart natively flips in RTL
     textAlign: "right",
   },
   bottomSpacer: {
-    height: 100,
+    height: 64,
   },
   reelsScroll: {
-    marginStart: -16,
-    paddingStart: 16,
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
   reelCard: {
@@ -2050,7 +2030,7 @@ const styles = StyleSheet.create({
   reelViewsCount: {
     position: 'absolute',
     bottom: 8,
-    left: 8,
+    start: 8,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -2068,7 +2048,7 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   reelInfoRTL: {
-    alignItems: 'flex-end',
+    // Native RTL handles cross-axis flex-start alignment cleanly
   },
   reelTitle: {
     fontSize: 13,
@@ -2081,9 +2061,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
   },
-  reelStatsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   reelStat: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2109,9 +2087,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 25,
   },
-  membershipGridRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   tierCardMinimal: {
     // Correct calculation: (windowWidth - outerScrollPadding(32) - gridPadding(24) - 2*gaps(20)) / 3
     width: (width - 32 - 24 - 20) / 3 - 1,
@@ -2179,9 +2155,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 16,
   },
-  infoRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   infoLabel: {
     fontSize: 14,
     color: COLORS.textLight,
@@ -2234,9 +2208,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
   },
-  itemRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   itemTitle: {
     fontSize: 14,
     fontWeight: '600',

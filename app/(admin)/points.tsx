@@ -152,7 +152,7 @@ export default function PointsPage() {
                             {searchResults.map(user => (
                                 <TouchableOpacity
                                     key={user.id}
-                                    style={[styles.searchResultItem, isRTL && styles.searchResultItemRTL]}
+                                    style={[styles.searchResultItem]}
                                     onPress={() => handleUserSelect(user)}
                                 >
                                     <View style={styles.userInfo}>
@@ -184,7 +184,7 @@ export default function PointsPage() {
                     <View style={[styles.section, isRTL && styles.sectionRTL]}>
                         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.managePoints.userSummary')}</Text>
                         <View style={styles.userSummaryCard}>
-                            <View style={[styles.userSummaryHeader, isRTL && styles.userSummaryHeaderRTL]}>
+                            <View style={[styles.userSummaryHeader]}>
                                 {selectedUser.avatar ? (
                                     <Image source={{ uri: selectedUser.avatar }} style={[styles.userAvatar, isRTL && styles.userAvatarRTL]} />
                                 ) : (
@@ -237,12 +237,11 @@ export default function PointsPage() {
                             placeholderTextColor="#94a3b8"
                         />
 
-                        <View style={[styles.buttonRow, isRTL && styles.buttonRowRTL]}>
+                        <View style={[styles.buttonRow]}>
                             <TouchableOpacity
                                 style={[
                                     styles.btn,
                                     styles.btnSuccess,
-                                    isRTL && styles.btnRTL,
                                     (!selectedUser || !points.trim() || loading) && styles.btnDisabled
                                 ]}
                                 onPress={() => handleConfirmAction('add')}
@@ -256,7 +255,6 @@ export default function PointsPage() {
                                 style={[
                                     styles.btn,
                                     styles.btnError,
-                                    isRTL && styles.btnRTL,
                                     (!selectedUser || !points.trim() || loading) && styles.btnDisabled
                                 ]}
                                 onPress={() => handleConfirmAction('remove')}
@@ -290,7 +288,7 @@ export default function PointsPage() {
                                 : t('admin.managePoints.confirmRemove', { points, user: `${selectedUser.first_name} ${selectedUser.last_name}` })
                             }
                         </Text>
-                        <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+                        <View style={[styles.modalButtons]}>
                             <TouchableOpacity
                                 style={[styles.modalBtn, styles.modalBtnCancel]}
                                 onPress={() => setShowConfirmModal(false)}
@@ -367,7 +365,7 @@ function HistoryList({ userId, type, trigger, isRTL }: any) {
                 const actionColor = isAdd ? COLORS.success : COLORS.error;
 
                 return (
-                    <View key={idx} style={[styles.historyRow, isRTL && styles.historyRowRTL]}>
+                    <View key={idx} style={[styles.historyRow]}>
                         <View style={[styles.historyLeft, isRTL && styles.historyLeftRTL]}>
                             <Text style={[styles.historyDate, isRTL && styles.textRTL]}>
                                 {new Date(item.created_at || item.date).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}
@@ -520,9 +518,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    userSummaryHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userAvatar: {
         width: 50,
         height: 50,
@@ -741,24 +737,11 @@ const styles = StyleSheet.create({
     searchResultsRTL: {
         // Search results RTL adjustments if needed
     },
-    searchResultItemRTL: {
-        flexDirection: 'row-reverse',
-    },
-    buttonRowRTL: {
-        flexDirection: "row-reverse",
-    },
-    btnRTL: {
-        flexDirection: "row-reverse",
-    },
+
     modalContentRTL: {
         // Modal RTL adjustments if needed
     },
-    modalButtonsRTL: {
-        flexDirection: 'row-reverse',
-    },
-    historyRowRTL: {
-        flexDirection: "row-reverse",
-    },
+
     historyLeftRTL: {
         alignItems: 'flex-end',
     },

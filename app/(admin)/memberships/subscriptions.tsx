@@ -480,9 +480,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flex: 1,
     },
-    rowReverse: {
-        flexDirection: 'row-reverse',
-    },
+    // Row order comes from LanguageProvider/Yoga `direction`; extra row-reverse here flipped Arabic back to LTR.
+    rowReverse: {},
     backBtn: {
         padding: 8,
         marginEnd: 8,

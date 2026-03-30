@@ -188,7 +188,7 @@ export default function ClubGiftsPage() {
                             {searchResults.map(user => (
                                 <TouchableOpacity
                                     key={user.id}
-                                    style={[styles.searchResultItem, isRTL && styles.searchResultItemRTL]}
+                                    style={[styles.searchResultItem]}
                                     onPress={() => handleUserSelect(user)}
                                 >
                                     <View style={styles.userInfo}>
@@ -220,7 +220,7 @@ export default function ClubGiftsPage() {
                     <View style={[styles.section, isRTL && styles.sectionRTL]}>
                         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageCashback.userSummary')}</Text>
                         <View style={styles.userSummaryCard}>
-                            <View style={[styles.userSummaryHeader, isRTL && styles.userSummaryHeaderRTL]}>
+                            <View style={[styles.userSummaryHeader]}>
                                 {selectedUser.avatar ? (
                                     <Image source={{ uri: selectedUser.avatar }} style={[styles.userAvatar, isRTL && styles.userAvatarRTL]} />
                                 ) : (
@@ -259,7 +259,7 @@ export default function ClubGiftsPage() {
 
                         {/* Action Type Selection */}
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageCashback.actionType')}</Text>
-                        <View style={[styles.actionTypeContainer, isRTL && styles.actionTypeContainerRTL]}>
+                        <View style={[styles.actionTypeContainer]}>
                             <TouchableOpacity
                                 style={[styles.actionTypeButton, actionType === 'add' && styles.actionTypeButtonActive]}
                                 onPress={() => setActionType('add')}
@@ -303,7 +303,6 @@ export default function ClubGiftsPage() {
                             style={[
                                 styles.btn,
                                 actionType === 'add' ? styles.btnSuccess : styles.btnError,
-                                isRTL && styles.btnRTL,
                                 (!selectedUser || !amount.trim() || loading) && styles.btnDisabled
                             ]}
                             onPress={handleConfirmAction}
@@ -345,7 +344,7 @@ export default function ClubGiftsPage() {
                                 })
                             }
                         </Text>
-                        <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+                        <View style={[styles.modalButtons]}>
                             <TouchableOpacity
                                 style={[styles.modalBtn, styles.modalBtnCancel]}
                                 onPress={() => setShowConfirmModal(false)}
@@ -434,7 +433,7 @@ function HistoryList({ userId, type, trigger, isRTL }: any) {
                     : `${Math.abs(item.amount || item.cashback_amount || 0).toFixed(2)} ${t('common.currency.usd')}`;
 
                 return (
-                    <View key={idx} style={[styles.historyRow, isRTL && styles.historyRowRTL]}>
+                    <View key={idx} style={[styles.historyRow]}>
                         <View style={[styles.historyLeft, isRTL && styles.historyLeftRTL]}>
                             <Text style={[styles.historyDate, isRTL && styles.textRTL]}>
                                 {new Date(item.created_at || item.date).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}
@@ -588,9 +587,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    userSummaryHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     userAvatar: {
         width: 50,
         height: 50,
@@ -849,24 +846,11 @@ const styles = StyleSheet.create({
     searchResultsRTL: {
         // Search results RTL adjustments if needed
     },
-    searchResultItemRTL: {
-        flexDirection: 'row-reverse',
-    },
-    actionTypeContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
-    btnRTL: {
-        flexDirection: "row-reverse",
-    },
+
     modalContentRTL: {
         // Modal RTL adjustments if needed
     },
-    modalButtonsRTL: {
-        flexDirection: 'row-reverse',
-    },
-    historyRowRTL: {
-        flexDirection: "row-reverse",
-    },
+
     historyLeftRTL: {
         alignItems: 'flex-end',
     },

@@ -251,7 +251,7 @@ export default function ReferralScreen() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
                     <Ionicons name={isRTL ? 'arrow-forward' : 'arrow-back'} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -279,21 +279,19 @@ export default function ReferralScreen() {
                             <Text style={styles.codeText}>{referralCode || '—'}</Text>
                         )}
                     </View>
-                    <View style={[styles.actionButtons, isRTL && styles.rowRTL]}>
+                    <View style={[styles.actionButtons]}>
                         <TouchableOpacity
-                            style={[styles.actionBtn, styles.copyBtn]}
+                            style={[styles.actionBtn, styles.copyBtn, { opacity: codeLoading ? 0.6 : 1 }]}
                             onPress={copyToClipboard}
                             disabled={codeLoading}
-                            opacity={codeLoading ? 0.6 : 1}
                         >
                             <Ionicons name="copy-outline" size={20} color={COLORS.white} />
                             <Text style={styles.actionBtnText}>{t('referral.copy')}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={[styles.actionBtn, styles.shareBtn]}
+                            style={[styles.actionBtn, styles.shareBtn, { opacity: codeLoading ? 0.6 : 1 }]}
                             onPress={shareReferralCode}
                             disabled={codeLoading}
-                            opacity={codeLoading ? 0.6 : 1}
                         >
                             <Ionicons name="share-social-outline" size={20} color={COLORS.white} />
                             <Text style={styles.actionBtnText}>{t('referral.share')}</Text>
@@ -302,7 +300,7 @@ export default function ReferralScreen() {
                 </View>
 
                 {/* Stats Cards */}
-                <View style={[styles.statsGrid, isRTL && styles.rowRTL]}>
+                <View style={[styles.statsGrid]}>
                     <View style={styles.statCard}>
                         <Ionicons name="people" size={32} color={COLORS.primary} />
                         <Text style={styles.statValue}>{stats.totalReferrals}</Text>
@@ -378,7 +376,7 @@ export default function ReferralScreen() {
                             { icon: 'card', text: t('referral.steps.subscribe') },
                             { icon: 'star', text: t('referral.steps.earn') },
                         ].map((step, idx) => (
-                            <View key={idx} style={[styles.stepItem, isRTL && styles.rowRTL]}>
+                            <View key={idx} style={[styles.stepItem]}>
                                 <View style={styles.stepIcon}>
                                     <Ionicons name={step.icon as any} size={20} color={COLORS.primary} />
                                 </View>
@@ -406,7 +404,7 @@ export default function ReferralScreen() {
                                 ? t('common.statuses.ACTIVE', t('common.statuses.active', 'Active'))
                                 : t('common.statuses.PENDING', t('common.statuses.pending', 'Pending'));
                             return (
-                                <View key={item.id} style={[styles.historyItem, isRTL && styles.rowRTL]}>
+                                <View key={item.id} style={[styles.historyItem]}>
                                     <View style={styles.historyIcon}>
                                         <Ionicons
                                             name={isActive ? 'checkmark-circle' : 'time'}
@@ -452,9 +450,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backBtn: {
         padding: 8,
     },
@@ -506,9 +502,7 @@ const styles = StyleSheet.create({
         gap: 12,
         marginTop: 20,
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     actionBtn: {
         flexDirection: 'row',
         alignItems: 'center',

@@ -118,7 +118,7 @@ export default function ResetPasswordScreen() {
                 style={{ flex: 1 }}
             >
                 {/* Header */}
-                <View style={[styles.header, isRTL && styles.headerRTL]}>
+                <View style={[styles.header]}>
                     <TouchableOpacity onPress={() => router.back()}>
                         <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                     </TouchableOpacity>
@@ -253,7 +253,7 @@ export default function ResetPasswordScreen() {
 
 function RequirementItem({ met, text, isRTL }: { met: boolean; text: string; isRTL: boolean }) {
     return (
-        <View style={[styles.requirementRow, isRTL && styles.requirementRowRTL]}>
+        <View style={[styles.requirementRow]}>
             <Ionicons
                 name={met ? "checkmark-circle" : "ellipse-outline"}
                 size={16}
@@ -281,9 +281,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.lightGray,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     headerTitle: {
         fontSize: 18,
         fontWeight: "600",
@@ -375,9 +373,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 6,
     },
-    requirementRowRTL: {
-        flexDirection: "row-reverse",
-    },
+
     requirementText: {
         fontSize: 13,
         color: COLORS.textLight,

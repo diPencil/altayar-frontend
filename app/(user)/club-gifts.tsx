@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import { useAuth } from "../../src/contexts/AuthContext";
 import { cashbackApi, walletApi } from "../../src/services/api";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 
 const COLORS = {
   primary: "#1071b8",
@@ -50,14 +51,18 @@ export default function ClubGiftsScreen() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [balanceRes, recordsRes] = await Promise.allSettled([
+      const [balanceRes, recordsRes, walletRes] = await Promise.allSettled([
         cashbackApi.getBalance(),
         cashbackApi.getRecords(),
+        walletApi.getBalance(),
       ]);
 
       if (balanceRes.status === 'fulfilled') {
         setTotal((balanceRes.value as any)?.total || 0);
         setAvailable((balanceRes.value as any)?.available || 0);
+      }
+      if (walletRes.status === "fulfilled") {
+        setCashbackCurrency((walletRes.value as any)?.currency || "USD");
       }
       if (recordsRes.status === 'fulfilled') {
         setRecords((recordsRes.value as any) || []);
@@ -100,7 +105,7 @@ export default function ClubGiftsScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -119,13 +124,13 @@ export default function ClubGiftsScreen() {
       >
         {/* Cashback Card */}
         <View style={styles.cashbackCard}>
-          <View style={[styles.cardRow, isRTL && styles.cardRowRTL]}>
+          <View style={[styles.cardRow]}>
             <View style={styles.cardItem}>
               <Text style={[styles.cardLabel, isRTL && styles.textRTL]}>
                 {t('cashback.totalCashback')}
               </Text>
               <Text style={styles.cardAmount}>
-                {total.toLocaleString()} {t('wallet.currency')}
+                {total.toLocaleString()} {formatCurrencyLabel(cashbackCurrency, t)}
               </Text>
             </View>
             <View style={styles.cardDivider} />
@@ -134,7 +139,7 @@ export default function ClubGiftsScreen() {
                 {t('cashback.available')}
               </Text>
               <Text style={[styles.cardAmount, { color: COLORS.success }]}>
-                {available.toLocaleString()} {t('wallet.currency')}
+                {available.toLocaleString()} {formatCurrencyLabel(cashbackCurrency, t)}
               </Text>
             </View>
           </View>
@@ -186,7 +191,7 @@ export default function ClubGiftsScreen() {
               }
 
               return (
-                <View key={index} style={[styles.recordItem, isRTL && styles.recordItemRTL]}>
+                <View key={index} style={[styles.recordItem]}>
                   <View style={[styles.recordIcon, isNegative && { backgroundColor: '#fee2e2' }]}>
                     <Ionicons
                       name={isNegative ? "arrow-up-outline" : "gift"}
@@ -203,7 +208,7 @@ export default function ClubGiftsScreen() {
                     </Text>
                   </View>
                   <Text style={[styles.recordAmount, isNegative && { color: '#ef4444' }]}>
-                    {isNegative ? '-' : '+'}{formattedAmount} {t('wallet.currency')}
+                    {isNegative ? '-' : '+'}{formattedAmount} {formatCurrencyLabel(cashbackCurrency, t)}
                   </Text>
                 </View>
               );
@@ -226,7 +231,7 @@ export default function ClubGiftsScreen() {
               {t('cashback.requestWithdrawConfirmMessage', 'Are you sure you want to withdraw {{amount}} to your wallet?', { amount: Number(available).toFixed(2) })}
             </Text>
 
-            <View style={[styles.modalButtons, isRTL && styles.modalButtonsRTL]}>
+            <View style={[styles.modalButtons]}>
               <TouchableOpacity
                 style={[styles.modalBtn, styles.modalBtnCancel]}
                 onPress={() => setShowConfirmModal(false)}
@@ -269,9 +274,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -292,9 +295,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  cardRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardItem: {
     flex: 1,
     alignItems: "center",
@@ -358,9 +359,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 12,
   },
-  recordItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   recordIcon: {
     width: 44,
     height: 44,
@@ -374,9 +373,9 @@ const styles = StyleSheet.create({
     marginStart: 12,
   },
   recordInfoRTL: {
-    marginStart: 0,
-    marginEnd: 12,
-    alignItems: "flex-end",
+//     marginStart: 0,  /* removed double-flip for Native RTL */
+//     marginEnd: 12,  /* removed double-flip for Native RTL */
+    alignItems: "flex-start",
   },
   recordDesc: {
     fontSize: 15,
@@ -445,9 +444,7 @@ const styles = StyleSheet.create({
     width: '100%',
     gap: 12,
   },
-  modalButtonsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   modalBtn: {
     flex: 1,
     paddingVertical: 12,

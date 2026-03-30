@@ -358,7 +358,7 @@ export default function CreateInvoice() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen options={{ title: isEditMode ? (t("admin.editOrder") || "Edit Order") : t("admin.newOrder"), headerBackTitle: "Back" }} />
+            <Stack.Screen options={{ title: isEditMode ? (t("admin.editOrder") || "Edit Order") : t("admin.newOrder"), headerBackTitle: t("common.back") }} />
 
             <ScrollView contentContainerStyle={styles.scrollContent}>
 
@@ -366,7 +366,7 @@ export default function CreateInvoice() {
                 <View style={[styles.section, isRTL && styles.sectionRTL]}>
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageInvoices.customer')}</Text>
                     <TouchableOpacity
-                        style={[styles.userSelector, isRTL && styles.userSelectorRTL]}
+                        style={[styles.userSelector]}
                         onPress={() => setUserModalVisible(true)}
                     >
                         {selectedUser ? (
@@ -382,20 +382,20 @@ export default function CreateInvoice() {
 
                     {/* User Balances */}
                     {selectedUser && (
-                        <View style={[styles.balanceRow, isRTL && styles.balanceRowRTL]}>
-                            <View style={[styles.balanceBadge, isRTL && styles.balanceBadgeRTL, { backgroundColor: COLORS.warning + '20' }]}>
+                        <View style={[styles.balanceRow]}>
+                            <View style={[styles.balanceBadge, { backgroundColor: COLORS.warning + '20' }]}>
                                 <Ionicons name="star" size={14} color={COLORS.warning} />
                                 <Text style={[styles.balanceText, { color: COLORS.warning }]}>
                                     {userBalances.points} PTS
                                 </Text>
                             </View>
-                            <View style={[styles.balanceBadge, isRTL && styles.balanceBadgeRTL, { backgroundColor: COLORS.success + '20' }]}>
+                            <View style={[styles.balanceBadge, { backgroundColor: COLORS.success + '20' }]}>
                                 <Ionicons name="wallet" size={14} color={COLORS.success} />
                                 <Text style={[styles.balanceText, { color: COLORS.success }]}>
                                     {userBalances.wallet.toFixed(2)} {currency}
                                 </Text>
                             </View>
-                            <View style={[styles.balanceBadge, isRTL && styles.balanceBadgeRTL, { backgroundColor: COLORS.primary + '20' }]}>
+                            <View style={[styles.balanceBadge, { backgroundColor: COLORS.primary + '20' }]}>
                                 <Ionicons name="cash" size={14} color={COLORS.primary} />
                                 <Text style={[styles.balanceText, { color: COLORS.primary }]}>
                                     {userBalances.cashback.toFixed(2)} {currency}
@@ -409,7 +409,7 @@ export default function CreateInvoice() {
                 <View style={[styles.section, isRTL && styles.sectionRTL]}>
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t('admin.manageInvoices.items')}</Text>
                     {items.map((item, index) => (
-                        <View key={index} style={[styles.itemRow, isRTL && styles.itemRowRTL]}>
+                        <View key={index} style={[styles.itemRow]}>
                             <View style={{ flex: 1 }}>
                                 <TextInput
                                     placeholder={t('admin.manageInvoices.itemTitle') || "Item Title"}
@@ -423,7 +423,7 @@ export default function CreateInvoice() {
                                     value={item.description}
                                     onChangeText={(t) => updateItem(index, "description", t)}
                                 />
-                                <View style={[{ flexDirection: 'row', gap: 10, marginTop: 10 }, isRTL && { flexDirection: 'row-reverse' }]}>
+                                <View style={[{ flexDirection: 'row', gap: 10, marginTop: 10 }]}>
                                     <TextInput
                                         placeholder={t('admin.manageInvoices.qty')}
                                         keyboardType="numeric"
@@ -447,7 +447,7 @@ export default function CreateInvoice() {
                             )}
                         </View>
                     ))}
-                    <TouchableOpacity onPress={addItem} style={[styles.addItemBtn, isRTL && styles.addItemBtnRTL]}>
+                    <TouchableOpacity onPress={addItem} style={[styles.addItemBtn]}>
                         <Ionicons name="add" size={18} color={COLORS.primary} />
                         <Text style={styles.addItemText}>{t('admin.manageInvoices.addItem')}</Text>
                     </TouchableOpacity>
@@ -459,9 +459,9 @@ export default function CreateInvoice() {
 
 
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageInvoices.currency')}</Text>
-                        <View style={[styles.currencyRow, isRTL && styles.currencyRowRTL]}>
+                        <View style={[styles.currencyRow]}>
                             {['USD', 'EUR', 'SAR', 'EGP'].map((curr) => (
                                 <TouchableOpacity
                                     key={curr}
@@ -482,7 +482,7 @@ export default function CreateInvoice() {
                         </View>
                     </View>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageInvoices.taxRate')}</Text>
                         <TextInput
                             placeholder="14"
@@ -499,7 +499,7 @@ export default function CreateInvoice() {
                         />
                     </View>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageInvoices.discount')}</Text>
                         <TextInput
                             placeholder="0.00"
@@ -511,7 +511,7 @@ export default function CreateInvoice() {
                         />
                     </View>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 10 }]}>
+                    <View style={[styles.row, { marginTop: 10 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageInvoices.freeOrder') || "Free Order"}</Text>
                         <Switch
                             value={isFree}
@@ -521,7 +521,7 @@ export default function CreateInvoice() {
                         />
                     </View>
 
-                    <View style={[styles.row, isRTL && styles.rowRTL, { marginTop: 10 }]}>
+                    <View style={[styles.row, { marginTop: 10 }]}>
                         <Text style={[styles.label, isRTL && styles.textRTL]}>{t('admin.manageInvoices.paymentStatus') || "Payment Status"}</Text>
                         <View style={{ flexDirection: 'row', gap: 10 }}>
                             <TouchableOpacity
@@ -552,7 +552,7 @@ export default function CreateInvoice() {
                         <View style={[styles.section, isRTL && styles.sectionRTL]}>
                             {/* Points Deduction */}
                             <View style={[styles.deductionRow, isRTL && styles.deductionRowRTL]}>
-                                <View style={[{ flexDirection: 'row', alignItems: 'center' }, isRTL && { flexDirection: 'row-reverse' }]}>
+                                <View style={[{ flexDirection: 'row', alignItems: 'center' }]}>
                                     <Switch
                                         value={usePoints}
                                         onValueChange={setUsePoints}
@@ -590,7 +590,7 @@ export default function CreateInvoice() {
 
                             {/* Wallet Deduction */}
                             <View style={[styles.deductionRow, isRTL && styles.deductionRowRTL, { marginTop: 15 }]}>
-                                <View style={[{ flexDirection: 'row', alignItems: 'center' }, isRTL && { flexDirection: 'row-reverse' }]}>
+                                <View style={[{ flexDirection: 'row', alignItems: 'center' }]}>
                                     <Switch
                                         value={useWallet}
                                         onValueChange={setUseWallet}
@@ -622,7 +622,7 @@ export default function CreateInvoice() {
 
                             {/* Cashback Deduction */}
                             <View style={[styles.deductionRow, isRTL && styles.deductionRowRTL, { marginTop: 15 }]}>
-                                <View style={[{ flexDirection: 'row', alignItems: 'center' }, isRTL && { flexDirection: 'row-reverse' }]}>
+                                <View style={[{ flexDirection: 'row', alignItems: 'center' }]}>
                                     <Switch
                                         value={useCashback}
                                         onValueChange={setUseCashback}
@@ -657,16 +657,16 @@ export default function CreateInvoice() {
 
                 {/* Summary */}
                 <View style={[styles.section, isRTL && styles.sectionRTL]}>
-                    <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                    <View style={[styles.summaryRow]}>
                         <Text style={[styles.summaryLabel, isRTL && styles.textRTL]}>{t('admin.manageInvoices.subtotal')}</Text>
                         <Text style={[styles.summaryValue, isRTL && styles.textRTL]}>{totals.subtotal.toFixed(2)} {currency}</Text>
                     </View>
-                    <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                    <View style={[styles.summaryRow]}>
                         <Text style={[styles.summaryLabel, isRTL && styles.textRTL]}>{t('admin.manageInvoices.tax')} ({totals.taxRateValue.toFixed(1)}%)</Text>
                         <Text style={[styles.summaryValue, isRTL && styles.textRTL]}>{totals.taxAmount.toFixed(2)} {currency}</Text>
                     </View>
                     {totals.pointsValue > 0 && (
-                        <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                        <View style={[styles.summaryRow]}>
                             <Text style={[styles.summaryLabel, isRTL && styles.textRTL, { color: COLORS.warning }]}>
                                 {t('admin.manageInvoices.pointsReduction')} ({totals.pointsValueCount} {t("common.currency.pts")})
                             </Text>
@@ -676,7 +676,7 @@ export default function CreateInvoice() {
                         </View>
                     )}
                     {totals.walletValue > 0 && (
-                        <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                        <View style={[styles.summaryRow]}>
                             <Text style={[styles.summaryLabel, isRTL && styles.textRTL, { color: COLORS.primary }]}>{t('admin.manageInvoices.walletDeduction') || "Wallet Use"}</Text>
                             <Text style={[styles.summaryValue, isRTL && styles.textRTL, { color: COLORS.primary }]}>
                                 {t("common.amountNegative", { amount: `${totals.walletValue.toFixed(2)} ${currency}` })}
@@ -685,14 +685,14 @@ export default function CreateInvoice() {
                     )}
 
                     {totals.cashbackValue > 0 && (
-                        <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL]}>
+                        <View style={[styles.summaryRow]}>
                             <Text style={[styles.summaryLabel, isRTL && styles.textRTL, { color: COLORS.success }]}>{t('admin.manageInvoices.cashbackDeduction') || "Cashback Use"}</Text>
                             <Text style={[styles.summaryValue, isRTL && styles.textRTL, { color: COLORS.success }]}>
                                 {t("common.amountNegative", { amount: `${totals.cashbackValue.toFixed(2)} ${currency}` })}
                             </Text>
                         </View>
                     )}
-                    <View style={[styles.summaryRow, isRTL && styles.summaryRowRTL, { marginTop: 10, borderTopWidth: 1, paddingTop: 10 }]}>
+                    <View style={[styles.summaryRow, { marginTop: 10, borderTopWidth: 1, paddingTop: 10 }]}>
                         <Text style={[styles.totalLabel, isRTL && styles.textRTL]}>{t('admin.manageInvoices.totalDue')}</Text>
                         <Text style={[styles.totalValue, isRTL && styles.textRTL]}>{totals.finalTotal.toFixed(2)} {currency}</Text>
                     </View>
@@ -717,7 +717,7 @@ export default function CreateInvoice() {
             {/* User Selection Modal */}
             < Modal visible={userModalVisible} animationType="slide" >
                 <View style={styles.modalContainer}>
-                    <View style={[styles.modalHeader, isRTL && styles.modalHeaderRTL]}>
+                    <View style={[styles.modalHeader]}>
                         <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t('admin.manageInvoices.selectCustomer')}</Text>
                         <TouchableOpacity onPress={() => setUserModalVisible(false)}>
                             <Ionicons name="close" size={24} color="black" />
@@ -728,7 +728,7 @@ export default function CreateInvoice() {
                         keyExtractor={item => item.id}
                         renderItem={({ item }) => (
                             <TouchableOpacity
-                                style={[styles.userItem, isRTL && styles.userItemRTL]}
+                                style={[styles.userItem]}
                                 onPress={() => {
                                     setSelectedUser(item);
                                     setUserModalVisible(false);
@@ -1011,18 +1011,7 @@ const styles = StyleSheet.create({
     sectionRTL: {
         // Section RTL adjustments if needed
     },
-    userSelectorRTL: {
-        flexDirection: 'row-reverse',
-    },
-    balanceRowRTL: {
-        flexDirection: 'row-reverse',
-    },
-    balanceBadgeRTL: {
-        flexDirection: 'row-reverse',
-    },
-    itemRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     inputRTL: {
         textAlign: 'right',
     },
@@ -1030,15 +1019,7 @@ const styles = StyleSheet.create({
         marginStart: 0,
         marginEnd: 10,
     },
-    addItemBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
-    currencyRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     deductionRowRTL: {
         // Deduction row RTL adjustments
     },
@@ -1049,17 +1030,8 @@ const styles = StyleSheet.create({
     deductionInputContainerRTL: {
         marginStart: 0,
         marginEnd: 50,
-        flexDirection: 'row-reverse',
     },
-    summaryRowRTL: {
-        flexDirection: 'row-reverse',
-    },
-    modalHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
-    userItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatarRTL: {
         marginEnd: 0,
         marginStart: 12,
@@ -1076,9 +1048,7 @@ const styles = StyleSheet.create({
         borderColor: COLORS.border,
         marginBottom: 10,
     },
-    toggleRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     toggleLabel: {
         fontSize: 14,
         fontWeight: '500',

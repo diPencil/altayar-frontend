@@ -60,7 +60,7 @@ export default function AboutPage() {
 
     return (
         <View style={styles.container}>
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -93,7 +93,7 @@ export default function AboutPage() {
                 </View>
 
                 {/* Features Grid */}
-                <View style={[styles.featuresGrid, isRTL && styles.featuresGridRTL]}>
+                <View style={[styles.featuresGrid]}>
                     <FeatureCard
                         icon="diamond"
                         color="#f59e0b"
@@ -156,12 +156,12 @@ export default function AboutPage() {
                 <View style={styles.socialSection}>
                     <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>{t("about.visitWebsites")}</Text>
                     <View style={{ gap: 12, width: '100%', marginBottom: 24 }}>
-                        <TouchableOpacity onPress={() => handleLink(aboutLinks.websites.official)} style={[styles.websiteBtn, isRTL && styles.websiteBtnRTL]}>
+                        <TouchableOpacity onPress={() => handleLink(aboutLinks.websites.official)} style={[styles.websiteBtn]}>
                             <Ionicons name="globe-outline" size={24} color={COLORS.primary} />
                             <Text style={[styles.websiteText, isRTL && styles.websiteTextRTL]}>{t("about.officialWebsite")}</Text>
                             <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={20} color={COLORS.textLight} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => handleLink(aboutLinks.websites.hotel_booking)} style={[styles.websiteBtn, isRTL && styles.websiteBtnRTL]}>
+                        <TouchableOpacity onPress={() => handleLink(aboutLinks.websites.hotel_booking)} style={[styles.websiteBtn]}>
                             <Ionicons name="bed-outline" size={24} color={COLORS.primary} />
                             <Text style={[styles.websiteText, isRTL && styles.websiteTextRTL]}>{t("about.hotelBooking")}</Text>
                             <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={20} color={COLORS.textLight} />
@@ -198,7 +198,7 @@ export default function AboutPage() {
                 {/* Legal Links */}
                 <View style={styles.legalSection}>
                     <TouchableOpacity
-                        style={[styles.legalItem, isRTL && styles.legalItemRTL]}
+                        style={[styles.legalItem]}
                         onPress={() => router.push("/(user)/privacy-policy")}
                     >
                         <Text style={[styles.legalText, isRTL && styles.textRTL]}>{t("about.privacyPolicy")}</Text>
@@ -206,7 +206,7 @@ export default function AboutPage() {
                     </TouchableOpacity>
                     <View style={styles.divider} />
                     <TouchableOpacity
-                        style={[styles.legalItem, isRTL && styles.legalItemRTL]}
+                        style={[styles.legalItem]}
                         onPress={() => router.push("/(user)/terms-of-service")}
                     >
                         <Text style={[styles.legalText, isRTL && styles.textRTL]}>{t("about.termsOfService")}</Text>
@@ -228,7 +228,7 @@ export default function AboutPage() {
 
 function DetailButton({ icon, title, onPress, isRTL }: any) {
     return (
-        <TouchableOpacity style={[styles.detailBtn, isRTL && styles.detailBtnRTL]} onPress={onPress}>
+        <TouchableOpacity style={[styles.detailBtn]} onPress={onPress}>
             <View style={styles.detailIconBg}>
                 <Ionicons name={icon} size={22} color={COLORS.primary} />
             </View>
@@ -271,9 +271,7 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
         elevation: 2,
     },
-    detailBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     detailIconBg: {
         width: 40,
         height: 40,
@@ -305,9 +303,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -374,9 +370,7 @@ const styles = StyleSheet.create({
         gap: 16,
         marginBottom: 30,
     },
-    featuresGridRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     featureCard: {
         width: '47%',
         backgroundColor: COLORS.cardBg,
@@ -458,12 +452,10 @@ const styles = StyleSheet.create({
         color: COLORS.text,
         marginStart: 12,
     },
-    websiteBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     websiteTextRTL: {
-        marginStart: 0,
-        marginEnd: 12,
+//         marginStart: 0,  /* removed double-flip for Native RTL */
+//         marginEnd: 12,  /* removed double-flip for Native RTL */
         textAlign: 'right',
     },
     legalSection: {
@@ -478,9 +470,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         padding: 16,
     },
-    legalItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     legalText: {
         fontSize: 16,
         color: COLORS.text,

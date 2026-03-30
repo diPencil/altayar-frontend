@@ -101,7 +101,7 @@ export default function CompetitionPlanDetailScreen() {
                 <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[COLORS.primary]} />
             }
         >
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backIcon}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -125,7 +125,7 @@ export default function CompetitionPlanDetailScreen() {
                     customers.map((row, index) => (
                         <View
                             key={`${row.membership_number}-${index}`}
-                            style={[styles.row, isRTL && styles.rowRTL, index < customers.length - 1 && styles.rowBorder]}
+                            style={[styles.row, index < customers.length - 1 && styles.rowBorder]}
                         >
                             <View style={styles.avatar}>
                                 {row.customer_avatar ? (
@@ -168,9 +168,7 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         marginBottom: 20,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     backIcon: {
         padding: 4,
         marginEnd: 12,
@@ -203,9 +201,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 14,
     },
-    rowRTL: {
-        flexDirection: "row-reverse",
-    },
+
     rowBorder: {
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,

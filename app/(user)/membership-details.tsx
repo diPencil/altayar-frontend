@@ -35,7 +35,7 @@ const renderListSection = (title: string, items: any[], icon: string, config: an
 
     return (
         <View style={styles.modernSection}>
-            <View style={[styles.sectionTitleRow, isRTL && styles.sectionTitleRowRTL]}>
+            <View style={[styles.sectionTitleRow]}>
                 <View style={[styles.titleIcon, { backgroundColor: `${config.color} 15` }]}>
                     <Ionicons name={icon as any} size={20} color={config.color} />
                 </View>
@@ -51,10 +51,10 @@ const renderListSection = (title: string, items: any[], icon: string, config: an
 
                     return (
                         <View key={index}>
-                            <View style={[styles.modernListItem, isRTL && styles.modernListItemRTL]}>
+                            <View style={[styles.modernListItem]}>
                                 <View style={[styles.modernBullet, { backgroundColor: config.color }]} />
                                 <View style={styles.modernListItemContent}>
-                                    <View style={[styles.itemTitleRow, isRTL && styles.itemTitleRowRTL]}>
+                                    <View style={[styles.itemTitleRow]}>
                                         {itemValue && (
                                             <View style={[styles.itemValueBadge, { backgroundColor: `${config.color} 15` }]}>
                                                 <Text style={[styles.itemValueText, { color: config.color }]}>
@@ -88,7 +88,7 @@ const renderTextSection = (title: string, text: string, icon: string, config: an
 
     return (
         <View style={styles.modernSection}>
-            <View style={[styles.sectionTitleRow, isRTL && styles.sectionTitleRowRTL]}>
+            <View style={[styles.sectionTitleRow]}>
                 <View style={[styles.titleIcon, { backgroundColor: `${config.color} 15` }]}>
                     <Ionicons name={icon as any} size={20} color={config.color} />
                 </View>
@@ -246,14 +246,14 @@ export default function MembershipDetailsScreen() {
 
                         {/* Title & Description */}
                         <View style={styles.floatingContent}>
-                            <Text style={[styles.floatingTitle, { color: config.color }]}>
+                            <Text style={[styles.floatingTitle, { color: config.color }, isRTL && styles.textRTL]}>
                                 {language === 'ar'
                                     ? (planData?.tier_name_ar || planData?.plan_name_ar || planName)
                                     : (planData?.tier_name_en || planData?.plan_name_en || planName)
                                 }
                             </Text>
                             {planDescription && (
-                                <Text style={styles.floatingSubtitle}>
+                                <Text style={[styles.floatingSubtitle, isRTL && styles.textRTL]}>
                                     {planDescription}
                                 </Text>
                             )}
@@ -261,16 +261,16 @@ export default function MembershipDetailsScreen() {
 
                         {/* Integrated Stats Row */}
                         <View style={styles.floatingStatsDivider} />
-                        <View style={[styles.floatingStatsRow, isRTL && styles.floatingStatsRowRTL]}>
+                        <View style={[styles.floatingStatsRow]}>
                             <View style={styles.floatingStatItem}>
                                 <View style={[styles.miniStatIcon, { backgroundColor: `${config.color} 10` }]}>
                                     <Ionicons name="star" size={16} color={config.color} />
                                 </View>
-                                <View>
+                                <View style={styles.floatingStatTexts}>
                                     <Text style={[styles.floatingStatValue, { color: '#1e293b' }]}>
                                         {t("membershipDetails.floatingStats.rewardPointsValue")}
                                     </Text>
-                                    <Text style={[styles.floatingStatLabel, isRTL && styles.textRTL]}>
+                                    <Text style={styles.floatingStatLabel}>
                                         {t('membershipDetails.sections.rewardPoints')}
                                     </Text>
                                 </View>
@@ -280,11 +280,11 @@ export default function MembershipDetailsScreen() {
                                 <View style={[styles.miniStatIcon, { backgroundColor: `${config.color} 10` }]}>
                                     <Ionicons name="gift" size={16} color={config.color} />
                                 </View>
-                                <View>
+                                <View style={styles.floatingStatTexts}>
                                     <Text style={[styles.floatingStatValue, { color: '#1e293b' }]}>
                                         {t("membershipDetails.floatingStats.instantReturnValue")}
                                     </Text>
-                                    <Text style={[styles.floatingStatLabel, isRTL && styles.textRTL]}>
+                                    <Text style={styles.floatingStatLabel}>
                                         {t('membershipDetails.sections.instantReturn')}
                                     </Text>
                                 </View>
@@ -300,7 +300,7 @@ export default function MembershipDetailsScreen() {
                     {benefitsData?.welcome_message_en || benefitsData?.welcome_message_ar ? (
                         <View style={styles.modernSection}>
                             <View style={[styles.welcomeBox, { backgroundColor: `${config.color}08`, borderColor: `${config.color}20` }]}>
-                                <Text style={styles.welcomeText}>
+                                <Text style={[styles.welcomeText, isRTL && styles.textRTL]}>
                                     {`"${
                                         language === 'ar'
                                             ? (benefitsData.welcome_message_ar || benefitsData.welcome_message_en)
@@ -458,7 +458,7 @@ export default function MembershipDetailsScreen() {
                     {/* Upgrade Information */}
                     {(benefitsData?.upgrade_info_en || benefitsData?.upgrade_info_ar || upgradePlan) ? (
                         <View style={styles.modernSection}>
-                            <View style={[styles.sectionTitleRow, isRTL && styles.sectionTitleRowRTL]}>
+                            <View style={[styles.sectionTitleRow]}>
                                 <View style={[styles.titleIcon, { backgroundColor: `${config.color} 15` }]}>
                                     <Ionicons name="trending-up" size={20} color={config.color} />
                                 </View>
@@ -525,7 +525,7 @@ export default function MembershipDetailsScreen() {
                     {/* Fallback: Basic Benefits */}
                     {!benefitsData && tierData?.benefits && (
                         <View style={styles.modernSection}>
-                            <View style={[styles.sectionTitleRow, isRTL && styles.sectionTitleRowRTL]}>
+                            <View style={[styles.sectionTitleRow]}>
                                 <View style={[styles.titleIcon, { backgroundColor: `${config.color} 15` }]}>
                                     <Ionicons name="star" size={20} color={config.color} />
                                 </View>
@@ -536,7 +536,7 @@ export default function MembershipDetailsScreen() {
                             <View style={styles.modernCard}>
                                 {(tierData.benefits || []).map((benefit: string, index: number) => (
                                     <View key={index}>
-                                        <View style={[styles.modernListItem, isRTL && styles.modernListItemRTL]}>
+                                        <View style={[styles.modernListItem]}>
                                             <View style={[styles.modernBullet, { backgroundColor: config.color }]} />
                                             <Text style={[styles.modernListItemText, isRTL && styles.textRTL]}>{benefit}</Text>
                                         </View>
@@ -580,12 +580,11 @@ const styles = StyleSheet.create({
     },
     heroBackBtn: {
         position: 'absolute',
-        left: 20,
+        start: 20,
         zIndex: 10,
     },
     heroBackBtnRTL: {
-        left: 'auto',
-        right: 20,
+        // start/end are logical and flip automatically with direction:rtl — no override needed
     },
     backBtnBlur: {
         width: 40,
@@ -650,6 +649,7 @@ const styles = StyleSheet.create({
         color: '#1e293b',
         textAlign: 'center',
         marginBottom: 8,
+        width: '100%',
     },
     floatingSubtitle: {
         fontSize: 14,
@@ -657,6 +657,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         lineHeight: 20,
         paddingHorizontal: 10,
+        width: '100%',
     },
     floatingStatsDivider: {
         width: '100%',
@@ -669,14 +670,14 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-around',
         alignItems: 'center',
+        direction: 'ltr',
     },
-    floatingStatsRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     floatingStatItem: {
         flexDirection: 'row',
         alignItems: 'center',
         gap: 12,
+        direction: 'ltr',
     },
     miniStatIcon: {
         width: 36,
@@ -685,15 +686,20 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    floatingStatTexts: {
+        alignItems: 'center',
+    },
     floatingStatValue: {
         fontSize: 18,
         fontWeight: '700',
+        textAlign: 'center',
     },
     floatingStatLabel: {
         fontSize: 11,
         color: '#94a3b8',
         textTransform: 'uppercase',
         fontWeight: '600',
+        textAlign: 'center',
     },
     floatingStatSeparator: {
         width: 1,
@@ -729,9 +735,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         gap: 12,
     },
-    sectionTitleRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     titleIcon: {
         width: 36,
         height: 36,
@@ -762,9 +766,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         paddingVertical: 14,
     },
-    modernListItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     modernBullet: {
         width: 8,
         height: 8,
@@ -848,9 +850,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         marginBottom: 4,
     },
-    itemTitleRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     itemValueBadge: {
         paddingHorizontal: 10,
         paddingVertical: 5,

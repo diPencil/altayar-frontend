@@ -111,7 +111,7 @@ export default function ProfileViewPage() {
     return (
         <View style={styles.container}>
             {/* Custom Header Matching History Pages */}
-            <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name={isRTL ? "chevron-forward" : "chevron-back"} size={26} color={COLORS.text} />
                 </TouchableOpacity>
@@ -146,7 +146,7 @@ export default function ProfileViewPage() {
                         {user?.phone && <Text style={styles.phone}>{user.phone}</Text>}
 
                         {/* Status Badges */}
-                        <View style={[styles.badgesRow, isRTL && styles.rowRTL]}>
+                        <View style={[styles.badgesRow]}>
                             <View style={[styles.badge, { backgroundColor: '#dbeafe' }]}>
                                 <Ionicons name="person" size={14} color={COLORS.primary} />
                                 <Text style={[styles.badgeText, { color: COLORS.primary }]}>
@@ -164,7 +164,7 @@ export default function ProfileViewPage() {
                 </View>
 
                 {/* Info Cards Row */}
-                <View style={[styles.infoCardsRow, isRTL && styles.rowRTL]}>
+                <View style={[styles.infoCardsRow]}>
                     <View style={[styles.infoCard, { flex: 1, marginEnd: isRTL ? 0 : 8, marginStart: isRTL ? 8 : 0 }]}>
                         <Ionicons name="card-outline" size={24} color={COLORS.textLight} />
                         <Text style={[styles.infoCardLabel]}>{t("common.memberId")}</Text>
@@ -179,7 +179,7 @@ export default function ProfileViewPage() {
 
                 {/* Membership Card - Full Width - CLICKABLE */}
                 <TouchableOpacity
-                    style={[styles.membershipCard, isRTL && styles.cardRTL]}
+                    style={[styles.membershipCard]}
                     onPress={() => {
                         if (!isMember) {
                             router.push("/(user)/memberships-explore" as any);
@@ -191,7 +191,7 @@ export default function ProfileViewPage() {
                     <View style={[styles.statIconContainer, { backgroundColor: '#fef3c7' }]}>
                         <Ionicons name={isMember ? "diamond" : "lock-closed"} size={24} color={isMember ? "#f59e0b" : COLORS.primary} />
                     </View>
-                    <View style={{ flex: 1, marginStart: isRTL ? 0 : 16, marginEnd: isRTL ? 16 : 0, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
+                    <View style={{ flex: 1, marginStart: isRTL ? 0 : 16, marginEnd: isRTL ? 16 : 0, alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
                         <Text style={[styles.statLabel]}>{t('profile.membershipCard', 'Membership Card')}</Text>
                         <Text style={[styles.membershipValue]}>{membershipPlan}</Text>
                         <Text style={[styles.statSubtext]}>
@@ -205,7 +205,7 @@ export default function ProfileViewPage() {
                 </TouchableOpacity>
 
                 {/* Cashback & Points Row - CLICKABLE */}
-                <View style={[styles.statsRow, isRTL && styles.rowRTL]}>
+                <View style={[styles.statsRow]}>
                     <TouchableOpacity
                         style={[styles.statCard, { flex: 1, marginEnd: isRTL ? 0 : 8, marginStart: isRTL ? 8 : 0 }]}
                         onPress={() => {
@@ -247,7 +247,7 @@ export default function ProfileViewPage() {
 
                 {/* Transaction History - CLICKABLE ENTRY */}
                 <TouchableOpacity
-                    style={[styles.section, isRTL && styles.cardRTL]}
+                    style={[styles.section]}
                     onPress={() => {
                         if (!isMember) {
                             emitMembershipRequired({ source: "profile-view/orders" });
@@ -256,8 +256,8 @@ export default function ProfileViewPage() {
                         router.push("/(user)/orders");
                     }}
                 >
-                    <View style={{ flex: 1, alignItems: isRTL ? 'flex-end' : 'flex-start' }}>
-                        <View style={[styles.sectionHeader, isRTL && styles.rowRTL]}>
+                    <View style={{ flex: 1, alignItems: isRTL ? 'flex-start' : 'flex-start' }}>
+                        <View style={[styles.sectionHeader]}>
                             <View style={[styles.iconSmall, { backgroundColor: '#e0f2fe' }]}>
                                 <Ionicons name="receipt" size={18} color={COLORS.primary} />
                             </View>
@@ -295,9 +295,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         zIndex: 10,
     },
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     backButton: {
         width: 40,
         height: 40,
@@ -331,9 +329,7 @@ const styles = StyleSheet.create({
     profileCardRTL: {
         alignItems: 'center', // Centered for now as standard profile view
     },
-    cardRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatarContainer: {
         marginBottom: 16,
         shadowColor: "#000",
@@ -383,9 +379,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     badge: {
         flexDirection: 'row',
         alignItems: 'center',

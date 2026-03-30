@@ -91,14 +91,14 @@ export default function EmployeeCustomers() {
     return (
         <ScrollView style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <Text style={styles.pageTitle}>{t('admin.manageUsers.title')}</Text>
                 {/* Employee cannot create users usually */}
             </View>
 
             {/* Simple Mobile Filter Bar */}
-            <View style={[styles.filterBar, isRTL && styles.filterBarRTL]}>
-                <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL]}>
+            <View style={[styles.filterBar]}>
+                <View style={[styles.searchContainer]}>
                     <Ionicons name="search" size={20} color={COLORS.textLight} />
                     <TextInput
                         style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -120,7 +120,7 @@ export default function EmployeeCustomers() {
                 <View style={styles.listContainer}>
                     {users.map((u) => (
                         <View key={u.id} style={styles.userCard}>
-                            <View style={[styles.userMeta, isRTL && styles.userMetaRTL]}>
+                            <View style={[styles.userMeta]}>
                                 <View style={styles.avatar}>
                                     {u.avatar ? (
                                         <Image source={{ uri: u.avatar }} style={{ width: 48, height: 48, borderRadius: 24 }} />
@@ -145,7 +145,7 @@ export default function EmployeeCustomers() {
                                 </View>
                             </View>
 
-                            <TouchableOpacity style={[styles.detailsBtn, isRTL && styles.detailsBtnRTL]} onPress={() => openDetails(u.id)}>
+                            <TouchableOpacity style={[styles.detailsBtn]} onPress={() => openDetails(u.id)}>
                                 <Text style={styles.detailsBtnText}>{t('admin.manageUsers.details')}</Text>
                                 <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={16} color={COLORS.primary} />
                             </TouchableOpacity>
@@ -415,9 +415,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 12,
     },
-    userMetaRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     avatar: {
         width: 48,
         height: 48,
@@ -457,9 +455,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderTopColor: '#f1f5f9',
     },
-    detailsBtnRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     detailsBtnText: {
         fontSize: 13,
         fontWeight: '600',
@@ -608,15 +604,7 @@ const styles = StyleSheet.create({
         color: COLORS.textLight,
     },
     // RTL Styles
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
-    filterBarRTL: {
-        flexDirection: 'row-reverse',
-    },
-    searchContainerRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     searchInputRTL: {
         textAlign: 'right',
         marginStart: 0,

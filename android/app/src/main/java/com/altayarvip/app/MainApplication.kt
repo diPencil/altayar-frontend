@@ -1,4 +1,4 @@
-package com.altayarvip.app
+package altayarvip.app
 
 import android.app.Application
 import android.content.res.Configuration

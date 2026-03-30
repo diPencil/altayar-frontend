@@ -66,7 +66,7 @@ export default function EmployeeAdminMessageDetails() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -89,7 +89,7 @@ export default function EmployeeAdminMessageDetails() {
       ) : (
         <ScrollView style={styles.body} contentContainerStyle={{ paddingBottom: 24 }}>
           <View style={styles.card}>
-            <View style={[styles.titleRow, isRTL && styles.titleRowRTL]}>
+            <View style={[styles.titleRow]}>
               <Text style={[styles.title, isRTL && styles.textRTL]}>{data?.title || ""}</Text>
               {isUrgent && (
                 <View style={styles.urgentBadge}>
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: { flexDirection: "row-reverse" },
+
   headerTitle: { fontSize: 16, fontWeight: "700", color: COLORS.text },
   textRTL: { textAlign: "right" },
   center: { flex: 1, alignItems: "center", justifyContent: "center", padding: 16 },
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   titleRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 10 },
-  titleRowRTL: { flexDirection: "row-reverse" },
+
   title: { fontSize: 18, fontWeight: "800", color: COLORS.text, flex: 1 },
   urgentBadge: {
     backgroundColor: `${COLORS.warning}20`,

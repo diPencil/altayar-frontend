@@ -96,7 +96,7 @@ export default function AdminBookings() {
             <Stack.Screen options={{ title: t("admin.bookings.title"), headerBackTitle: t("common.back") }} />
 
             {/* Header Actions */}
-            <View style={[styles.headerRow, isRTL && styles.headerRowRTL]}>
+            <View style={[styles.headerRow]}>
                 <View style={isRTL && { alignItems: 'flex-end' }}>
                     <Text style={[styles.pageTitle, isRTL && styles.textRTL]}>{t('admin.bookings.title')}</Text>
                     <Text style={[styles.pageSubtitle, isRTL && styles.textRTL]}>{bookings.length} {t("admin.bookings.totalBookings")}</Text>
@@ -111,7 +111,7 @@ export default function AdminBookings() {
             </View>
 
             {/* Search Bar */}
-            <View style={[styles.searchContainer, isRTL && styles.rowRTL]}>
+            <View style={[styles.searchContainer]}>
                 <Ionicons name="search" size={20} color={COLORS.textLight} style={{ marginHorizontal: 8 }} />
                 <TextInput
                     style={[styles.searchInput, isRTL && styles.textRTL]}
@@ -128,8 +128,7 @@ export default function AdminBookings() {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     contentContainerStyle={[
-                        { paddingHorizontal: 16 },
-                        isRTL && { flexDirection: 'row-reverse' }
+                        { paddingHorizontal: 16 }
                     ]}
                 >
                     {['', 'PENDING', 'CONFIRMED', 'COMPLETED', 'CANCELLED'].map(status => (
@@ -181,7 +180,7 @@ function BookingCard({ booking }: any) {
             style={[styles.card, isRTL && styles.cardRTL]}
             onPress={() => router.push(`/(admin)/bookings/${booking.id}` as any)}
         >
-            <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+            <View style={[styles.cardHeader]}>
                 <View style={{ flex: 1 }}>
                     <Text style={[styles.bookingNumber, isRTL && styles.textRTL]}>{booking.booking_number}</Text>
                     <Text style={[styles.bookingType, isRTL && styles.textRTL]}>{t(`admin.bookings.types.${booking.booking_type?.toLowerCase()}`) || booking.booking_type}</Text>
@@ -200,7 +199,7 @@ function BookingCard({ booking }: any) {
                     {isRTL ? booking.title_ar : booking.title_en}
                 </Text>
 
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.customer')}</Text>
                     <Text style={[styles.value, isRTL && styles.textRTL]}>
                         {booking.customer_name || booking.creator_name}
@@ -208,7 +207,7 @@ function BookingCard({ booking }: any) {
                 </View>
 
                 {booking.booking_source === 'ADMIN' && booking.creator_name !== booking.customer_name && (
-                    <View style={[styles.row, isRTL && styles.rowRTL]}>
+                    <View style={[styles.row]}>
                         <Text style={[styles.label, isRTL && styles.labelRTL]}>{t('admin.bookings.createdBy')}</Text>
                         <Text style={[styles.value, isRTL && styles.textRTL, { color: COLORS.textLight }]}>
                             {booking.creator_name}
@@ -216,12 +215,12 @@ function BookingCard({ booking }: any) {
                     </View>
                 )}
 
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t("admin.bookings.date")}</Text>
                     <Text style={[styles.value, isRTL && styles.textRTL]}>{new Date(booking.created_at).toLocaleDateString(isRTL ? 'ar-EG' : 'en-US')}</Text>
                 </View>
 
-                <View style={[styles.row, isRTL && styles.rowRTL]}>
+                <View style={[styles.row]}>
                     <Text style={[styles.label, isRTL && styles.labelRTL]}>{t("admin.bookings.total")}</Text>
                     <Text style={[styles.amount, isRTL && styles.textRTL]}>{booking.total_amount} {booking.currency}</Text>
                 </View>
@@ -254,9 +253,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.border,
     },
-    headerRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     pageTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -335,9 +332,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 12,
     },
-    cardHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     bookingNumber: {
         fontSize: 16,
         fontWeight: 'bold',
@@ -409,9 +404,7 @@ const styles = StyleSheet.create({
     cardBodyRTL: {
         alignItems: 'stretch',
     },
-    rowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     labelRTL: {
         textAlign: 'right',
     },

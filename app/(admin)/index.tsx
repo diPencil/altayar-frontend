@@ -24,6 +24,8 @@ const COLORS = {
 };
 
 import { adminApi, employeeApi } from "../../src/services/api";
+import { rtlMirroredIconStyle } from "../../src/utils/rtlIcons";
+import { formatCurrencyLabel } from "../../src/utils/currencyLabel";
 import { useAuth } from "../../src/contexts/AuthContext";
 import { useState, useEffect, useCallback } from "react";
 
@@ -32,7 +34,10 @@ export default function AdminDashboard() {
   const { isRTL, language } = useLanguage();
   const { user } = useAuth();
 
-  const userName = user?.role === 'ADMIN' ? 'AltayarVIP' : (user?.first_name || "Admin");
+  const userName =
+    user?.role === 'ADMIN'
+      ? t('admin.dashboard.brandAccountName')
+      : (user?.first_name || t('admin.dashboard.fallbackName'));
 
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -297,7 +302,7 @@ export default function AdminDashboard() {
       {/* ... Welcome Section ... */}
       <View style={{ marginBottom: 20, marginTop: 10 }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.text, textAlign: isRTL ? 'right' : 'left' }}>
-          {t('dashboard.hello')}, {userName}! 👋
+          {t('admin.dashboard.hello')}, {userName}! 👋
         </Text>
         <Text style={{ fontSize: 14, color: COLORS.textLight, textAlign: isRTL ? 'right' : 'left', marginTop: 4 }}>
           {t('admin.revenueOverview')}
@@ -305,7 +310,7 @@ export default function AdminDashboard() {
       </View>
 
       {/* Stats Cards - Keeping existing props logic */}
-      <View style={[styles.statsGrid, isRTL && styles.statsGridRTL]}>
+      <View style={[styles.statsGrid]}>
         <StatCard
           icon="people"
           label={t("admin.totalUsers")}
@@ -342,13 +347,13 @@ export default function AdminDashboard() {
 
       {/* Admin -> Employee messages (under dashboard) */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+        <View style={[styles.cardHeader]}>
           <Text style={[styles.cardTitle, isRTL && styles.textRTL]}>
             {t('admin.employeeMessages.sendTitle', 'Send message to employees')}
           </Text>
         </View>
 
-        <View style={[styles.empMsgSendToRow, isRTL && styles.empMsgSendToRowRTL]}>
+        <View style={[styles.empMsgSendToRow]}>
           <Text style={[styles.empMsgSendToLabel, isRTL && styles.textRTL]}>
             {t('admin.employeeMessages.sendToLabel', 'Send to')}
           </Text>
@@ -373,7 +378,7 @@ export default function AdminDashboard() {
         </View>
 
         {!!targetEmployeeId && (
-          <TouchableOpacity style={[styles.empMsgSelectedRow, isRTL && styles.empMsgSelectedRowRTL]} onPress={() => setEmployeePickerOpen(true)}>
+          <TouchableOpacity style={[styles.empMsgSelectedRow]} onPress={() => setEmployeePickerOpen(true)}>
             <Ionicons name="person-outline" size={16} color={COLORS.textLight} />
             <Text style={[styles.empMsgSelectedText, isRTL && styles.textRTL]} numberOfLines={1}>
               {t('admin.employeeMessages.selectedEmployee', 'Selected')}:{' '}
@@ -397,7 +402,7 @@ export default function AdminDashboard() {
         />
 
         <TouchableOpacity
-          style={[styles.empMsgUrgentToggle, isRTL && styles.empMsgUrgentToggleRTL]}
+          style={[styles.empMsgUrgentToggle]}
           onPress={() => setMsgUrgent(v => !v)}
         >
           <Ionicons name={msgUrgent ? 'checkbox' : 'square-outline'} size={20} color={COLORS.primary} />
@@ -454,7 +459,7 @@ export default function AdminDashboard() {
                   return (
                     <TouchableOpacity
                       key={String(e?.id)}
-                      style={[styles.empMsgEmployeeRow, selected && styles.empMsgEmployeeRowSelected, isRTL && styles.empMsgEmployeeRowRTL]}
+                      style={[styles.empMsgEmployeeRow, selected && styles.empMsgEmployeeRowSelected]}
                       onPress={() => {
                         setTargetEmployeeId(String(e?.id));
                         setEmployeePickerOpen(false);
@@ -483,7 +488,7 @@ export default function AdminDashboard() {
               )}
             </ScrollView>
 
-            <View style={[styles.empMsgModalFooter, isRTL && styles.empMsgModalFooterRTL]}>
+            <View style={[styles.empMsgModalFooter]}>
               <TouchableOpacity
                 style={[styles.empMsgModalBtn, styles.empMsgModalBtnSecondary]}
                 onPress={() => {
@@ -503,12 +508,12 @@ export default function AdminDashboard() {
 
       {/* Analytics Card - Chart */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+        <View style={[styles.cardHeader]}>
           <Text style={[styles.cardTitle, isRTL && styles.textRTL]}>
             {t("admin.revenueOverview")}
           </Text>
           <TouchableOpacity
-            style={[styles.periodBtn, isRTL && styles.periodBtnRTL]}
+            style={[styles.periodBtn]}
             onPress={() => setPeriodSelectorVisible(true)}
           >
             <Text style={styles.periodText}>
@@ -523,7 +528,7 @@ export default function AdminDashboard() {
           </TouchableOpacity>
         </View>
         <View style={styles.chartPlaceholder}>
-          <View style={[styles.chartBars, isRTL && styles.chartBarsRTL]}>
+          <View style={[styles.chartBars]}>
             {revenueChart.length > 0 ? (
               revenueChart.map((item, index) => {
                 // Calculate height percentage relative to max, max height 100px
@@ -579,7 +584,7 @@ export default function AdminDashboard() {
             <Text style={[styles.modalTitle, isRTL && styles.textRTL]}>{t("admin.filter")}</Text>
 
             <TouchableOpacity
-              style={[styles.modalOption, isRTL && styles.modalOptionRTL]}
+              style={[styles.modalOption]}
               onPress={() => { setChartPeriod('week'); setPeriodSelectorVisible(false); }}
             >
               <Text style={[styles.modalOptionText, chartPeriod === 'week' && styles.selectedOptionText]}>{t("admin.thisWeek")}</Text>
@@ -587,7 +592,7 @@ export default function AdminDashboard() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.modalOption, isRTL && styles.modalOptionRTL]}
+              style={[styles.modalOption]}
               onPress={() => { setChartPeriod('month'); setPeriodSelectorVisible(false); }}
             >
               <Text style={[styles.modalOptionText, chartPeriod === 'month' && styles.selectedOptionText]}>{t("admin.thisMonth")}</Text>
@@ -595,7 +600,7 @@ export default function AdminDashboard() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.modalOption, isRTL && styles.modalOptionRTL]}
+              style={[styles.modalOption]}
               onPress={() => { setChartPeriod('year'); setPeriodSelectorVisible(false); }}
             >
               <Text style={[styles.modalOptionText, chartPeriod === 'year' && styles.selectedOptionText]}>{t("admin.thisYear")}</Text>
@@ -607,12 +612,12 @@ export default function AdminDashboard() {
 
       {/* Recent Activities */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
-          <Text style={[styles.cardTitle, isRTL && styles.textRTL]}>
+        <View style={[styles.cardHeader]}>
+          <Text style={[styles.cardTitle, isRTL ? styles.cardTitleActivitiesRTL : styles.cardTitleActivitiesLTR]}>
             {t("admin.recentActivities")}
           </Text>
           <TouchableOpacity onPress={() => router.push('/(admin)/activities')}>
-            <Text style={styles.viewAll}>{t("common.viewAll")}</Text>
+            <Text style={[styles.viewAll, isRTL && styles.viewAllRTL]}>{t("common.viewAll")}</Text>
           </TouchableOpacity>
         </View>
 
@@ -645,19 +650,19 @@ export default function AdminDashboard() {
 
       {/* Recent Transactions */}
       <View style={styles.card}>
-        <View style={[styles.cardHeader, isRTL && styles.cardHeaderRTL]}>
+        <View style={[styles.cardHeader]}>
           <Text style={[styles.cardTitle, isRTL && styles.textRTL]}>
             {t("admin.recentTransactions")}
           </Text>
           <TouchableOpacity onPress={() => router.push('/(admin)/payments')}>
-            <Text style={styles.viewAll}>{t("common.viewAll")}</Text>
+            <Text style={[styles.viewAll, isRTL && styles.viewAllRTL]}>{t("common.viewAll")}</Text>
           </TouchableOpacity>
         </View>
 
         {transactions.length > 0 ? (
           <View>
             {/* Header */}
-            <View style={[styles.tableHeader, isRTL && styles.tableHeaderRTL]}>
+            <View style={[styles.tableHeader]}>
               <Text style={[styles.tableCell, styles.cellWide, isRTL && styles.textRTL]}>
                 {t("common.user")}
               </Text>
@@ -672,7 +677,7 @@ export default function AdminDashboard() {
               <TransactionRow
                 key={i}
                 user={tx.user || "Unknown"}
-                amount={`${tx.amount} USD`}
+                amount={`${tx.amount} ${formatCurrencyLabel(tx.currency, t)}`}
                 status={t(`common.statuses.${(tx.status || '').toLowerCase()}`) || tx.status}
                 statusKey={tx.status}
                 isRTL={isRTL}
@@ -687,7 +692,7 @@ export default function AdminDashboard() {
       </View>
 
       {/* Quick Actions */}
-      <View style={[styles.quickActions, isRTL && styles.quickActionsRTL]}>
+      <View style={[styles.quickActions]}>
         <QuickAction
           icon="person-add"
           label={t("admin.addUser")}
@@ -722,7 +727,7 @@ export default function AdminDashboard() {
       <Text style={{ fontSize: 18, fontWeight: 'bold', color: COLORS.text, marginHorizontal: 16, marginTop: 10, marginBottom: 10, textAlign: isRTL ? 'right' : 'left' }}>
         {t('admin.marketing')}
       </Text>
-      <View style={[styles.quickActions, isRTL && styles.quickActionsRTL, { marginBottom: 20 }]}>
+      <View style={[styles.quickActions, { marginBottom: 20 }]}>
         <QuickAction
           icon="pricetag"
           label={t('admin.sendOffer')}
@@ -760,14 +765,24 @@ export default function AdminDashboard() {
 
 function StatCard({ icon, label, value, change, gradient, isRTL }: any) {
   return (
-    <LinearGradient colors={gradient} style={[styles.statCard, isRTL && styles.statCardRTL]}>
-      <View style={[styles.statIcon, isRTL && styles.statIconRTL]}>
-        <Ionicons name={icon} size={24} color="rgba(255,255,255,0.9)" />
+    <LinearGradient colors={gradient} style={styles.statCard}>
+      <View style={styles.statIcon}>
+        <Ionicons
+          name={icon}
+          size={24}
+          color="rgba(255,255,255,0.9)"
+          style={rtlMirroredIconStyle(icon, isRTL)}
+        />
       </View>
       <Text style={[styles.statValue, isRTL && styles.statValueRTL]}>{value}</Text>
       <Text style={[styles.statLabel, isRTL && styles.statLabelRTL]}>{label}</Text>
-      <View style={[styles.statChange, isRTL && styles.statChangeRTL]}>
-        <Ionicons name="trending-up" size={14} color="rgba(255,255,255,0.8)" />
+      <View style={styles.statChange}>
+        <Ionicons
+          name="trending-up"
+          size={14}
+          color="rgba(255,255,255,0.8)"
+          style={rtlMirroredIconStyle('trending-up', isRTL)}
+        />
         <Text style={[styles.changeText, isRTL && styles.changeTextRTL]}>{change}</Text>
       </View>
     </LinearGradient>
@@ -776,15 +791,22 @@ function StatCard({ icon, label, value, change, gradient, isRTL }: any) {
 
 function ActivityItem({ icon, iconColor, title, description, time, isRTL }: any) {
   return (
-    <View style={[styles.activityItem, isRTL && styles.activityItemRTL]}>
+    <View style={[styles.activityItem]}>
       <View style={[styles.activityIcon, { backgroundColor: `${iconColor}15` }]}>
         <Ionicons name={icon} size={20} color={iconColor} />
       </View>
       <View style={[styles.activityContent, isRTL && styles.activityContentRTL]}>
-        <Text style={[styles.activityTitle, isRTL && styles.textRTL]}>{title}</Text>
-        <Text style={[styles.activityDesc, isRTL && styles.textRTL]}>{description}</Text>
+        <Text style={[styles.activityTitle, isRTL && styles.textRTL]} numberOfLines={1}>{title}</Text>
+        <Text
+          style={[styles.activityDesc, isRTL && styles.activityDescRTL]}
+          numberOfLines={2}
+        >
+          {description}
+        </Text>
       </View>
-      <Text style={styles.activityTime}>{time}</Text>
+      <View style={[styles.activityTimeWrap, isRTL && styles.activityTimeWrapRTL]}>
+        <Text style={[styles.activityTime, isRTL && styles.activityTimeRTL]}>{time}</Text>
+      </View>
     </View>
   );
 }
@@ -797,7 +819,7 @@ function TransactionRow({ user, amount, status, statusKey, isRTL }: any) {
   };
 
   return (
-    <View style={[styles.tableRow, isRTL && styles.tableRowRTL]}>
+    <View style={[styles.tableRow]}>
       <Text style={[styles.tableCell, styles.cellWide, isRTL && styles.textRTL]}>{user}</Text>
       <Text style={[styles.tableCell, isRTL && styles.textRTL]}>{amount}</Text>
       <View style={[styles.statusBadge, { backgroundColor: `${statusColors[statusKey]}15` }]}>
@@ -836,18 +858,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     gap: 12,
   },
-  statsGridRTL: {
-    flexDirection: "row-reverse",
-  },
+
   statCard: {
     width: (width - 48) / 2 - 6, // Account for gap between cards
     borderRadius: 16,
     padding: 16,
     marginBottom: 0, // Remove marginBottom since we use gap
+    /* flex-start follows layout direction: left in LTR, right in RTL */
     alignItems: 'flex-start',
-  },
-  statCardRTL: {
-    alignItems: 'flex-end',
   },
   statIcon: {
     width: 44,
@@ -859,14 +877,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     alignSelf: 'flex-start',
   },
-  statIconRTL: {
-    alignSelf: 'flex-end',
-  },
   statValue: {
     fontSize: 28,
     fontWeight: "bold",
     color: COLORS.cardBg,
     textAlign: 'auto',
+    alignSelf: 'stretch',
   },
   statValueRTL: {
     textAlign: 'right',
@@ -876,6 +892,7 @@ const styles = StyleSheet.create({
     color: "rgba(255,255,255,0.8)",
     marginTop: 2,
     textAlign: 'auto',
+    alignSelf: 'stretch',
   },
   statLabelRTL: {
     textAlign: 'right',
@@ -884,10 +901,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 8,
+    alignSelf: 'flex-start',
   },
-  statChangeRTL: {
-    flexDirection: "row-reverse",
-  },
+
   changeText: {
     fontSize: 12,
     color: "rgba(255,255,255,0.8)",
@@ -914,13 +930,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  cardHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   cardTitle: {
     fontSize: 17,
     fontWeight: "600",
     color: COLORS.text,
+    flex: 1,
+  },
+  /** Indent heading past the activity icon column (40 + 12) so it lines up with titles below */
+  cardTitleActivitiesLTR: {
+    paddingStart: 52,
+    textAlign: "left",
+  },
+  cardTitleActivitiesRTL: {
+    paddingEnd: 52,
+    textAlign: "right",
   },
   empMsgSendToRow: {
     flexDirection: "row",
@@ -929,9 +953,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 10,
   },
-  empMsgSendToRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   empMsgSendToLabel: {
     color: COLORS.textLight,
     fontSize: 13,
@@ -963,9 +985,7 @@ const styles = StyleSheet.create({
     gap: 6,
     marginBottom: 10,
   },
-  empMsgSelectedRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   empMsgSelectedText: {
     color: COLORS.textLight,
     fontSize: 13,
@@ -991,9 +1011,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 10,
   },
-  empMsgUrgentToggleRTL: {
-    flexDirection: "row-reverse",
-  },
+
   empMsgUrgentLabel: {
     color: COLORS.text,
     fontSize: 14,
@@ -1020,9 +1038,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginBottom: 8,
   },
-  empMsgEmployeeRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   empMsgEmployeeRowSelected: {
     borderColor: COLORS.primary,
     backgroundColor: "#f0f9ff",
@@ -1055,9 +1071,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
   },
-  empMsgModalFooterRTL: {
-    flexDirection: "row-reverse",
-  },
+
   empMsgModalBtn: {
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -1081,9 +1095,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 16,
   },
-  periodBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   periodText: {
     fontSize: 13,
     color: COLORS.textLight,
@@ -1093,6 +1105,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.primary,
     fontWeight: "500",
+    flexShrink: 0,
+  },
+  viewAllRTL: {
+    textAlign: "left",
   },
   chartPlaceholder: {
     height: 160,
@@ -1104,9 +1120,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     height: 140,
   },
-  chartBarsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   barContainer: {
     flex: 1,
     alignItems: "center",
@@ -1128,9 +1142,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  activityItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   activityIcon: {
     width: 40,
     height: 40,
@@ -1141,25 +1153,44 @@ const styles = StyleSheet.create({
   activityContent: {
     flex: 1,
     marginStart: 12,
+    minWidth: 0,
   },
   activityContentRTL: {
     marginStart: 0,
     marginEnd: 12,
-    alignItems: "flex-end",
   },
   activityTitle: {
     fontSize: 14,
     fontWeight: "500",
     color: COLORS.text,
+    width: "100%",
   },
   activityDesc: {
     fontSize: 12,
     color: COLORS.textLight,
     marginTop: 2,
+    width: "100%",
+  },
+  activityDescRTL: {
+    textAlign: "right",
+  },
+  activityTimeWrap: {
+    flexShrink: 0,
+    maxWidth: 104,
+    marginStart: 8,
+    justifyContent: "center",
+  },
+  activityTimeWrapRTL: {
+    marginStart: 0,
+    marginEnd: 8,
   },
   activityTime: {
     fontSize: 11,
     color: COLORS.textLight,
+    textAlign: "right",
+  },
+  activityTimeRTL: {
+    textAlign: "left",
   },
   tableHeader: {
     flexDirection: "row",
@@ -1167,9 +1198,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: COLORS.border,
   },
-  tableHeaderRTL: {
-    flexDirection: "row-reverse",
-  },
+
   tableRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -1177,9 +1206,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  tableRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
@@ -1214,9 +1241,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  modalOptionRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   modalOptionText: {
     fontSize: 16,
     color: COLORS.text,
@@ -1248,9 +1273,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  quickActionsRTL: {
-    flexDirection: "row-reverse",
-  },
+
   quickAction: {
     alignItems: "center",
     width: (width - 64) / 4,

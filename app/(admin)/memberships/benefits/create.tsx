@@ -292,7 +292,7 @@ export default function MembershipBenefitsManagement() {
         <View style={styles.cardContent}>
 
           {/* Title and Value in one row */}
-          <View style={[styles.titleValueRow, isRTL && styles.titleValueRowRTL]}>
+          <View style={[styles.titleValueRow]}>
             {/* Title Input */}
             <View style={styles.titleInputGroup}>
               <Text style={[styles.inputLabel, isRTL && styles.textRTL]}>
@@ -313,7 +313,7 @@ export default function MembershipBenefitsManagement() {
               <Text style={[styles.inputLabel, isRTL && styles.textRTL]}>
                 {lang === 'en' ? t("common.value", { lng: "en" }) : t("common.value", { lng: "ar" })}
               </Text>
-              <View style={[styles.valueInputWrapper, isRTL && styles.valueInputWrapperRTL]}>
+              <View style={[styles.valueInputWrapper]}>
                 <TextInput
                   style={[styles.valueInput, isRTL && styles.textRTL]}
                   value={item['value'] || ''}
@@ -351,7 +351,7 @@ export default function MembershipBenefitsManagement() {
 
     return (
       <View style={styles.section}>
-        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+        <View style={[styles.sectionHeader]}>
           <View style={[styles.iconBox, { backgroundColor: `${COLORS.primary}15` }]}>
             <Ionicons name={icon as any} size={24} color={COLORS.primary} />
           </View>
@@ -362,7 +362,7 @@ export default function MembershipBenefitsManagement() {
 
         {/* English Section */}
         <View style={styles.langSection}>
-          <View style={[styles.langHeader, isRTL && styles.langHeaderRTL]}>
+          <View style={[styles.langHeader]}>
             <Text style={[styles.langLabel, { marginBottom: 0 }]}>{t("common.english", { lng: "en" })}</Text>
             <View style={styles.langBadge}>
               <Text style={styles.langBadgeText}>{t("common.langCode.en")}</Text>
@@ -383,7 +383,7 @@ export default function MembershipBenefitsManagement() {
 
         {/* Arabic Section */}
         <View style={styles.langSection}>
-          <View style={[styles.langHeader, isRTL && styles.langHeaderRTL]}>
+          <View style={[styles.langHeader]}>
             <Text style={[styles.langLabel, { marginBottom: 0 }]}>{t("common.arabic", { lng: "ar" })}</Text>
             <View style={[styles.langBadge, { backgroundColor: '#ecfdf5' }]}>
               <Text style={[styles.langBadgeText, { color: '#059669' }]}>{t("common.langCode.ar")}</Text>
@@ -412,7 +412,7 @@ export default function MembershipBenefitsManagement() {
   ) => {
     return (
       <View style={styles.section}>
-        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+        <View style={[styles.sectionHeader]}>
           <Ionicons name={icon as any} size={24} color={COLORS.primary} />
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {title}
@@ -458,7 +458,7 @@ export default function MembershipBenefitsManagement() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -481,7 +481,7 @@ export default function MembershipBenefitsManagement() {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Plan Selection */}
         <View style={styles.section}>
-          <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+          <View style={[styles.sectionHeader]}>
             <Ionicons name="diamond" size={24} color={COLORS.primary} />
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
               {t('admin.selectMembershipPlan', 'Select Membership Plan')}
@@ -489,7 +489,7 @@ export default function MembershipBenefitsManagement() {
           </View>
           <View style={styles.pickerContainer}>
             <TouchableOpacity
-              style={[styles.pickerWrapper, isRTL && styles.pickerWrapperRTL]}
+              style={[styles.pickerWrapper]}
               onPress={() => setShowPlansDropdown(!showPlansDropdown)}
             >
               <Ionicons name="diamond-outline" size={20} color={COLORS.textLight} style={[styles.pickerIcon, isRTL && styles.pickerIconRTL]} />
@@ -528,8 +528,7 @@ export default function MembershipBenefitsManagement() {
                         key={plan.id}
                         style={[
                           styles.planOption,
-                          isSelected && styles.planOptionSelected,
-                          isRTL && styles.planOptionRTL
+                          isSelected && styles.planOptionSelected
                         ]}
                         onPress={() => {
                           setSelectedPlanId(plan.id);
@@ -568,7 +567,7 @@ export default function MembershipBenefitsManagement() {
 
         {/* Image Section */}
         <View style={styles.section}>
-          <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+          <View style={[styles.sectionHeader]}>
             <Ionicons name="image" size={24} color={COLORS.primary} />
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
               {t('common.imageUrl', 'Image URL')}
@@ -746,7 +745,7 @@ export default function MembershipBenefitsManagement() {
 
         {/* Upgrade Information */}
         <View style={styles.section}>
-          <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
+          <View style={[styles.sectionHeader]}>
             <Ionicons name="trending-up" size={24} color={COLORS.primary} />
             <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
               {t('admin.upgradeInfo', 'Upgrade Information')}
@@ -764,7 +763,7 @@ export default function MembershipBenefitsManagement() {
 
               return (
                 <View style={[styles.currentPlanCard, isRTL && styles.currentPlanCardRTL]}>
-                  <View style={[styles.currentPlanBadgeContainer, isRTL && styles.currentPlanBadgeContainerRTL]}>
+                  <View style={[styles.currentPlanBadgeContainer]}>
                     <View style={[styles.currentPlanBadgeItem, { backgroundColor: COLORS.background }]}>
                       <Ionicons name="diamond" size={18} color={COLORS.primary} />
                       <View style={styles.currentPlanBadgeTextContainer}>
@@ -830,7 +829,7 @@ export default function MembershipBenefitsManagement() {
               {t('admin.upgradeToPlan', 'Upgrade To Plan')}
             </Text>
             <TouchableOpacity
-              style={[styles.pickerWrapper, isRTL && styles.pickerWrapperRTL]}
+              style={[styles.pickerWrapper]}
               onPress={() => setShowUpgradeDropdown(!showUpgradeDropdown)}
             >
               <Ionicons name="diamond-outline" size={20} color={COLORS.textLight} style={[styles.pickerIcon, isRTL && styles.pickerIconRTL]} />
@@ -871,8 +870,7 @@ export default function MembershipBenefitsManagement() {
                           key={plan.id}
                           style={[
                             styles.planOption,
-                            isSelected && styles.planOptionSelected,
-                            isRTL && styles.planOptionRTL
+                            isSelected && styles.planOptionSelected
                           ]}
                           onPress={() => {
                             setFormData(prev => ({ ...prev, upgrade_to_plan_id: plan.id }));
@@ -957,9 +955,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   backBtn: {
     padding: isSmallScreen ? 6 : 8,
   },
@@ -1001,9 +997,7 @@ const styles = StyleSheet.create({
     marginBottom: isSmallScreen ? 16 : 20,
     gap: isSmallScreen ? 10 : 12,
   },
-  sectionHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   sectionTitle: {
     fontSize: isSmallScreen ? 16 : isMediumScreen ? 17 : 18,
     fontWeight: '700',
@@ -1024,9 +1018,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     gap: 8,
   },
-  inputRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   textInput: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -1073,9 +1065,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     gap: 8,
   },
-  langHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   langBadge: {
     paddingHorizontal: 8,
     paddingVertical: 2,
@@ -1104,9 +1094,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  pickerWrapperRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   pickerIcon: {
     marginEnd: 12,
   },
@@ -1127,9 +1115,7 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 12,
   },
-  titleValueRowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   titleInputGroup: {
     flex: 1,
   },
@@ -1147,9 +1133,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     height: 44,
   },
-  valueInputWrapperRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   valueInput: {
     flex: 1,
     fontSize: 14,
@@ -1222,9 +1206,7 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.border,
     gap: isSmallScreen ? 10 : 12,
   },
-  planOptionRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   planOptionSelected: {
     backgroundColor: `${COLORS.primary}10`,
   },
@@ -1279,9 +1261,7 @@ const styles = StyleSheet.create({
     gap: isSmallScreen ? 6 : 10,
     width: '100%',
   },
-  currentPlanBadgeContainerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   currentPlanBadgeItem: {
     flex: 1,
     flexDirection: 'row',

@@ -334,13 +334,13 @@ export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.container}>
       {/* Home Style Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <Image
           source={{ uri: 'https://customer-assets.emergentagent.com/job_viptraveller/artifacts/hsqancxd_altayarlogo.png' }}
           style={styles.logoImage}
           resizeMode="contain"
         />
-        <View style={[styles.headerRight, isRTL && styles.headerRightRTL]}>
+        <View style={[styles.headerRight]}>
           <TouchableOpacity style={styles.langBtn} onPress={toggleLanguage}>
             <Text style={styles.langText}>{language === 'ar' ? 'EN' : 'ع'}</Text>
           </TouchableOpacity>
@@ -375,15 +375,15 @@ export default function ProfileScreen() {
             style={styles.profileCard}
           >
             {/* Decorative Elements */}
-            <View style={styles.cardDecoration} />
+            <View style={[styles.cardDecoration, isRTL && styles.cardDecorationRTL]} />
             <Ionicons
               name="airplane"
               size={120}
               color="rgba(255,255,255,0.05)"
-              style={styles.cardIconDecor}
+              style={[styles.cardIconDecor, isRTL && styles.cardIconDecorRTL]}
             />
 
-            <View style={[styles.cardTop, isRTL && styles.rowRTL]}>
+            <View style={[styles.cardTop]}>
               <View style={styles.avatarWrapper}>
                 <View style={styles.avatar}>
                   {user?.avatar && !avatarError ? (
@@ -413,7 +413,7 @@ export default function ProfileScreen() {
                 </TouchableOpacity>
               </View>
 
-              <View style={[styles.userInfo, isRTL && styles.userInfoRTL]}>
+              <View style={styles.userInfo}>
                 <Text style={styles.profileName}>{userName}</Text>
                 <Text style={styles.usernameText}>
                   {t("common.usernameHandle", { username: user?.username || t("common.user") })}
@@ -423,7 +423,7 @@ export default function ProfileScreen() {
 
             <View style={styles.cardDivider} />
 
-            <View style={[styles.cardBottom, isRTL && styles.rowRTL]}>
+            <View style={[styles.cardBottom]}>
               <View>
                 <Text style={styles.cardLabel}>{t('common.memberId')}</Text>
                 <Text style={styles.memberIdText}>
@@ -431,7 +431,7 @@ export default function ProfileScreen() {
                 </Text>
               </View>
               {isMember ? (
-                <View style={[styles.memberBadge, isRTL && styles.memberBadgeRTL]}>
+                <View style={[styles.memberBadge]}>
                   <Ionicons name="diamond" size={14} color={COLORS.gold} />
                   <Text style={[styles.memberText, isRTL && styles.memberTextRTL]}>
                     {(language === 'ar' ? user?.membership?.plan_name_ar : user?.membership?.plan_name_en) ||
@@ -441,7 +441,7 @@ export default function ProfileScreen() {
                 </View>
               ) : (
                 <TouchableOpacity
-                  style={[styles.memberBadge, isRTL && styles.memberBadgeRTL]}
+                  style={[styles.memberBadge]}
                   onPress={() => router.push("/(user)/memberships-explore" as any)}
                   activeOpacity={0.85}
                 >
@@ -457,7 +457,7 @@ export default function ProfileScreen() {
 
         {/* Stats Grid */}
         {isAuthenticated && (
-          <View style={[styles.statsGrid, isRTL && styles.statsGridRTL]}>
+          <View style={[styles.statsGrid]}>
             {balances.loading ? (
               <View style={styles.loadingContainer}>
                 <ActivityIndicator size="small" color={COLORS.primary} />
@@ -470,6 +470,7 @@ export default function ProfileScreen() {
                   value={balances.wallet.toFixed(0)}
                   color="#0ea5e9"
                   isRTL={isRTL}
+                  onPress={() => router.push("/(user)/wallet-history" as any)}
                 />
                 <BalanceCard
                   icon="star-outline"
@@ -477,6 +478,7 @@ export default function ProfileScreen() {
                   value={balances.points.toString()}
                   color="#f59e0b"
                   isRTL={isRTL}
+                  onPress={() => router.push("/(user)/points-history" as any)}
                 />
                 <BalanceCard
                   icon="gift-outline"
@@ -484,6 +486,7 @@ export default function ProfileScreen() {
                   value={balances.cashback.toFixed(0)}
                   color="#10b981"
                   isRTL={isRTL}
+                  onPress={() => router.push("/(user)/club-gifts-history" as any)}
                 />
                 <BalanceCard
                   icon="people-outline"
@@ -491,6 +494,7 @@ export default function ProfileScreen() {
                   value={balances.referrals.toString()}
                   color="#8b5cf6"
                   isRTL={isRTL}
+                  onPress={() => router.push("/(user)/refer" as any)}
                 />
               </>
             )}
@@ -500,7 +504,7 @@ export default function ProfileScreen() {
         {/* Membership Journey Section */}
         {isAuthenticated && (
           <View style={styles.journeySection}>
-            <View style={[styles.sectionHeader, isRTL && styles.rowRTL]}>
+            <View style={[styles.sectionHeader]}>
               <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
                 {t('profile.membershipJourney')}
               </Text>
@@ -517,7 +521,7 @@ export default function ProfileScreen() {
             <View style={styles.journeyCard}>
               {!isMember ? (
                 <>
-                  <View style={[styles.lockedJourneyRow, isRTL && styles.rowRTL]}>
+                  <View style={[styles.lockedJourneyRow]}>
                     <Ionicons name="lock-closed" size={18} color={COLORS.primary} />
                     <Text style={[styles.currentTierText, isRTL && styles.textRTL]}>
                       {t("membership.locked.title", "Subscribe to unlock")}
@@ -527,7 +531,7 @@ export default function ProfileScreen() {
                     {t("membership.locked.body", "Subscribe to explore the app and access all features.")}
                   </Text>
                   <TouchableOpacity
-                    style={[styles.lockedJourneyBtn, isRTL && styles.lockedJourneyBtnRTL]}
+                    style={[styles.lockedJourneyBtn]}
                     onPress={() => router.push("/(user)/memberships-explore" as any)}
                   >
                     <Text style={styles.lockedJourneyBtnText}>
@@ -540,7 +544,7 @@ export default function ProfileScreen() {
                 <ActivityIndicator size="small" color={COLORS.primary} />
               ) : (
                 <>
-                  <View style={[styles.journeyInfo, isRTL && styles.rowRTL]}>
+                  <View style={[styles.journeyInfo]}>
                     <Text style={[styles.currentTierText, isRTL && styles.textRTL]}>
                       {t('profile.currentPlan', 'Current Plan')}: {language === 'ar' ? membershipProgress.currentTierNameAr : membershipProgress.currentTierName}
                     </Text>
@@ -574,7 +578,7 @@ export default function ProfileScreen() {
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL, { marginStart: 16, marginBottom: 16 }]}>
             {t('profile.quickActions')}
           </Text>
-          <View style={[styles.quickActionsGrid, isRTL && styles.rowRTL]}>
+          <View style={[styles.quickActionsGrid]}>
             {[
               { icon: 'pricetags', label: t('profile.clubOffers'), color: '#8b5cf6', route: "/(user)/for-you" },
               { icon: 'add-circle', label: t('profile.addFunds'), color: '#10b981', route: "/(user)/wallet" },
@@ -603,14 +607,14 @@ export default function ProfileScreen() {
 
         {/* Language Switcher */}
         <TouchableOpacity
-          style={[styles.languageBtn, isRTL && styles.languageBtnRTL]}
+          style={[styles.languageBtn]}
           onPress={() => router.push("/(user)/language")}
         >
           <Ionicons name="language" size={22} color={COLORS.primary} />
           <Text style={[styles.languageLabel, isRTL && styles.languageLabelRTL]}>
             {t("common.language")}
           </Text>
-          <View style={[styles.languageValue, isRTL && styles.languageValueRTL]}>
+          <View style={[styles.languageValue]}>
             <Text style={styles.langText}>
               {language === 'ar' ? t("common.arabic") : t("common.english")}
             </Text>
@@ -704,7 +708,7 @@ export default function ProfileScreen() {
         </View>
 
         <TouchableOpacity
-          style={[styles.logoutBtn, isRTL && styles.logoutBtnRTL]}
+          style={[styles.logoutBtn]}
           onPress={logout}
         >
           <Ionicons name="log-out-outline" size={22} color={COLORS.error} />
@@ -716,7 +720,7 @@ export default function ProfileScreen() {
         {/* Admin/Employee Switch */}
         {(user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
           <TouchableOpacity
-            style={[styles.adminSwitch, isRTL && styles.adminSwitchRTL]}
+            style={[styles.adminSwitch]}
             onPress={() => router.push("/(admin)")}
           >
             <Ionicons name="shield" size={20} color={COLORS.primary} />
@@ -728,7 +732,7 @@ export default function ProfileScreen() {
 
         {(user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
           <TouchableOpacity
-            style={[styles.adminSwitch, isRTL && styles.adminSwitchRTL]}
+            style={[styles.adminSwitch]}
             onPress={() => router.push("/(employee)")}
           >
             <Ionicons name="briefcase" size={20} color={COLORS.gold} />
@@ -741,7 +745,7 @@ export default function ProfileScreen() {
         {/* Employee Back Button */}
         {user?.role === "EMPLOYEE" && (
           <TouchableOpacity
-            style={[styles.adminSwitch, isRTL && styles.adminSwitchRTL]}
+            style={[styles.adminSwitch]}
             onPress={() => router.push("/(employee)")}
           >
             <Ionicons name="briefcase" size={20} color={COLORS.gold} />
@@ -770,7 +774,7 @@ export default function ProfileScreen() {
 function MenuItem({ icon, label, isRTL, isLast, onPress }: any) {
   return (
     <TouchableOpacity
-      style={[styles.menuItem, isRTL && styles.menuItemRTL, !isLast && styles.menuItemBorder]}
+      style={[styles.menuItem, !isLast && styles.menuItemBorder]}
       onPress={onPress}
     >
       <Ionicons name={icon} size={22} color={COLORS.textLight} />
@@ -784,9 +788,14 @@ function MenuItem({ icon, label, isRTL, isLast, onPress }: any) {
   );
 }
 
-function BalanceCard({ icon, label, value, color, isRTL, fullWidth }: any) {
+function BalanceCard({ icon, label, value, color, isRTL, fullWidth, onPress }: any) {
+  const Container = onPress ? TouchableOpacity : View;
   return (
-    <View style={[styles.balanceCard, fullWidth && { width: '100%' }, isRTL && styles.rowRTL]}>
+    <Container
+      style={[styles.balanceCard, fullWidth && { width: '100%' }]}
+      onPress={onPress}
+      activeOpacity={0.85}
+    >
       <View style={[styles.balanceIcon, { backgroundColor: `${color}15` }]}>
         <Ionicons name={icon} size={22} color={color} />
       </View>
@@ -799,7 +808,7 @@ function BalanceCard({ icon, label, value, color, isRTL, fullWidth }: any) {
         size={16}
         color={COLORS.lightGray}
       />
-    </View>
+    </Container>
   );
 }
 
@@ -825,9 +834,7 @@ const styles = StyleSheet.create({
     elevation: 8,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   logoImage: {
     width: 120,
     height: 40,
@@ -837,9 +844,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
   },
-  headerRightRTL: {
-    flexDirection: "row-reverse",
-  },
+
   langBtn: {
     backgroundColor: "rgba(255,255,255,0.2)",
     paddingHorizontal: 10,
@@ -872,17 +877,25 @@ const styles = StyleSheet.create({
   cardDecoration: {
     position: 'absolute',
     top: -20,
-    right: -20,
+    end: -20,
     width: 100,
     height: 100,
     borderRadius: 50,
     backgroundColor: 'rgba(255,255,255,0.05)',
   },
+  cardDecorationRTL: {
+    end: undefined,
+    start: -20,
+  },
   cardIconDecor: {
     position: 'absolute',
     bottom: -20,
-    right: -20,
+    end: -20,
     transform: [{ rotate: '-45deg' }],
+  },
+  cardIconDecorRTL: {
+    end: undefined,
+    start: -20,
   },
   cardTop: {
     flexDirection: 'row',
@@ -923,11 +936,6 @@ const styles = StyleSheet.create({
     marginStart: 16,
     flex: 1,
   },
-  userInfoRTL: {
-    marginStart: 0,
-    marginEnd: 16,
-    alignItems: 'flex-end',
-  },
   profileName: {
     color: COLORS.white,
     fontSize: 22,
@@ -967,15 +975,15 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     gap: 6,
   },
-  memberBadgeRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   memberText: {
     color: COLORS.white,
     fontSize: 14,
     fontWeight: '600',
   },
-  memberTextRTL: {},
+  memberTextRTL: {
+    textAlign: 'right',
+  },
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -983,9 +991,7 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: 10,
   },
-  statsGridRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   loadingContainer: {
     flex: 1,
     height: 100,
@@ -1108,9 +1114,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.lightGray,
   },
-  lockedJourneyBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   lockedJourneyBtnText: {
     color: COLORS.primary,
     fontWeight: '800',
@@ -1156,13 +1160,14 @@ const styles = StyleSheet.create({
   actionArrow: {
     position: 'absolute',
     top: 12,
-    right: 12,
+    end: 12,
     opacity: 0.5,
   },
   languageBtn: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: 12,
     backgroundColor: COLORS.white,
     marginHorizontal: 16,
     marginBottom: 20,
@@ -1171,18 +1176,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.lightGray,
   },
-  languageBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   languageLabel: {
     flex: 1,
     fontSize: 16,
     color: COLORS.text,
-    marginStart: 12,
   },
   languageLabelRTL: {
-    marginStart: 0,
-    marginEnd: 12,
     textAlign: "right",
   },
   languageValue: {
@@ -1190,9 +1190,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
   },
-  languageValueRTL: {
-    flexDirection: "row-reverse",
-  },
+
   menuSection: {
     backgroundColor: COLORS.white,
     borderRadius: 20,
@@ -1209,10 +1207,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 16,
+    gap: 12,
   },
-  menuItemRTL: {
-    flexDirection: "row-reverse",
-  },
+
   menuItemBorder: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
@@ -1221,11 +1218,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: COLORS.text,
-    marginStart: 12,
   },
   menuLabelRTL: {
-    marginStart: 0,
-    marginEnd: 12,
     textAlign: "right",
   },
   logoutBtn: {
@@ -1239,15 +1233,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 8,
   },
-  logoutBtnRTL: {
-    flexDirection: "row-reverse",
-  },
+
   logoutText: {
     color: COLORS.error,
     fontSize: 16,
     fontWeight: "bold",
   },
-  logoutTextRTL: {},
+  logoutTextRTL: {
+    textAlign: 'right',
+  },
   adminSwitch: {
     flexDirection: "row",
     alignItems: "center",
@@ -1259,15 +1253,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     gap: 8,
   },
-  adminSwitchRTL: {
-    flexDirection: "row-reverse",
-  },
+
   adminSwitchText: {
     color: COLORS.primary,
     fontSize: 16,
     fontWeight: "bold",
   },
-  adminSwitchTextRTL: {},
+  adminSwitchTextRTL: {
+    textAlign: 'right',
+  },
   version: {
     alignItems: "center",
     marginBottom: 20,
@@ -1276,9 +1270,7 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     fontSize: 12,
   },
-  rowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   textRTL: {
     textAlign: 'right',
   },

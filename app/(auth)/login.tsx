@@ -95,7 +95,7 @@ export default function LoginScreen() {
 
             <View style={styles.formContainer}>
               {error ? (
-                <View style={[styles.errorBox, isRTL && styles.errorBoxRTL]}>
+                <View style={[styles.errorBox]}>
                   <Ionicons name="alert-circle" size={20} color={COLORS.error} />
                   <Text style={[styles.errorText, isRTL && styles.errorTextRTL]}>{error}</Text>
                 </View>
@@ -103,7 +103,7 @@ export default function LoginScreen() {
 
               <View style={styles.inputGroup}>
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.emailOrUsername")}</Text>
-                <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+                <View style={[styles.inputContainer]}>
                   <Ionicons name="person-outline" size={20} color={COLORS.textLight} />
                   <TextInput
                     style={[styles.input, isRTL && styles.inputRTL]}
@@ -121,7 +121,7 @@ export default function LoginScreen() {
 
               <View style={styles.inputGroup}>
                 <Text style={[styles.label, isRTL && styles.textRTL]}>{t("common.password")}</Text>
-                <View style={[styles.inputContainer, isRTL && styles.inputContainerRTL]}>
+                <View style={[styles.inputContainer]}>
                   <Ionicons name="lock-closed-outline" size={20} color={COLORS.textLight} />
                   <TextInput
                     style={[styles.input, isRTL && styles.inputRTL]}
@@ -163,7 +163,7 @@ export default function LoginScreen() {
                 )}
               </TouchableOpacity>
 
-              <View style={[styles.footerRow, isRTL && styles.footerRowRTL]}>
+              <View style={[styles.footerRow]}>
                 <Text style={[styles.footerText, isRTL && styles.textRTL]}>{t("auth.noAccount")}</Text>
                 <TouchableOpacity onPress={() => router.push("/(auth)/register")} disabled={submitting}>
                   <Text style={styles.footerLink}>{t("common.register")}</Text>
@@ -172,7 +172,7 @@ export default function LoginScreen() {
 
               <View style={styles.languageContainer}>
                 <TouchableOpacity
-                  style={[styles.languagePill, isRTL && styles.languagePillRTL]}
+                  style={[styles.languagePill]}
                   onPress={toggleLanguage}
                   disabled={submitting}
                 >
@@ -246,9 +246,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 14,
   },
-  errorBoxRTL: {
-    flexDirection: "row-reverse",
-  },
+
   errorText: {
     marginStart: 8,
     color: COLORS.error,
@@ -277,9 +275,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 12,
   },
-  inputContainerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   input: {
     flex: 1,
     fontSize: 16,
@@ -328,9 +324,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     gap: 8,
   },
-  footerRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   footerText: {
     color: COLORS.textLight,
     fontSize: 13,
@@ -355,9 +349,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     gap: 8,
   },
-  languagePillRTL: {
-    flexDirection: "row-reverse",
-  },
+
   languagePillText: {
     color: COLORS.primary,
     fontWeight: "700",

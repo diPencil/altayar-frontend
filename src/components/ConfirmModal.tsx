@@ -72,7 +72,7 @@ export default function ConfirmModal({
                     <Text style={[styles.message, isRTL && styles.textRTL]}>{message}</Text>
 
                     {/* Buttons */}
-                    <View style={[styles.buttonRow, isRTL && styles.buttonRowRTL]}>
+                    <View style={[styles.buttonRow]}>
                         <TouchableOpacity
                             style={styles.cancelButton}
                             onPress={onCancel}
@@ -151,9 +151,7 @@ const styles = StyleSheet.create({
         gap: 12,
         width: '100%',
     },
-    buttonRowRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     cancelButton: {
         flex: 1,
         paddingVertical: 14,

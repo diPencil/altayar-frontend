@@ -101,12 +101,12 @@ export default function MembershipBenefitsList() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
+      <View style={[styles.header]}>
         <Text style={[styles.headerTitle, isRTL && styles.textRTL]}>
           {t('admin.membershipBenefits', 'Membership Benefits')}
         </Text>
         <TouchableOpacity
-          style={[styles.createBtnHeader, isRTL && styles.createBtnHeaderRTL]}
+          style={[styles.createBtnHeader]}
           onPress={handleCreate}
         >
           <Ionicons name="add" size={20} color="white" />
@@ -135,10 +135,10 @@ export default function MembershipBenefitsList() {
               return (
                 <TouchableOpacity
                   key={plan.id}
-                  style={[styles.pageCard, isRTL && styles.pageCardRTL]}
+                  style={[styles.pageCard]}
                   onPress={() => handleEdit(plan.id)}
                 >
-                  <View style={[styles.pageInfo, isRTL && styles.pageInfoRTL]}>
+                  <View style={[styles.pageInfo]}>
                     <View style={styles.pageIcon}>
                       <Image
                         source={TIER_IMAGES[normalizeCode(plan.tier_code)] || TIER_IMAGES.silver}
@@ -197,9 +197,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: '600',
@@ -216,9 +214,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 6,
   },
-  createBtnHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   createBtnHeaderText: {
     color: 'white',
     fontSize: 14,
@@ -244,18 +240,14 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  pageCardRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   pageInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     gap: 12,
   },
-  pageInfoRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   pageIcon: {
     width: 48,
     height: 48,

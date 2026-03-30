@@ -181,12 +181,12 @@ export default function TierPostsAdminScreen() {
     return (
         <View style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <Text style={styles.headerTitle}>{t('admin.tierPosts.title')}</Text>
             </View>
 
             {/* Tabs */}
-            <View style={[styles.tabs, isRTL && styles.tabsRTL]}>
+            <View style={[styles.tabs]}>
                 <TouchableOpacity
                     style={[styles.tab, activeTab === 'pending' && styles.tabActive]}
                     onPress={() => setActiveTab('pending')}
@@ -235,7 +235,7 @@ export default function TierPostsAdminScreen() {
                         ) : (
                             comments.map((comment) => (
                                 <View key={comment.id} style={styles.commentCard}>
-                                    <View style={[styles.commentHeader, isRTL && styles.commentHeaderRTL]}>
+                                    <View style={[styles.commentHeader]}>
                                         <Image
                                             source={{ uri: comment.user_avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
                                             style={styles.avatar}
@@ -255,7 +255,7 @@ export default function TierPostsAdminScreen() {
 
                                     <Text style={[styles.commentContent, isRTL && styles.textRTL]}>{comment.content}</Text>
 
-                                    <View style={[styles.actions, isRTL && styles.actionsRTL]}>
+                                    <View style={[styles.actions]}>
                                         {comment.status === 'PENDING' && (
                                             <TouchableOpacity
                                                 style={[styles.actionBtn, styles.approveBtn]}
@@ -300,7 +300,7 @@ export default function TierPostsAdminScreen() {
                         ) : (
                             posts.map((post) => (
                                 <View key={post.id} style={styles.postCard}>
-                                    <View style={[styles.postHeader, isRTL && styles.postHeaderRTL]}>
+                                    <View style={[styles.postHeader]}>
                                         <Image
                                             source={{ uri: post.user_avatar || 'https://randomuser.me/api/portraits/men/1.jpg' }}
                                             style={styles.avatar}
@@ -322,7 +322,7 @@ export default function TierPostsAdminScreen() {
                                         <Image source={{ uri: post.image_url }} style={styles.postImage} resizeMode="cover" />
                                     )}
 
-                                    <View style={[styles.postStats, isRTL && styles.postStatsRTL]}>
+                                    <View style={[styles.postStats]}>
                                         <View style={styles.stat}>
                                             <Ionicons name="heart" size={16} color="#64748b" />
                                             <Text style={styles.statText}>{post.likes_count}</Text>
@@ -338,7 +338,7 @@ export default function TierPostsAdminScreen() {
                                         </View>
                                     </View>
 
-                                    <View style={[styles.actions, isRTL && styles.actionsRTL]}>
+                                    <View style={[styles.actions]}>
                                         {post.status === 'PENDING' && (
                                             <>
                                                 <TouchableOpacity
@@ -613,15 +613,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     // RTL Styles
-    headerRTL: {
-        flexDirection: 'row-reverse',
-    },
-    tabsRTL: {
-        flexDirection: 'row-reverse',
-    },
-    commentHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     commentMetaRTL: {
         marginStart: 0,
         marginEnd: 12,
@@ -630,18 +622,11 @@ const styles = StyleSheet.create({
     textRTL: {
         textAlign: 'right',
     },
-    actionsRTL: {
-        flexDirection: 'row-reverse',
-    },
-    postHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     postMetaRTL: {
         marginStart: 0,
         marginEnd: 12,
         alignItems: 'flex-end',
     },
-    postStatsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
 });

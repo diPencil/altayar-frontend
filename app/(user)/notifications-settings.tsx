@@ -80,7 +80,7 @@ export default function NotificationsSettingsScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -214,21 +214,25 @@ export default function NotificationsSettingsScreen() {
 
 function SettingRow({ icon, title, subtitle, value, onToggle, isRTL, isLast, disabled }: any) {
   return (
-    <View style={[styles.settingRow, isRTL && styles.settingRowRTL, !isLast && styles.settingRowBorder]}>
+    <View style={[styles.settingRow, !isLast && styles.settingRowBorder]}>
       <View style={styles.settingIcon}>
         <Ionicons name={icon} size={22} color={COLORS.primary} />
       </View>
-      <View style={[styles.settingInfo, isRTL && styles.settingInfoRTL]}>
+      <View style={styles.settingInfo}>
         <Text style={[styles.settingTitle, isRTL && styles.textRTL]}>{title}</Text>
         <Text style={[styles.settingSubtitle, isRTL && styles.textRTL]}>{subtitle}</Text>
       </View>
-      <Switch
-        value={value}
-        onValueChange={onToggle}
-        disabled={disabled}
-        trackColor={{ false: COLORS.lightGray, true: COLORS.primary }}
-        thumbColor={COLORS.white}
-      />
+      <View style={styles.switchWrap}>
+        <Switch
+          value={value}
+          onValueChange={onToggle}
+          disabled={disabled}
+          trackColor={{ false: COLORS.lightGray, true: COLORS.primary }}
+          thumbColor={COLORS.white}
+          ios_backgroundColor={COLORS.lightGray}
+          style={isRTL ? { transform: [{ scaleX: -1 }] } : undefined}
+        />
+      </View>
     </View>
   );
 }
@@ -254,13 +258,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
+    flex: 1,
     fontSize: 18,
     fontWeight: "600",
     color: COLORS.text,
+    textAlign: "center",
   },
   content: {
     flex: 1,
@@ -288,11 +292,11 @@ const styles = StyleSheet.create({
   settingRow: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 18,
+    gap: 12,
   },
-  settingRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   settingRowBorder: {
     borderBottomWidth: 1,
     borderBottomColor: COLORS.lightGray,
@@ -304,14 +308,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0f7fa",
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
   },
   settingInfo: {
     flex: 1,
-    marginStart: 12,
-  },
-  settingInfoRTL: {
-    marginStart: 0,
-    marginEnd: 12,
+    minWidth: 0,
   },
   settingTitle: {
     fontSize: 15,
@@ -322,6 +323,9 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.textLight,
     marginTop: 2,
+  },
+  switchWrap: {
+    flexShrink: 0,
   },
   footer: {
     paddingVertical: 20,

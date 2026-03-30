@@ -222,7 +222,6 @@ export default function EmployeeNotificationsScreen() {
             style={[
                 styles.notificationItem,
                 !item.is_read && styles.unreadNotification,
-                isRTL && styles.notificationItemRTL,
             ]}
             onPress={() => handleNotificationPress(item)}
             activeOpacity={0.7}
@@ -236,7 +235,7 @@ export default function EmployeeNotificationsScreen() {
             </View>
 
             <View style={styles.notificationContent}>
-                <View style={[styles.notificationHeader, isRTL && styles.notificationHeaderRTL]}>
+                <View style={[styles.notificationHeader]}>
                     <Text style={[styles.notificationTitle, isRTL && styles.textRTL]} numberOfLines={1}>
                         {t(`notifications.types.${item.type}`, item.title)}
                     </Text>
@@ -249,10 +248,10 @@ export default function EmployeeNotificationsScreen() {
                     {item.message}
                 </Text>
 
-                <View style={[styles.notificationActions, isRTL && styles.notificationActionsRTL]}>
+                <View style={[styles.notificationActions]}>
                     {!item.is_read && (
                         <TouchableOpacity
-                            style={[styles.actionButton, isRTL && styles.actionButtonRTL]}
+                            style={[styles.actionButton]}
                             onPress={(e) => {
                                 e.stopPropagation();
                                 handleMarkAsRead(item);
@@ -296,7 +295,7 @@ export default function EmployeeNotificationsScreen() {
     return (
         <SafeAreaView style={styles.container}>
             {/* Header */}
-            <View style={[styles.header, isRTL && styles.headerRTL]}>
+            <View style={[styles.header]}>
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
                 </TouchableOpacity>
@@ -354,9 +353,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.lightGray,
     },
-    headerRTL: {
-        flexDirection: "row-reverse",
-    },
+
     headerTitle: {
         fontSize: 18,
         fontWeight: "600",
@@ -391,9 +388,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: COLORS.lightGray,
     },
-    notificationItemRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     unreadNotification: {
         backgroundColor: COLORS.unreadBg,
     },
@@ -419,9 +414,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         marginBottom: 4,
     },
-    notificationHeaderRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     notificationTitle: {
         fontSize: 15,
         fontWeight: '600',
@@ -444,18 +437,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    notificationActionsRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     actionButton: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 4,
         paddingHorizontal: 8,
     },
-    actionButtonRTL: {
-        flexDirection: 'row-reverse',
-    },
+
     actionText: {
         fontSize: 12,
         color: COLORS.gray,

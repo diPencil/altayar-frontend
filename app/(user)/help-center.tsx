@@ -112,7 +112,7 @@ export default function HelpCenterScreen() {
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={[styles.header, isRTL && styles.headerRTL, { paddingTop: insets.top + 10 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name={isRTL ? "arrow-forward" : "arrow-back"} size={24} color={COLORS.text} />
         </TouchableOpacity>
@@ -133,7 +133,7 @@ export default function HelpCenterScreen() {
           </Text>
 
           {/* Search */}
-          <View style={[styles.searchContainer, isRTL && styles.searchContainerRTL]}>
+          <View style={[styles.searchContainer]}>
             <Ionicons name="search" size={20} color={COLORS.textLight} />
             <TextInput
               style={[styles.searchInput, isRTL && styles.searchInputRTL]}
@@ -150,7 +150,7 @@ export default function HelpCenterScreen() {
         <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
           {t('helpCenter.contactUs')}
         </Text>
-        <View style={[styles.contactRow, isRTL && styles.contactRowRTL]}>
+        <View style={[styles.contactRow]}>
           <TouchableOpacity style={styles.contactBtn} onPress={handleWhatsApp}>
             <View style={[styles.contactIcon, { backgroundColor: '#dcfce7' }]}>
               <Ionicons name="logo-whatsapp" size={24} color={COLORS.whatsapp} />
@@ -191,7 +191,7 @@ export default function HelpCenterScreen() {
               onPress={() => setExpandedFaq(expandedFaq === item.id ? null : item.id)}
               activeOpacity={0.7}
             >
-              <View style={[styles.faqQuestion, isRTL && styles.faqQuestionRTL]}>
+              <View style={[styles.faqQuestion]}>
                 <Text style={[styles.faqQuestionText, isRTL && styles.textRTL]}>
                   {item.question}
                 </Text>
@@ -215,7 +215,7 @@ export default function HelpCenterScreen() {
           style={styles.liveChatBtn}
           onPress={() => router.push('/(user)/inbox')}
         >
-          <View style={[styles.liveChatContent, isRTL && styles.liveChatContentRTL]}>
+          <View style={[styles.liveChatContent]}>
             <View style={styles.liveChatIcon}>
               <Ionicons name="chatbubbles" size={28} color={COLORS.white} />
             </View>
@@ -266,9 +266,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
-  headerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   headerTitle: {
     fontSize: 18,
     fontWeight: "600",
@@ -315,9 +313,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 24,
   },
-  searchContainerRTL: {
-    flexDirection: "row-reverse",
-  },
+
   searchInput: {
     flex: 1,
     paddingVertical: 14,
@@ -343,9 +339,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 24,
   },
-  contactRowRTL: {
-    flexDirection: "row-reverse",
-  },
+
   contactBtn: {
     alignItems: "center",
   },
@@ -380,9 +374,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  faqQuestionRTL: {
-    flexDirection: "row-reverse",
-  },
+
   faqQuestionText: {
     flex: 1,
     fontSize: 15,
@@ -406,9 +398,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  liveChatContentRTL: {
-    flexDirection: "row-reverse",
-  },
+
   liveChatIcon: {
     width: 50,
     height: 50,
@@ -422,7 +412,7 @@ const styles = StyleSheet.create({
     marginStart: 14,
   },
   liveChatInfoRTL: {
-    marginStart: 0,
+//     marginStart: 0,  /* removed double-flip for Native RTL */
     marginEnd: 14,
   },
   liveChatTitle: {

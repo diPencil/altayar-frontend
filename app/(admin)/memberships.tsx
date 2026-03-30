@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, FlatList, Alert, Modal, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, FlatList, Alert, Modal, Pressable, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { adminApi } from "../../src/services/api";
 import { useTranslation } from "react-i18next";
 import { useRouter, useFocusEffect } from "expo-router";
 import { useLanguage } from "../../src/contexts/LanguageContext";
 import Toast from "../../src/components/Toast";
+import { formatCurrency } from "../../src/utils/currency";
 
 const COLORS = {
   primary: "#1071b8",
@@ -24,7 +25,8 @@ const COLORS = {
 export default function AdminMemberships() {
   const router = useRouter();
   const { t } = useTranslation();
-  const { isRTL } = useLanguage();
+  const { isRTL, language } = useLanguage();
+  const locale = language === "ar" ? "ar-EG" : "en-US";
   const [plans, setPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -161,13 +163,13 @@ export default function AdminMemberships() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={[styles.header, isRTL && styles.headerRTL]}>
-        <Text style={[styles.pageTitle, isRTL && styles.textRTL]}>{t('manageMemberships.title')}</Text>
-        <View style={[styles.headerActions, isRTL && styles.headerActionsRTL]}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+      <View style={styles.header}>
+        <Text style={[styles.pageTitle, isRTL && styles.pageTitleRTL]}>{t('manageMemberships.title')}</Text>
+        <View style={[styles.headerActions]}>
 
           <TouchableOpacity
-            style={[styles.addBtn, isRTL && styles.addBtnRTL]}
+            style={[styles.addBtn]}
             onPress={() => router.push('/(admin)/memberships/create')}
           >
             <Ionicons name="add" size={20} color="white" />
@@ -177,7 +179,7 @@ export default function AdminMemberships() {
       </View>
 
       {/* Analytics Matrix (2x2 Grid) */}
-      <View style={[styles.statsGrid, isRTL && styles.statsGridRTL]}>
+      <View style={[styles.statsGrid]}>
         <View style={styles.statsColumn}>
           <StatsCard
             title={t('manageMemberships.totalMembers')}
@@ -188,7 +190,7 @@ export default function AdminMemberships() {
           />
           <StatsCard
             title={t('manageMemberships.estRevenue')}
-            value={`$${(stats.totalRevenue || 0).toLocaleString()}`}
+            value={formatCurrency(stats.totalRevenue || 0, "USD", locale)}
             icon="cash"
             color="#10b981"
             isRTL={isRTL}
@@ -213,54 +215,54 @@ export default function AdminMemberships() {
       </View>
 
       {/* Revenue & Growth Insights Section */}
-      <View style={[styles.insightsContainer, isRTL && styles.rowRTL]}>
+      <View style={[styles.insightsContainer]}>
         <View style={styles.insightCard}>
-          <View style={[styles.insightHeader, isRTL && styles.rowRTL]}>
+          <View style={styles.insightHeader}>
             <View style={styles.insightIconCircle}>
               <Ionicons name="trending-up" size={16} color={COLORS.success} />
             </View>
-            <Text style={[styles.insightTitle, isRTL && { textAlign: 'right' }]}>{t('manageMemberships.monthlyGrowth')}</Text>
+            <Text style={[styles.insightTitle, isRTL && styles.textAlignEnd]}>{t('manageMemberships.monthlyGrowth')}</Text>
           </View>
-          <Text style={[styles.insightValue, isRTL && styles.textRTL]}>
+          <Text style={[styles.insightValue, isRTL && styles.textAlignEnd]}>
             {stats.monthlyGrowth > 0 ? '+' : ''}{stats.monthlyGrowth}%
           </Text>
-          <Text style={[styles.insightSubtext, isRTL && { textAlign: 'right' }]}>{t('manageMemberships.vsLastMonth')}</Text>
+          <Text style={[styles.insightSubtext, isRTL && styles.textAlignEnd]}>{t('manageMemberships.vsLastMonth')}</Text>
         </View>
 
         <View style={styles.insightCard}>
-          <View style={[styles.insightHeader, isRTL && styles.rowRTL]}>
+          <View style={styles.insightHeader}>
             <View style={[styles.insightIconCircle, { backgroundColor: '#fef3c7' }]}>
               <Ionicons name="star" size={16} color={COLORS.warning} />
             </View>
-            <Text style={[styles.insightTitle, isRTL && { textAlign: 'right' }]}>{t('manageMemberships.topPlan')}</Text>
+            <Text style={[styles.insightTitle, isRTL && styles.textAlignEnd]}>{t('manageMemberships.topPlan')}</Text>
           </View>
-          <Text style={[styles.insightValue, isRTL && styles.textRTL]}>
+          <Text style={[styles.insightValue, isRTL && styles.textAlignEnd]}>
             {isRTL ? stats.topPlan?.name_ar || '-' : stats.topPlan?.name_en || '-'}
           </Text>
-          <Text style={[styles.insightSubtext, isRTL && { textAlign: 'right' }]}>{t('manageMemberships.mostPopular')}</Text>
+          <Text style={[styles.insightSubtext, isRTL && styles.textAlignEnd]}>{t('manageMemberships.mostPopular')}</Text>
         </View>
       </View>
 
       {/* Recent Activity Feed */}
       <View style={styles.activityCard}>
-        <View style={[styles.cardHeader, isRTL && styles.rowRTL]}>
-          <Text style={[styles.cardTitle, isRTL && { textAlign: 'right' }]}>{t('manageMemberships.recentActivity')}</Text>
+        <View style={[styles.cardHeader]}>
+          <Text style={[styles.cardTitle, isRTL && styles.textAlignEnd]}>{t('manageMemberships.recentActivity')}</Text>
           <TouchableOpacity onPress={() => router.push('/(admin)/memberships/subscriptions')}>
-            <Text style={styles.viewAll}>{t('common.viewAll', 'View All')}</Text>
+            <Text style={[styles.viewAll, isRTL && styles.textAlignEnd]}>{t('common.viewAll', 'View All')}</Text>
           </TouchableOpacity>
         </View>
 
         {stats.recentActivity && stats.recentActivity.length > 0 ? (
           stats.recentActivity.map((activity, idx) => (
-            <View key={activity.id} style={[styles.activityItem, isRTL && { flexDirection: 'row-reverse' }, idx === stats.recentActivity.length - 1 && { borderBottomWidth: 0 }]}>
+            <View key={activity.id} style={styles.activityItem}>
               <View style={styles.activityIcon}>
                 <Ionicons name="person-outline" size={14} color={COLORS.textLight} />
               </View>
-              <View style={[styles.activityContent, isRTL && styles.alignEnd]}>
-                <Text style={[styles.activityText, isRTL && { textAlign: 'right', writingDirection: 'rtl' }]}>
+              <View style={styles.activityContent}>
+                <Text style={[styles.activityText, isRTL && styles.textAlignEnd, isRTL && { writingDirection: "rtl" as const }]}>
                   <Text style={styles.boldText}>{activity.user}</Text> {isRTL ? activity.action_ar : activity.action_en} <Text style={[styles.boldText, { color: COLORS.primary }]}>{isRTL ? activity.plan_ar : activity.plan_en}</Text>
                 </Text>
-                <Text style={styles.activityDate}>{activity.date}</Text>
+                <Text style={[styles.activityDate, isRTL && styles.textAlignEnd]}>{activity.date}</Text>
               </View>
             </View>
           ))
@@ -272,12 +274,12 @@ export default function AdminMemberships() {
       {/* Data Table */}
       <View style={[styles.tableCard, { marginTop: 16, position: 'relative' }]}>
         {/* Table Header */}
-        <View style={[styles.tableHeader, isRTL && styles.tableHeaderRTL]}>
-          <Text style={[styles.th, { flex: 0.8 }, isRTL && styles.textRTL]}>{t('manageMemberships.table.id')}</Text>
-          <Text style={[styles.th, { flex: 2 }, isRTL && styles.textRTL]}>{t('manageMemberships.table.name')}</Text>
-          <Text style={[styles.th, { flex: 2 }, isRTL && styles.textRTL]}>{t('manageMemberships.table.details')}</Text>
-          <Text style={[styles.th, { flex: 1, textAlign: 'center' }, isRTL && styles.textRTL]}>{t('manageMemberships.table.members')}</Text>
-          <Text style={[styles.th, { flex: 0.5 }, isRTL && styles.textRTL]}>{t('manageMemberships.table.action')}</Text>
+        <View style={styles.tableHeader}>
+          <Text style={[styles.th, styles.thCell, { flex: 0.7 }, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>{t('manageMemberships.table.id')}</Text>
+          <Text style={[styles.th, styles.thCell, { flex: 2.2 }, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>{t('manageMemberships.table.name')}</Text>
+          <Text style={[styles.th, styles.thCell, { flex: 2 }, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>{t('manageMemberships.table.details')}</Text>
+          <Text style={[styles.th, styles.thCell, { flex: 1 }, styles.textAlignCenter]}>{t('manageMemberships.table.members')}</Text>
+          <Text style={[styles.th, styles.thCell, { flex: 0.6 }, styles.textAlignCenter]}>{t('manageMemberships.table.action')}</Text>
         </View>
 
         {loading ? (
@@ -295,32 +297,10 @@ export default function AdminMemberships() {
               openMenuId={openMenuId}
               setOpenMenuId={setOpenMenuId}
               showMenu={openMenuId === plan.id}
+              locale={locale}
             />
           ))
         )}
-
-        {/* Render dropdowns at table level */}
-        {plans.map((plan) => (
-          openMenuId === plan.id && (
-            <MembershipDropdown
-              key={`dropdown-${plan.id}`}
-              plan={plan}
-              onEdit={() => {
-                setOpenMenuId(null);
-                router.push(`/(admin)/memberships/${plan.id}/edit`);
-              }}
-              onViewMembers={() => {
-                setOpenMenuId(null);
-                router.push(`/(admin)/memberships/${plan.id}/members`);
-              }}
-              onDelete={() => {
-                setOpenMenuId(null);
-                handleDeleteRequest(plan);
-              }}
-              onClose={() => setOpenMenuId(null)}
-            />
-          )
-        ))}
       </View>
 
       {/* Delete Confirmation Modal */}
@@ -373,19 +353,20 @@ export default function AdminMemberships() {
 
 function StatsCard({ title, value, icon, color, isRTL }: any) {
   return (
-    <View style={[styles.statCard, isRTL && styles.statCardRTL]}>
+    <View style={styles.statCard}>
       <View style={[styles.iconBox, { backgroundColor: `${color}10` }]}>
         <Ionicons name={icon} size={22} color={color} />
       </View>
-      <View style={[styles.statContent, isRTL && styles.statContentRTL]}>
-        <Text style={styles.statValue}>{value}</Text>
-        <Text style={styles.statTitle} numberOfLines={1}>{title}</Text>
+      <View style={styles.statContent}>
+        <Text style={[styles.statValue, isRTL && styles.textAlignEnd]}>{value}</Text>
+        <Text style={[styles.statTitle, isRTL && styles.textAlignEnd]} numberOfLines={1}>{title}</Text>
       </View>
     </View>
   );
 }
 
-function MembershipRow({ plan, index, onRefresh, onDelete, openMenuId, setOpenMenuId, showMenu }: any) {
+function MembershipRow({ plan, index, onRefresh, onDelete, openMenuId, setOpenMenuId, showMenu, locale }: any) {
+  const router = useRouter();
   const { isRTL } = useLanguage();
   const { t } = useTranslation();
   const isPaid = plan.price > 0 || plan.plan_type !== 'FREE';
@@ -394,65 +375,146 @@ function MembershipRow({ plan, index, onRefresh, onDelete, openMenuId, setOpenMe
     setOpenMenuId(showMenu ? null : plan.id);
   };
 
+  const durationLabel =
+    plan.plan_type === "PAID_INFINITE"
+      ? t("manageMemberships.lifetime", "For Lifetime")
+      : t("manageMemberships.perDays", { days: plan.duration_days });
+
   return (
-    <View style={[styles.tr, isRTL && styles.trRTL]}>
-      <Text style={[styles.td, { flex: 0.8, color: COLORS.textLight }, isRTL && styles.textRTL]}>{index}</Text>
-
-      <View style={[{ flex: 2 }, isRTL && { alignItems: 'flex-end' }]}>
-        <Text style={[styles.planName, isRTL && styles.textRTL]}>{isRTL ? (plan.tier_name_ar || plan.tier_name_en) : plan.tier_name_en}</Text>
-        <Text style={[styles.planCode, isRTL && styles.textRTL]}>{plan.tier_code}</Text>
-      </View>
-
-      <View style={[{ flex: 2 }, isRTL && { alignItems: 'flex-end' }]}>
-        <View style={[styles.badge, isPaid ? styles.paidBadge : styles.freeBadge]}>
-          <Text style={[styles.badgeText, isPaid ? styles.paidText : styles.freeText]}>
-            {isPaid ? t('manageMemberships.paid', 'Paid') : t('manageMemberships.free', 'Free')}
-          </Text>
-        </View>
-        <Text style={[styles.planPrice, isRTL && styles.textRTL]}>
-          {isPaid ? `$${plan.price.toLocaleString()} ${plan.currency} ` : t('manageMemberships.free', 'Free') + ' '}
-          <Text style={styles.planDuration}>
-            {plan.plan_type === 'PAID_INFINITE' ? t('manageMemberships.lifetime', 'For Lifetime') : t('manageMemberships.perDays', { days: plan.duration_days })}
-          </Text>
-        </Text>
-      </View>
-
-      <Text style={[styles.td, { flex: 1, textAlign: 'center', fontWeight: 'bold' }]}>
-        {plan.members_count || 0}
+    <View style={[styles.tr, showMenu && styles.trWithOpenMenu]}>
+      <Text style={[styles.td, styles.tdCell, { flex: 0.7, color: COLORS.textLight }, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>
+        {index}
       </Text>
 
-      <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-        <TouchableOpacity
-          onPress={toggleMenu}
-          activeOpacity={0.6}
-        >
+      <View style={[styles.nameCol, { flex: 2.2 }]}>
+        <View style={styles.nameRow}>
+          <Text
+            style={[styles.planName, isRTL ? styles.textAlignEnd : styles.textAlignStart]}
+            numberOfLines={2}
+          >
+            {isRTL ? plan.tier_name_ar || plan.tier_name_en : plan.tier_name_en}
+          </Text>
+          <View style={[styles.badge, isPaid ? styles.paidBadge : styles.freeBadge]}>
+            <Text style={[styles.badgeText, isPaid ? styles.paidText : styles.freeText]}>
+              {isPaid ? t("manageMemberships.paid", "Paid") : t("manageMemberships.free", "Free")}
+            </Text>
+          </View>
+        </View>
+        <Text style={[styles.planCode, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>{plan.tier_code}</Text>
+      </View>
+
+      <View style={[styles.detailsCol, { flex: 2 }]}>
+        {isPaid ? (
+          <Text style={[styles.planPrice, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>
+            {formatCurrency(Number(plan.price), plan.currency || "USD", locale)}
+            {"\n"}
+            <Text style={styles.planDuration}>{durationLabel}</Text>
+          </Text>
+        ) : (
+          <Text style={[styles.planPrice, isRTL ? styles.textAlignEnd : styles.textAlignStart]}>
+            {t("manageMemberships.free", "Free")}
+            {"\n"}
+            <Text style={styles.planDuration}>{durationLabel}</Text>
+          </Text>
+        )}
+      </View>
+
+      <Text style={[styles.td, styles.tdCell, { flex: 1, fontWeight: "700" }, styles.textAlignCenter]}>{plan.members_count || 0}</Text>
+
+      <View style={[styles.actionCol, styles.actionColRelative, { flex: 0.6 }]}>
+        <TouchableOpacity onPress={toggleMenu} activeOpacity={0.6} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
           <Ionicons name="ellipsis-horizontal" size={20} color={COLORS.text} />
         </TouchableOpacity>
+        {showMenu && (
+          <MembershipDropdown
+            onEdit={() => {
+              setOpenMenuId(null);
+              router.push(`/(admin)/memberships/${plan.id}/edit`);
+            }}
+            onViewMembers={() => {
+              setOpenMenuId(null);
+              router.push(`/(admin)/memberships/${plan.id}/members`);
+            }}
+            onDelete={() => {
+              setOpenMenuId(null);
+              onDelete(plan);
+            }}
+          />
+        )}
       </View>
     </View>
   );
 }
 
-function MembershipDropdown({ plan, onEdit, onViewMembers, onDelete, onClose }: any) {
+function MenuActionRow({
+  isRTL,
+  onPress,
+  label,
+  iconName,
+  iconColor,
+  labelColor,
+}: {
+  isRTL: boolean;
+  onPress: () => void;
+  label: string;
+  iconName: React.ComponentProps<typeof Ionicons>["name"];
+  iconColor: string;
+  labelColor: string;
+}) {
+  return (
+    <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.7}>
+      <Ionicons name={iconName} size={18} color={iconColor} />
+      <Text
+        style={[
+          styles.menuText,
+          styles.menuTextFlex,
+          isRTL ? styles.textAlignEnd : styles.textAlignStart,
+          { color: labelColor },
+          isRTL && { writingDirection: "rtl" as const },
+        ]}
+        numberOfLines={2}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+}
+
+function MembershipDropdown({ onEdit, onViewMembers, onDelete }: any) {
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
 
   return (
-    <View style={[styles.actionMenu, { position: 'absolute', top: 80, right: isRTL ? undefined : 20, left: isRTL ? 20 : undefined, zIndex: 9999, elevation: 15 }]}>
-      <TouchableOpacity style={[styles.menuItem, isRTL && styles.menuItemRTL]} onPress={onEdit}>
-        <Ionicons name="create-outline" size={18} color={COLORS.primary} />
-        <Text style={styles.menuText}>{t('common.edit', 'Edit')}</Text>
-      </TouchableOpacity>
+    <View
+      style={[styles.actionMenu, isRTL && styles.actionMenuRTL, styles.actionMenuAnchored]}
+      {...(Platform.OS === "web" && isRTL ? ({ dir: "rtl", lang: "ar" } as any) : {})}
+    >
+      <MenuActionRow
+        isRTL={isRTL}
+        onPress={onEdit}
+        label={t("common.edit", "Edit")}
+        iconName="create-outline"
+        iconColor={COLORS.primary}
+        labelColor={COLORS.text}
+      />
       <View style={styles.menuDivider} />
-      <TouchableOpacity style={[styles.menuItem, isRTL && styles.menuItemRTL]} onPress={onViewMembers}>
-        <Ionicons name="eye-outline" size={18} color={COLORS.primary} />
-        <Text style={styles.menuText}>{t('manageMemberships.viewMembers', 'View Members')}</Text>
-      </TouchableOpacity>
+      <MenuActionRow
+        isRTL={isRTL}
+        onPress={onViewMembers}
+        label={t("manageMemberships.viewMembers", "View Members")}
+        iconName="eye-outline"
+        iconColor={COLORS.primary}
+        labelColor={COLORS.text}
+      />
       <View style={styles.menuDivider} />
-      <TouchableOpacity style={[styles.menuItem, isRTL && styles.menuItemRTL]} onPress={onDelete}>
-        <Ionicons name="trash-outline" size={18} color={COLORS.error} />
-        <Text style={[styles.menuText, { color: COLORS.error }]}>{t('common.delete', 'Delete')}</Text>
-      </TouchableOpacity>
+      <MenuActionRow
+        isRTL={isRTL}
+        onPress={onDelete}
+        label={t("common.delete", "Delete")}
+        iconName="trash-outline"
+        iconColor={COLORS.error}
+        labelColor={COLORS.error}
+      />
     </View>
   );
 }
@@ -461,7 +523,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scrollContent: {
     padding: 20,
+    paddingBottom: 48,
+    flexGrow: 1,
+    overflow: "visible",
   },
   header: {
     flexDirection: 'row',
@@ -469,21 +536,61 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 24,
   },
-  headerRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   headerActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  headerActionsRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   pageTitle: {
-    fontSize: 20, // Reduced from 24
+    fontSize: 20,
     fontWeight: "bold",
     color: COLORS.text,
+    textAlign: "left",
+  },
+  pageTitleRTL: {
+    textAlign: "right",
+  },
+  thCell: {
+    paddingHorizontal: 4,
+  },
+  tdCell: {
+    paddingHorizontal: 4,
+  },
+  textAlignStart: {
+    textAlign: "left",
+  },
+  textAlignEnd: {
+    textAlign: "right",
+  },
+  textAlignCenter: {
+    textAlign: "center",
+  },
+  nameCol: {
+    minWidth: 0,
+    justifyContent: "center",
+  },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 4,
+  },
+  detailsCol: {
+    minWidth: 0,
+    justifyContent: "center",
+  },
+  actionCol: {
+    alignItems: "center",
+    justifyContent: "center",
+    minWidth: 36,
+  },
+  actionColRelative: {
+    position: "relative",
+    overflow: "visible",
+    zIndex: 1,
   },
 
   addBtn: {
@@ -499,9 +606,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
-  addBtnRTL: {
-    flexDirection: 'row-reverse',
-  },
+
   addBtnText: {
     color: 'white',
     fontSize: 14,
@@ -543,21 +648,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  statContentRTL: {
-    alignItems: 'flex-end',
-    marginEnd: 12,
-    marginStart: 0,
-  },
+
   statValue: {
     fontSize: 18,
     fontWeight: "800",
     color: COLORS.text,
+    textAlign: 'left',
   },
   statTitle: {
     fontSize: 11,
     color: COLORS.textLight,
     fontWeight: '600',
     marginTop: 2,
+    textAlign: 'left',
   },
   tableCard: {
     backgroundColor: COLORS.cardBg,
@@ -565,6 +668,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     paddingBottom: 8,
+    overflow: "visible",
   },
   tableHeader: {
     flexDirection: 'row',
@@ -581,6 +685,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.textLight,
     textTransform: 'uppercase',
+    textAlign: 'left',
   },
   tr: {
     flexDirection: 'row',
@@ -589,23 +694,29 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
     alignItems: 'center',
+    overflow: 'visible',
   },
-  trRTL: {
-    flexDirection: 'row-reverse',
+  trWithOpenMenu: {
+    zIndex: 1000,
+    elevation: 8,
   },
+
   td: {
     fontSize: 14,
     color: COLORS.text,
+    textAlign: 'left',
   },
   planName: {
     fontWeight: '600',
     color: COLORS.primary,
     textDecorationLine: 'underline',
+    textAlign: 'left',
   },
   planCode: {
     fontSize: 11,
     color: COLORS.textLight,
     marginTop: 2,
+    textAlign: 'left',
   },
   badge: {
     alignSelf: 'flex-start',
@@ -623,6 +734,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
     color: COLORS.text,
+    textAlign: 'left',
   },
   planDuration: {
     color: COLORS.textLight,
@@ -655,6 +767,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.text,
+    textAlign: 'left',
   },
   viewAll: {
     fontSize: 14,
@@ -709,22 +822,37 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
     shadowRadius: 8,
-    minWidth: 140,
+    minWidth: 168,
+    overflow: "visible",
+  },
+  /** Dropdown opens under the ⋮ control in this row (not a fixed table offset). */
+  actionMenuAnchored: {
+    position: "absolute",
+    top: "100%",
+    marginTop: 6,
+    end: 0,
+    zIndex: 10000,
+    elevation: 16,
+  },
+  actionMenuRTL: {
+    direction: "rtl",
   },
   menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 8,
   },
-  menuItemRTL: {
-    flexDirection: 'row-reverse',
+  menuTextFlex: {
+    flex: 1,
+    flexShrink: 1,
   },
   menuText: {
     fontSize: 14,
     color: COLORS.text,
-    fontWeight: '500',
+    fontWeight: "500",
+    textAlign: "left",
   },
   menuDivider: {
     height: 1,
@@ -793,19 +921,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   textRTL: {
-    textAlign: 'right',
+    // handled by logical direction
   },
 
-  statsGridRTL: {
-    flexDirection: 'row-reverse',
-  },
-  tableHeaderRTL: {
-    flexDirection: 'row-reverse',
-  },
-  statCardRTL: {
-    flexDirection: 'row-reverse',
-    alignItems: 'center',
-  },
   insightsContainer: {
     flexDirection: 'row',
     gap: 12,
@@ -834,19 +952,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   insightTitle: {
+    flex: 1,
     fontSize: 12,
     fontWeight: '600',
     color: COLORS.textLight,
+    textAlign: 'left',
   },
   insightValue: {
     fontSize: 20,
     fontWeight: '800',
     color: COLORS.text,
     marginBottom: 2,
+    textAlign: 'left',
   },
   insightSubtext: {
     fontSize: 11,
     color: COLORS.textLight,
+    textAlign: 'left',
   },
   activityCard: {
     backgroundColor: COLORS.cardBg,
@@ -880,6 +1002,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.text,
     lineHeight: 18,
+    textAlign: 'left',
   },
   boldText: {
     fontWeight: '700',
@@ -888,13 +1011,12 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: COLORS.textLight,
     marginTop: 4,
+    textAlign: 'left',
   },
   alignEnd: {
     alignItems: 'flex-end',
   },
-  rowRTL: {
-    flexDirection: 'row-reverse',
-  },
+
 
 });
 
