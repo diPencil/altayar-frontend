@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Dimensions, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Alert, Share, Image } from 'react-native';
+import { View, FlatList, StyleSheet, Dimensions, useWindowDimensions, ActivityIndicator, Text, TouchableOpacity, Modal, TextInput, Alert, Share, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter, useLocalSearchParams } from 'expo-router';
@@ -9,7 +9,7 @@ import ReelItem from '../../components/reels/ReelItem';
 import { reelsService, Reel } from '../../src/services/reels';
 import { authApi, User, api } from '../../src/services/api';
 
-const { height } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // Comment Item Component
 interface CommentItemProps {
@@ -122,6 +122,7 @@ export default function ReelsPage() {
     const { t } = useTranslation();
     const { isRTL } = useLanguage();
     const params = useLocalSearchParams();
+    const { height } = useWindowDimensions();
 
     const [reels, setReels] = useState<Reel[]>([]);
     const [allReels, setAllReels] = useState<Reel[]>([]); // For search
@@ -267,8 +268,8 @@ export default function ReelsPage() {
     }).current;
 
     const viewabilityConfig = useRef({
-        itemVisiblePercentThreshold: 80, // Require 80% visibility to be considered "active"
-        minimumViewTime: 100, // Must be visible for 100ms
+        itemVisiblePercentThreshold: 60,
+        minimumViewTime: 50,
     }).current;
 
     const handleInteract = async (reelId: string, type: 'LIKE' | 'COMMENT' | 'SHARE') => {

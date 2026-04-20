@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableWithoutFeedback, TouchableOpacity, Image, Platform, Alert, Linking, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, useWindowDimensions, TouchableWithoutFeedback, TouchableOpacity, Image, Platform, Alert, Linking, Animated, Easing } from 'react-native';
 import Video from 'expo-av/build/Video';
 import { ResizeMode } from 'expo-av/build/Video.types';
 import { AVPlaybackStatus } from 'expo-av/build/AV';
@@ -43,7 +43,7 @@ const showConfirmAlert = (
     }
 };
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 // Utility function to extract YouTube video ID
 const extractYouTubeVideoId = (url: string): string | null => {
@@ -90,6 +90,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
 }) => {
     const { isRTL } = useLanguage();
     const { t } = useTranslation();
+    const { height } = useWindowDimensions();
     const videoRef = useRef<Video>(null);
     const [status, setStatus] = useState<AVPlaybackStatus | null>(null);
     const [viewTriggered, setViewTriggered] = useState(false);
@@ -409,7 +410,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { height }]}>
             <TouchableWithoutFeedback onPress={() => {
                 // For external videos that can't be played (error state), open in browser
                 if (videoError && !isYouTube) {
@@ -475,7 +476,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
             {/* Info Section - Instagram/Facebook Style */}
             <View style={[styles.infoContainer, isRTL && styles.infoContainerRTL]}>
                 {/* User Row: Avatar | Name */}
-                <View style={[styles.userRow]}>
+                <View style={[styles.userRow, isRTL && styles.userRowRTL]}>
                     <Image
                         source={{ uri: item.user?.avatar_url || 'https://via.placeholder.com/100' }}
                         style={[styles.avatar, isRTL && styles.avatarRTL]}
@@ -561,7 +562,6 @@ const ReelItem: React.FC<ReelItemProps> = ({
 const styles = StyleSheet.create({
     container: {
         width: width,
-        height: height, // Should adjust for bottom tab bar if needed, but 'full screen' asked
         backgroundColor: 'black',
         justifyContent: 'center',
     },
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
     },
     fallbackMessage: {
         position: 'absolute',
-        bottom: 76,
+        bottom: 90,
         left: 20,
         right: 20,
         alignItems: 'center',
@@ -659,7 +659,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         position: 'absolute',
-        bottom: 76,
+        bottom: 90,
         left: 12,
         right: 90, // More space for interaction bar
         zIndex: 20,
@@ -676,6 +676,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 8,
+    },
+    userRowRTL: {
+        flexDirection: 'row-reverse',
     },
 
     avatar: {

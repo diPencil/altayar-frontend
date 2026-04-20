@@ -392,9 +392,9 @@ export default function UserDashboard() {
       >
         {/* Greeting */}
         <View style={[styles.greeting, isRTL && styles.greetingRTL]}>
-          <View>
+          <View style={isRTL ? { alignItems: 'flex-end' } : undefined}>
             <Text style={[styles.greetingText, isRTL && styles.greetingTextRTL]}>
-              {t("dashboard.hello")}, {userName}! 👋
+              {isRTL ? `👋 !${userName} ،${t("dashboard.hello")}` : `${t("dashboard.hello")}, ${userName}! 👋`}
             </Text>
             <Text style={[styles.greetingSubtext, isRTL && styles.greetingSubtextRTL]}>
               {t("dashboard.welcomeTo")}
@@ -587,7 +587,7 @@ export default function UserDashboard() {
         <PointsCard isRTL={isRTL} t={t} points={userData.points} total={userData.pointsTotal} isMember={isMember} />
 
         {/* Special Offers Section (Global) */}
-        <View style={[styles.sectionHeader]}>
+        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("dashboard.specialOffers")}
           </Text>
@@ -623,7 +623,7 @@ export default function UserDashboard() {
         </ScrollView>
 
         {/* Membership Description Section */}
-        <View style={[styles.sectionHeader, { marginTop: 24 }]}>
+        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL, { marginTop: 24 }]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("membershipTiers.title")}
           </Text>
@@ -654,7 +654,7 @@ export default function UserDashboard() {
         </View>
 
         {/* For You Section (Targeted) */}
-        <View style={[styles.sectionHeader]}>
+        <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
           <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
             {t("dashboard.forYou")}
           </Text>
@@ -691,7 +691,7 @@ export default function UserDashboard() {
         {/* Latest Reels Section */}
         {latestReels.length > 0 && (
           <>
-            <View style={[styles.sectionHeader]}>
+            <View style={[styles.sectionHeader, isRTL && styles.sectionHeaderRTL]}>
               <Text style={[styles.sectionTitle, isRTL && styles.textRTL]}>
                 {t("dashboard.latestReels", "Latest Reels")}
               </Text>
@@ -1899,6 +1899,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 12,
     marginTop: 24,
+  },
+  sectionHeaderRTL: {
+    flexDirection: "row-reverse",
   },
 
   sectionTitle: {

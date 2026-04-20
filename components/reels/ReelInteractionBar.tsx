@@ -184,7 +184,7 @@ const ReelInteractionBar: React.FC<ReelInteractionBarProps> = ({
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        bottom: 76,
+        bottom: 90,
         alignItems: 'center',
         zIndex: 50,
     },
