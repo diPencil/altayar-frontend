@@ -392,9 +392,9 @@ export default function UserDashboard() {
       >
         {/* Greeting */}
         <View style={[styles.greeting, isRTL && styles.greetingRTL]}>
-          <View style={isRTL ? { alignItems: 'flex-end' } : undefined}>
+          <View style={isRTL ? { alignItems: 'flex-end', width: '100%' } : undefined}>
             <Text style={[styles.greetingText, isRTL && styles.greetingTextRTL]}>
-              {isRTL ? `👋 !${userName} ،${t("dashboard.hello")}` : `${t("dashboard.hello")}, ${userName}! 👋`}
+              {t("dashboard.hello")}, {userName}! 👋
             </Text>
             <Text style={[styles.greetingSubtext, isRTL && styles.greetingSubtextRTL]}>
               {t("dashboard.welcomeTo")}
