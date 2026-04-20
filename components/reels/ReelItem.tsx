@@ -126,12 +126,14 @@ const ReelItem: React.FC<ReelItemProps> = ({
                     // Check if loaded first? actually loading is handled by source prop
                     // Just try to play
                     console.log('[ReelItem] Playing:', item.id);
+                    await videoRef.current?.setPositionAsync(0).catch(() => { });
                     await videoRef.current?.playAsync();
                 } else {
                     // FORCE STOP
                     console.log('[ReelItem] Stopping:', item.id);
-                    await videoRef.current?.stopAsync();
-                    await videoRef.current?.unloadAsync(); // Unload to kill audio 100%
+                    await videoRef.current?.pauseAsync().catch(() => { });
+                    await videoRef.current?.setPositionAsync(0).catch(() => { });
+                    await videoRef.current?.unloadAsync().catch(() => { }); // Unload to kill audio 100%
                 }
             } catch (error) {
                 // Ignore unload errors
@@ -143,6 +145,8 @@ const ReelItem: React.FC<ReelItemProps> = ({
         // Cleanup immediately on unmount or isActive false
         return () => {
             if (!isActive && !isYouTube) {
+                videoRef.current?.pauseAsync().catch(() => { });
+                videoRef.current?.setPositionAsync(0).catch(() => { });
                 videoRef.current?.unloadAsync().catch(() => { });
             }
         }
@@ -250,14 +254,15 @@ const ReelItem: React.FC<ReelItemProps> = ({
 
             return (
                 <Video
+                    key={`${item.id}-upload-${isActive ? 'active' : 'inactive'}`}
                     ref={videoRef}
                     style={styles.video}
                     source={{ uri: videoUri }}
                     useNativeControls={false}
-                    resizeMode={ResizeMode.CONTAIN}
+                    resizeMode={ResizeMode.COVER}
                     isLooping
                     isMuted={false}
-                    shouldPlay={isActive}
+                    shouldPlay={isActive && !videoError}
                     onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
                         setStatus(() => status);
                         // Optional logging removed for cleaner code
@@ -267,7 +272,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
                             ? { uri: rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url }
                             : undefined
                     }
-                    posterStyle={{ resizeMode: 'contain' }}
+                    posterStyle={{ resizeMode: 'cover' }}
                     usePoster={true}
                     onError={(error) => {
                         // Only log real errors, ignore unload errors
@@ -297,14 +302,15 @@ const ReelItem: React.FC<ReelItemProps> = ({
                 const directUri = resolveReelMediaUrl(item.video_url) ?? item.video_url;
                 return (
                     <Video
+                        key={`${item.id}-direct-${isActive ? 'active' : 'inactive'}`}
                         ref={videoRef}
                         style={styles.video}
                         source={{ uri: directUri }}
                         useNativeControls={false}
-                        resizeMode={ResizeMode.CONTAIN}
+                        resizeMode={ResizeMode.COVER}
                         isLooping
                         isMuted={false}
-                        shouldPlay={isActive}
+                        shouldPlay={isActive && !videoError}
                         onPlaybackStatusUpdate={(status: AVPlaybackStatus) => {
                             setStatus(() => status);
                             if (!status.isLoaded && status.error) {
@@ -319,7 +325,7 @@ const ReelItem: React.FC<ReelItemProps> = ({
                                 ? { uri: rewriteBackendMediaUrl(item.thumbnail_url) ?? item.thumbnail_url }
                                 : undefined
                         }
-                        posterStyle={{ resizeMode: 'contain' }}
+                        posterStyle={{ resizeMode: 'cover' }}
                         usePoster={true}
                         onError={handleVideoError}
                     />
@@ -617,7 +623,7 @@ const styles = StyleSheet.create({
     },
     fallbackMessage: {
         position: 'absolute',
-        bottom: 100,
+        bottom: 76,
         left: 20,
         right: 20,
         alignItems: 'center',
@@ -653,7 +659,7 @@ const styles = StyleSheet.create({
     },
     infoContainer: {
         position: 'absolute',
-        bottom: 100, // Much higher from bottom for better visibility
+        bottom: 76,
         left: 12,
         right: 90, // More space for interaction bar
         zIndex: 20,

@@ -139,6 +139,7 @@ export default function ReelsPage() {
 
     const insets = useSafeAreaInsets();
     const flatListRef = useRef<FlatList>(null);
+    const activeIndexRef = useRef(0);
     const router = useRouter();
 
     // Focus handling to pause videos when leaving tab
@@ -211,6 +212,7 @@ export default function ReelsPage() {
         if (__DEV__) {
             console.log('Active index updated:', activeIndex, 'Page focused:', isPageFocused);
         }
+        activeIndexRef.current = activeIndex;
     }, [activeIndex, isPageFocused]);
 
     const handleSearch = (query: string) => {
@@ -228,20 +230,37 @@ export default function ReelsPage() {
         setReels(filtered);
     };
 
+    const syncActiveIndexFromOffset = useCallback((offsetY: number) => {
+        if (!reels.length) return;
+
+        const maxIndex = reels.length - 1;
+        const nextIndex = Math.min(maxIndex, Math.max(0, Math.round(offsetY / height)));
+
+        if (nextIndex !== activeIndexRef.current) {
+            activeIndexRef.current = nextIndex;
+            setActiveIndex(nextIndex);
+
+            if (__DEV__) {
+                console.log('Active reel changed to index:', nextIndex);
+            }
+        }
+    }, [reels.length]);
+
+    const onMomentumScrollEnd = useCallback((event: any) => {
+        syncActiveIndexFromOffset(event?.nativeEvent?.contentOffset?.y || 0);
+    }, [syncActiveIndexFromOffset]);
+
     const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
         if (viewableItems.length > 0) {
-            // Get the item that's most visible (closest to center)
-            const mostVisibleItem = viewableItems.reduce((prev: any, current: any) => {
-                const prevPercent = prev?.percentVisible || 0;
-                const currentPercent = current?.percentVisible || 0;
-                return currentPercent > prevPercent ? current : prev;
-            }, viewableItems[0]);
+            const centeredItem = viewableItems.find((item: any) => item.isViewable) || viewableItems[0];
+            const newIndex = centeredItem?.index ?? 0;
 
-            const newIndex = mostVisibleItem?.index ?? 0;
-            if (newIndex !== activeIndex) {
+            if (newIndex !== activeIndexRef.current) {
+                activeIndexRef.current = newIndex;
                 setActiveIndex(newIndex);
+
                 if (__DEV__) {
-                    console.log('Active reel changed to index:', newIndex);
+                    console.log('Active reel changed via viewability to index:', newIndex);
                 }
             }
         }
@@ -541,6 +560,7 @@ export default function ReelsPage() {
 
             <FlatList
                 ref={flatListRef}
+                style={{ flex: 1, backgroundColor: 'black' }}
                 data={reels}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item, index }) => (
@@ -554,16 +574,21 @@ export default function ReelsPage() {
                     />
                 )}
                 pagingEnabled
+                disableIntervalMomentum
                 showsVerticalScrollIndicator={false}
-                snapToInterval={height}
-                snapToAlignment="center"
                 decelerationRate="fast"
+                onMomentumScrollEnd={onMomentumScrollEnd}
                 onViewableItemsChanged={onViewableItemsChanged}
                 viewabilityConfig={viewabilityConfig}
                 initialNumToRender={1}
                 maxToRenderPerBatch={2}
                 windowSize={3}
                 contentContainerStyle={{ flexGrow: 1 }}
+                getItemLayout={(_, index) => ({
+                    length: height,
+                    offset: height * index,
+                    index,
+                })}
                 removeClippedSubviews
             />
 

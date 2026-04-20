@@ -120,8 +120,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         toggleLanguage,
       }}
     >
-      {/* Yoga `direction` must be set on native too: I18nManager + reload can fail in dev; this keeps flex rows mirroring with language. */}
-      <View style={{ flex: 1, direction: isRTL ? 'rtl' : 'ltr' }}>
+      <View style={Platform.OS === 'web' ? { flex: 1, direction: isRTL ? 'rtl' : 'ltr' } : { flex: 1 }}>
         {children}
       </View>
     </LanguageContext.Provider>

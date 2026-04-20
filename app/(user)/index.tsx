@@ -393,10 +393,10 @@ export default function UserDashboard() {
         {/* Greeting */}
         <View style={[styles.greeting, isRTL && styles.greetingRTL]}>
           <View>
-            <Text style={[styles.greetingText, isRTL && styles.textRTL]}>
+            <Text style={[styles.greetingText, isRTL && styles.greetingTextRTL]}>
               {t("dashboard.hello")}, {userName}! 👋
             </Text>
-            <Text style={[styles.greetingSubtext, isRTL && styles.textRTL]}>
+            <Text style={[styles.greetingSubtext, isRTL && styles.greetingSubtextRTL]}>
               {t("dashboard.welcomeTo")}
             </Text>
           </View>
@@ -1458,10 +1458,20 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLORS.text,
   },
+  greetingTextRTL: {
+    textAlign: 'right',
+    writingDirection: 'rtl',
+    alignSelf: 'flex-end',
+  },
   greetingSubtext: {
     fontSize: 14,
     color: COLORS.textLight,
     marginTop: 4,
+  },
+  greetingSubtextRTL: {
+    textAlign: 'right',
+    writingDirection: 'rtl',
+    alignSelf: 'flex-end',
   },
   textRTL: {
     textAlign: "right",

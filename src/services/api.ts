@@ -3,28 +3,60 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { emitMembershipRequired } from '../utils/membershipGate';
 
-export const getBaseUrl = () => {
-  // Use environment variable if available (for production)
-  const apiUrl = Constants.expoConfig?.extra?.apiUrl;
+function getDevHost(): string | undefined {
+  const candidates = [
+    (Constants.expoConfig as any)?.hostUri,
+    (Constants as any)?.manifest2?.debuggerHost,
+    (Constants as any)?.manifest?.debuggerHost,
+    (Constants as any)?.expoGoConfig?.debuggerHost,
+  ];
 
-  if (apiUrl && typeof apiUrl === 'string') {
-    return apiUrl;
+  for (const candidate of candidates) {
+    if (typeof candidate !== 'string' || !candidate.trim()) continue;
+    const cleaned = candidate.trim().replace(/^https?:\/\//, '').replace(/^exp:\/\//, '');
+    const host = cleaned.split('/')[0].split(':')[0];
+    if (host) return host;
   }
 
-  // Development fallback
-  console.log('[API] Platform.OS:', Platform.OS);
-  if (Platform.OS === 'web') {
-    // Use localhost instead of 127.0.0.1 for better CORS compatibility
-    const url = 'http://localhost:8082/api';
-    console.log('[API] Using Web URL:', url);
+  return undefined;
+}
+
+function getDevApiUrl(): string {
+  const expoHost = getDevHost();
+  if (expoHost) {
+    const url = `http://${expoHost}:8082/api`;
+    console.log('[API] Using Expo host dev URL:', url);
     return url;
   }
 
-  // FORCE PRODUCTION IP FOR MOBILE TESTING
-  // This ensures the app connects to the VPS backend
-  const prodUrl = 'http://69.62.117.50:8082/api';
-  console.log(`[API] Using Production URL: ${prodUrl}`);
-  return prodUrl;
+  const extra = Constants.expoConfig?.extra as { devServerIp?: unknown } | undefined;
+  const devServerIp = typeof extra?.devServerIp === 'string' ? extra.devServerIp.trim() : '';
+  if (devServerIp) {
+    const url = `http://${devServerIp}:8082/api`;
+    console.log('[API] Using configured dev server URL:', url);
+    return url;
+  }
+
+  const fallbackUrl = 'http://localhost:8082/api';
+  console.log('[API] Using fallback dev URL:', fallbackUrl);
+  return fallbackUrl;
+}
+
+export const getBaseUrl = () => {
+  const extra = Constants.expoConfig?.extra as { apiUrl?: unknown } | undefined;
+  const productionUrl = typeof extra?.apiUrl === 'string' ? extra.apiUrl : 'https://api.altayarvip.sbs/api';
+
+  if (!__DEV__) {
+    return productionUrl;
+  }
+
+  if (Platform.OS === 'web') {
+    const url = 'http://localhost:8082/api';
+    console.log('[API] Using Web dev URL:', url);
+    return url;
+  }
+
+  return getDevApiUrl();
 };
 
 /** Dev / old VPS hosts often stored in reel video_url while the app uses extra.apiUrl */
