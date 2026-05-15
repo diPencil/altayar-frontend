@@ -76,7 +76,7 @@
       "eas": {
         "projectId": "b6ad6ef4-815f-4206-90d5-a8a0e28325e1"
       },
-      "apiUrl": "https://api.altayarvip.sbs/api",
+      "apiUrl": "https://altayarvip.com/api/mobile",
       "devServerIp": "192.168.1.17",
       "router": {}
     }

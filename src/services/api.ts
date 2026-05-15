@@ -3,63 +3,43 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { emitMembershipRequired } from '../utils/membershipGate';
 
-function getDevHost(): string | undefined {
-  const candidates = [
-    (Constants.expoConfig as any)?.hostUri,
-    (Constants as any)?.manifest2?.debuggerHost,
-    (Constants as any)?.manifest?.debuggerHost,
-    (Constants as any)?.expoGoConfig?.debuggerHost,
-  ];
-
-  for (const candidate of candidates) {
-    if (typeof candidate !== 'string' || !candidate.trim()) continue;
-    const cleaned = candidate.trim().replace(/^https?:\/\//, '').replace(/^exp:\/\//, '');
-    const host = cleaned.split('/')[0].split(':')[0];
-    if (host) return host;
-  }
-
-  return undefined;
-}
-
 function getDevApiUrl(): string {
-  const expoHost = getDevHost();
-  if (expoHost) {
-    const url = `http://${expoHost}:8082/api`;
-    console.log('[API] Using Expo host dev URL:', url);
-    return url;
+  const extra = Constants.expoConfig?.extra as { devServerIp?: unknown; mobileApiUrl?: unknown } | undefined;
+  const configuredMobileApiUrl = typeof extra?.mobileApiUrl === 'string' ? extra.mobileApiUrl.trim() : '';
+  if (configuredMobileApiUrl) {
+    console.log('[API] Using configured mobile API URL:', configuredMobileApiUrl);
+    return configuredMobileApiUrl;
   }
 
-  const extra = Constants.expoConfig?.extra as { devServerIp?: unknown } | undefined;
+  const webUrl = 'http://127.0.0.1:8000/api/mobile';
+  if (Platform.OS === 'web') {
+    console.log('[API] Using Web dev URL:', webUrl);
+    return webUrl;
+  }
+
   const devServerIp = typeof extra?.devServerIp === 'string' ? extra.devServerIp.trim() : '';
   if (devServerIp) {
-    const url = `http://${devServerIp}:8082/api`;
+    const url = `http://${devServerIp}:8000/api/mobile`;
     console.log('[API] Using configured dev server URL:', url);
     return url;
   }
 
-  const fallbackUrl = 'http://localhost:8082/api';
-  console.log('[API] Using fallback dev URL:', fallbackUrl);
-  return fallbackUrl;
+  console.log('[API] Using fallback dev URL:', webUrl);
+  return webUrl;
 }
 
 export const getBaseUrl = () => {
   const extra = Constants.expoConfig?.extra as { apiUrl?: unknown } | undefined;
-  const productionUrl = typeof extra?.apiUrl === 'string' ? extra.apiUrl : 'https://api.altayarvip.sbs/api';
+  const productionUrl = typeof extra?.apiUrl === 'string' ? extra.apiUrl : 'https://altayarvip.com/api/mobile';
 
   if (!__DEV__) {
     return productionUrl;
   }
 
-  if (Platform.OS === 'web') {
-    const url = 'http://localhost:8082/api';
-    console.log('[API] Using Web dev URL:', url);
-    return url;
-  }
-
   return getDevApiUrl();
 };
 
-/** Dev / old VPS hosts often stored in reel video_url while the app uses extra.apiUrl */
+/** Legacy backend hosts often stored in reel video_url while the app uses extra.apiUrl */
 const REWRITE_MEDIA_HOSTS = new Set([
   'localhost',
   '127.0.0.1',
@@ -69,7 +49,7 @@ const REWRITE_MEDIA_HOSTS = new Set([
 
 /**
  * Point reel thumbnails / videos at the same public host the app uses (fixes real devices
- * when the DB still has http://localhost:8082/... or the legacy VPS IP).
+ * when the DB still has legacy backend URLs or the legacy VPS IP).
  */
 export function rewriteBackendMediaUrl(url: string | undefined | null): string | undefined {
   if (url == null || typeof url !== 'string') return undefined;
@@ -105,7 +85,7 @@ export function resolveReelMediaUrl(videoUrl: string | undefined | null): string
   const base = getBaseUrl().replace(/\/$/, '');
   const path = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
   const joined =
-    path.startsWith('/api/') && /\/api$/.test(base)
+    path.startsWith('/api/') && base.endsWith('/api/mobile')
       ? `${base}${path.slice('/api'.length)}`
       : `${base}${path}`;
   return joined;
@@ -228,7 +208,7 @@ class ApiService {
         if (isCorsIssue) {
           throw new Error(`CORS error: Backend server at ${BASE_URL} is not allowing requests from this origin. Please check CORS configuration.`);
         }
-        throw new Error(`Cannot connect to backend server at ${BASE_URL}. Please ensure the server is running on http://localhost:8082`);
+        throw new Error(`Cannot connect to backend server at ${BASE_URL}. Please ensure the Laravel mobile API is running.`);
       }
 
       throw error;
@@ -292,7 +272,7 @@ class ApiService {
       if (error.name === 'AbortError' || error.message?.includes('timeout')) {
         throw new Error('Request timeout. Please check if the backend server is running.');
       } else if (error.message?.includes('Failed to fetch') || error.message?.includes('NetworkError')) {
-        throw new Error(`Cannot connect to backend server at ${BASE_URL}. Please ensure the server is running and your device is on the same network.`);
+        throw new Error(`Cannot connect to backend server at ${BASE_URL}. Please ensure the Laravel mobile API is running and your device is on the same network.`);
       }
 
       throw error;
