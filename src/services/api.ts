@@ -653,8 +653,16 @@ export interface Offer {
   offer_type: string;
   category?: string;
   category_id?: string;
+  category_name_en?: string;
+  category_name_ar?: string;
+  category_slug?: string;
   category_details?: Category;
   destination?: string;
+  destination_details?: {
+    city?: string;
+    country?: string;
+    address?: string;
+  };
   original_price: number;
   discounted_price?: number;
   currency: string;
@@ -685,12 +693,127 @@ export interface Offer {
   average_rating?: number;
   my_rating?: number;
 }
+
+type ApiEnvelope<T> = {
+  success?: boolean;
+  data?: T;
+  meta?: unknown;
+};
+
+function unwrapApiData<T>(response: T | ApiEnvelope<T>): T {
+  if (response && typeof response === 'object' && 'data' in (response as ApiEnvelope<T>)) {
+    return (response as ApiEnvelope<T>).data as T;
+  }
+
+  return response as T;
+}
+
+function normalizeCategoryDetails(category: any): Category | undefined {
+  if (!category || typeof category !== 'object') {
+    return undefined;
+  }
+
+  return {
+    id: String(category.id ?? ''),
+    name_en: String(category.name_en ?? ''),
+    name_ar: String(category.name_ar ?? ''),
+    slug: String(category.slug ?? ''),
+    icon: category.icon,
+    sort_order: Number(category.sort_order ?? 0),
+    is_active: Boolean(category.is_active ?? true),
+    created_at: String(category.created_at ?? ''),
+  };
+}
+
+function normalizeOfferItem(offer: any): Offer {
+  const categoryDetails = normalizeCategoryDetails(offer?.category || offer?.category_details);
+  const destinationDetails = offer?.destination && typeof offer.destination === 'object'
+    ? {
+        city: offer.destination.city ? String(offer.destination.city) : undefined,
+        country: offer.destination.country ? String(offer.destination.country) : undefined,
+        address: offer.destination.address ? String(offer.destination.address) : undefined,
+      }
+    : undefined;
+
+  const destinationLabel = destinationDetails
+    ? [destinationDetails.city, destinationDetails.country, destinationDetails.address].filter(Boolean).join(', ')
+    : (typeof offer?.destination === 'string' ? offer.destination : '');
+
+  return {
+    ...offer,
+    id: String(offer?.id ?? ''),
+    title_ar: String(offer?.title_ar ?? ''),
+    title_en: String(offer?.title_en ?? ''),
+    description_ar: offer?.description_ar != null ? String(offer.description_ar) : undefined,
+    description_en: offer?.description_en != null ? String(offer.description_en) : undefined,
+    image_url: offer?.image_url != null ? String(offer.image_url) : undefined,
+    offer_type: String(offer?.offer_type ?? ''),
+    category: String(offer?.category_slug ?? categoryDetails?.slug ?? offer?.category ?? ''),
+    category_id: String(offer?.category_id ?? categoryDetails?.id ?? ''),
+    category_name_en: String(offer?.category_name_en ?? categoryDetails?.name_en ?? ''),
+    category_name_ar: String(offer?.category_name_ar ?? categoryDetails?.name_ar ?? ''),
+    category_slug: String(offer?.category_slug ?? categoryDetails?.slug ?? ''),
+    category_details: categoryDetails,
+    destination: destinationLabel || undefined,
+    destination_details: destinationDetails,
+    original_price: Number(offer?.original_price ?? 0),
+    discounted_price: offer?.discounted_price != null ? Number(offer.discounted_price) : undefined,
+    currency: String(offer?.currency ?? 'EGP'),
+    discount_percentage: offer?.discount_percentage != null ? Number(offer.discount_percentage) : undefined,
+    duration_days: offer?.duration_days != null ? Number(offer.duration_days) : undefined,
+    duration_nights: offer?.duration_nights != null ? Number(offer.duration_nights) : undefined,
+    status: String(offer?.status ?? 'ACTIVE'),
+    is_featured: Boolean(offer?.is_featured ?? false),
+    is_hot: Boolean(offer?.is_hot ?? false),
+    valid_from: offer?.valid_from != null ? String(offer.valid_from) : undefined,
+    valid_until: offer?.valid_until != null ? String(offer.valid_until) : undefined,
+    includes: offer?.includes,
+    excludes: offer?.excludes,
+    created_at: String(offer?.created_at ?? ''),
+    updated_at: offer?.updated_at != null ? String(offer.updated_at) : undefined,
+    created_by_user_id: offer?.created_by_user_id != null ? String(offer.created_by_user_id) : undefined,
+    created_by_name: offer?.created_by_name != null ? String(offer.created_by_name) : undefined,
+    created_by_email: offer?.created_by_email != null ? String(offer.created_by_email) : undefined,
+    created_by_role: offer?.created_by_role != null ? String(offer.created_by_role) : undefined,
+    target_audience: offer?.target_audience,
+    target_user_ids: Array.isArray(offer?.target_user_ids) ? offer.target_user_ids.map((value: any) => String(value)) : undefined,
+    offer_source: offer?.offer_source ?? 'ADMIN',
+    is_favorited: Boolean(offer?.is_favorited ?? false),
+    rating_count: offer?.rating_count != null ? Number(offer.rating_count) : undefined,
+    average_rating: offer?.average_rating != null ? Number(offer.average_rating) : undefined,
+    my_rating: offer?.my_rating != null ? Number(offer.my_rating) : undefined,
+  };
+}
+
+function normalizeOfferCollection(response: any): Offer[] {
+  const data = unwrapApiData<any>(response);
+  if (!Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map(normalizeOfferItem);
+}
+
+function normalizeOfferDetail(response: any): Offer {
+  return normalizeOfferItem(unwrapApiData<any>(response) ?? {});
+}
+
+function normalizeCategoryCollection(response: any): Category[] {
+  const data = unwrapApiData<any>(response);
+  if (!Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map((category: any) => normalizeCategoryDetails(category) as Category).filter(Boolean);
+}
+
 export const offersApi = {
-  getFeatured: (): Promise<Offer[]> => api.get('/offers/public/featured'),
-  getPublic: (params?: { offer_type?: string; category?: string }): Promise<Offer[]> => {
-    return api.get('/offers/public', params);
+  getFeatured: (params?: { category?: string; destination?: string; currency?: string; search?: string; page?: number; per_page?: number }): Promise<Offer[]> =>
+    api.get('/offers/featured', params).then(normalizeOfferCollection),
+  getPublic: (params?: { category?: string; destination?: string; currency?: string; search?: string; page?: number; per_page?: number; offer_type?: string }): Promise<Offer[]> => {
+    return api.get('/offers', params).then(normalizeOfferCollection);
   },
-  getOffer: (id: string): Promise<Offer> => api.get(`/offers/public/${id}`),
+  getOffer: (id: string): Promise<Offer> => api.get(`/offers/${id}`).then(normalizeOfferDetail),
 
   // Favorites (user)
   getFavorites: (): Promise<Offer[]> => api.get('/offers/favorites'),
@@ -704,9 +827,8 @@ export const offersApi = {
 
   // Category endpoints
   getCategories: (activeOnly: boolean = false): Promise<Category[]> => {
-    let url = '/offers/categories';
-    if (activeOnly) url += '/public'; // Or query param, but we have /categories/public route
-    return api.get(url);
+    void activeOnly;
+    return api.get('/offers/categories').then(normalizeCategoryCollection);
   },
 
   // Create Offer
@@ -715,7 +837,7 @@ export const offersApi = {
   },
 
   // Authenticated User Offers
-  getMyOffers: (): Promise<Offer[]> => api.get('/offers/user/my-offers'),
+  getMyOffers: (): Promise<Offer[]> => Promise.resolve([]),
 
   // Admin endpoints
   getAll: (params?: any): Promise<Offer[]> => api.get('/offers', params),
