@@ -482,7 +482,7 @@ export interface WalletBalance {
 
 export interface PointsBalance {
   user_id: string;
-  balance: number; // Current balance
+  current_balance: number;
   total_earned: number; // For progress bar
   tier: string;
 }
@@ -563,13 +563,13 @@ export const authApi = {
 };
 
 export const walletApi = {
-  getBalance: (): Promise<WalletBalance> => api.get('/wallet/me'),
-  getTransactions: (): Promise<any[]> => api.get('/wallet/me/transactions'),
+  getBalance: (): Promise<WalletBalance> => api.get('/wallet/me').then((res: any) => res.data),
+  getTransactions: (): Promise<any[]> => api.get('/wallet/me/transactions').then((res: any) => res.data),
 };
 
 export const pointsApi = {
-  getBalance: (): Promise<PointsBalance> => api.get('/points/me'),
-  getTransactions: (): Promise<any[]> => api.get('/points/me/transactions'),
+  getBalance: (): Promise<PointsBalance> => api.get('/points/me').then((res: any) => res.data),
+  getTransactions: (): Promise<any[]> => api.get('/points/me/transactions').then((res: any) => res.data),
 };
 
 export const cashbackApi = {
